@@ -3,9 +3,8 @@
 image:[Palimpsest-MPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
 
 image:https://img.shields.io/badge/RSR-Bronze-CD7F32[RSR Bronze,link=docs/RSR_COMPLIANCE.md]
-image:[License,link="https://github.com/hyperpolymath/palimpsest-license"]
-
-// SPDX-License-Identifier: PMPL-1.0
+image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[MPL-2.0-or-later,link="https://opensource.org/licenses/MPL-2.0"]
+// SPDX-License-Identifier: MPL-2.0-or-later
 // SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
 
 image:[TPCF: Perimeter 3,link=docs/TPCF.md]
