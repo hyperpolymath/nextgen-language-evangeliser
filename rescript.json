@@ -5,6 +5,10 @@
     {
       "dir": "src",
       "subdirs": true
+    },
+    {
+      "dir": "scripts",
+      "subdirs": false
     }
   ],
   "package-specs": [

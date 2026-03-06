@@ -96,7 +96,7 @@ type analysisResult = {
 }
 
 // User's learning progress
-type learningProgress = {
+type rec learningProgress = {
   patternsCompleted: Set.t<string>,
   currentDifficulty: difficultyLevel,
   totalTransformations: int,
