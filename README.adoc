@@ -1,27 +1,25 @@
 = ReScript Evangeliser
 
-image:[Palimpsest-MPL-1.0,link="https://github.com/hyperpolymath/palimpsest-license"]
-
 image:https://img.shields.io/badge/RSR-Bronze-CD7F32[RSR Bronze,link=docs/RSR_COMPLIANCE.md]
-image:https://img.shields.io/badge/License-MPL_2.0-blue.svg[MPL-2.0-or-later,link="https://opensource.org/licenses/MPL-2.0"]
-// SPDX-License-Identifier: MPL-2.0-or-later
-// SPDX-FileCopyrightText: 2025 Jonathan D.A. Jewell
+image:https://img.shields.io/badge/License-PMPL--1.0--or--later-blue.svg[License: PMPL-1.0-or-later,link="https://github.com/hyperpolymath/palimpsest-license"]
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
 image:[TPCF: Perimeter 3,link=docs/TPCF.md]
 image:[ReScript First]
 image:https://img.shields.io/badge/Deno-Runtime-000000.svg[Deno Runtime]
 
-> *Celebrate good, minimize bad, show better* — A pattern library and educational toolkit that teaches JavaScript developers ReScript through progressive code transformation, without shame.
+> *Celebrate good, minimize bad, show better* -- A pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers ReScript through progressive code transformation, without shame.
 
 == What is This?
 
 ReScript Evangeliser is a library and toolkit that helps JavaScript developers learn ReScript by:
 
-* 🔍 *Detecting patterns* in existing JS code
-* 🔄 *Showing transformations* to equivalent ReScript code
-* 💬 *Explaining with encouragement* using the "You were close!" philosophy
-* 📊 *Visualizing concepts* with Makaton-inspired glyphs
-* 🎯 *Progressive disclosure* through 4 view layers (RAW → FOLDED → GLYPHED → WYSIWYG)
+* *Detecting patterns* in existing JS code (52 patterns across 21 categories)
+* *Showing transformations* to equivalent ReScript code
+* *Explaining with encouragement* using the "You were close!" philosophy
+* *Visualizing concepts* with Makaton-inspired glyphs
+* *Progressive disclosure* through 3 view layers (RAW -> FOLDED -> GLYPHED) and 3 output formats (plain, markdown, html)
 
 *We never shame developers.* Your JavaScript is good! ReScript just makes some things even better.
 
@@ -30,14 +28,14 @@ ReScript Evangeliser is a library and toolkit that helps JavaScript developers l
 === Prerequisites
 
 * https://deno.land[Deno] (latest stable)
-* https://rescript-lang.org[ReScript] 11+
+* https://rescript-lang.org[ReScript] 12.2+
 
 === Installation
 
 [source,bash]
 ----
 # Clone the repository
-git clone https://github.com/Hyperpolymath/rescript-evangeliser.git
+git clone https://github.com/hyperpolymath/rescript-evangeliser.git
 cd rescript-evangeliser
 
 # Install dependencies
@@ -45,20 +43,34 @@ just install
 
 # Build ReScript sources
 just build
+----
 
-# Run validation
-just validate
+=== Usage
+
+[source,bash]
+----
+# Scan a JavaScript file for patterns
+deno run --allow-read bin/evangeliser.js scan <file.js>
+
+# List all 52 available patterns
+deno run --allow-read bin/evangeliser.js patterns
+
+# Show the glyph legend
+deno run --allow-read bin/evangeliser.js legend
+
+# Display detection statistics
+deno run --allow-read bin/evangeliser.js stats
 ----
 
 === Development
 
 [source,bash]
 ----
+# Run tests (38 tests across 6 suites)
+just test
+
 # Watch mode for development
 just watch
-
-# Run tests
-just test
 
 # Format code
 just fmt
@@ -69,44 +81,56 @@ just ci
 
 == Features
 
-=== 50+ Transformation Patterns
+=== 52 Transformation Patterns
 
 Categories include:
 
-* Null safety → Option types
-* Async/await → Promise types
-* Try/catch → Result types
-* Array operations → Pipe operator
-* Conditionals → Pattern matching
-* OOP → Functional programming
-* Classes → Records
-* And many more!
+* Null safety -> Option types
+* Async/await -> Promise types
+* Try/catch -> Result types
+* Array operations -> Pipe operator
+* Conditionals -> Pattern matching
+* OOP -> Functional programming
+* Classes -> Records
+* And 14 more categories (21 total)
 
-=== Four View Layers
+=== Three View Layers
 
 1. *RAW*: Side-by-side JavaScript/ReScript comparison with narrative
 2. *FOLDED*: Organized sections with collapsible regions
 3. *GLYPHED*: Symbol-annotated code showing semantic meaning
-4. *WYSIWYG*: Block-based visual editor (coming soon)
+
+=== Three Output Formats
+
+* *Plain text*: Terminal-friendly output
+* *Markdown*: For documentation and READMEs
+* *HTML*: For web integration and reports
 
 === Makaton-Inspired Glyphs
 
-Visual symbols that transcend syntax:
+Visual symbols that transcend syntax across 21 glyph categories:
 
-* 🛡️ Shield (null safety)
-* 🔄 Transform (data transformation)
-* ➡️ Flow (pipe operator)
-* 🌿 Branch (pattern matching)
-* 💎 Crystal (immutability)
-* And 16 more!
+* Shield (null safety)
+* Transform (data transformation)
+* Flow (pipe operator)
+* Branch (pattern matching)
+* Crystal (immutability)
+* And 16 more
+
+=== Scanner + Analyser Detection Engine
+
+Regex-based pattern matching engine that scans JavaScript source files and identifies patterns amenable to ReScript transformation. The Analyser aggregates Scanner results into categorised reports with narrative explanations.
+
+=== CLI Interface
+
+Four commands: `scan`, `patterns`, `legend`, `stats`. Supports RAW/FOLDED/GLYPHED view layers and plain/markdown/html output formats.
 
 == Technology Stack
 
 === Primary Technologies
 
-* *ReScript*: Core application logic (Types, Patterns, Glyphs, Narrative)
-* *Deno*: Runtime, package management, build scripts
-* *Nickel*: Type-safe configuration
+* *ReScript 12.2*: All application logic (Types, Glyphs, Narrative, Patterns, Scanner, Analyser, Output, CLI)
+* *Deno*: Runtime and package management
 
 === Language Policy
 
@@ -119,7 +143,6 @@ Per Hyperpolymath Standard:
 |ReScript |TypeScript
 |Deno |Node.js/npm/bun
 |justfile |Makefile
-|Nickel |YAML/JSON for config
 |===
 
 == Project Structure
@@ -127,22 +150,34 @@ Per Hyperpolymath Standard:
 [source]
 ----
 rescript-evangeliser/
-├── src/                  # ReScript source files
-│   ├── Types.res         # Core type definitions
-│   ├── Glyphs.res        # Makaton-inspired symbol system
-│   ├── Narrative.res     # Encouraging message generation
-│   └── Patterns.res      # 50+ transformation patterns
-├── scripts/              # Deno build/validation scripts
-│   ├── build.ts
-│   ├── clean.ts
-│   └── validate.ts
-├── docs/                 # Documentation
-├── rescript.json         # ReScript configuration
-├── deno.json             # Deno configuration
-├── justfile              # Task orchestration
-├── Mustfile.epx          # Deployment contract
-├── config.ncl            # Nickel configuration
-└── CLAUDE.md             # AI context
++-- src/                    # ReScript source files
+|   +-- Types.res           # Core type definitions
+|   +-- Glyphs.res          # Makaton-inspired symbol system
+|   +-- Narrative.res       # Encouraging message generation
+|   +-- Patterns.res        # 52 transformation patterns
+|   +-- Scanner.res         # Pattern detection engine
+|   +-- Scanner.resi        # Scanner interface
+|   +-- Analyser.res        # Result aggregation and reporting
+|   +-- Analyser.resi       # Analyser interface
+|   +-- Output.res          # RAW/FOLDED/GLYPHED formatting
+|   +-- Cli.res             # CLI entry point (scan/patterns/legend/stats)
++-- test/                   # Test suites
+|   +-- Types_test.res      # Types tests
+|   +-- Glyphs_test.res     # Glyphs tests
+|   +-- Narrative_test.res  # Narrative tests
+|   +-- Patterns_test.res   # Patterns tests
+|   +-- Scanner_test.res    # Scanner tests
+|   +-- Analyser_test.res   # Analyser tests
+|   +-- run_all.js          # Deno test runner
++-- bin/
+|   +-- evangeliser.js      # CLI entry point
++-- docs/                   # Documentation
++-- rescript.json           # ReScript configuration
++-- deno.json               # Deno configuration
++-- justfile                # Task orchestration
++-- Mustfile.epx            # Deployment contract
++-- config.ncl              # Nickel configuration
++-- CLAUDE.md               # AI context
 ----
 
 == Philosophy: "Celebrate Good, Minimize Bad, Show Better"
@@ -158,24 +193,24 @@ We *never* shame developers. Instead:
 Example narrative:
 
 ____
-✨ *You were close!* You're already thinking about null and undefined - that's great defensive programming!
+*You were close!* You're already thinking about null and undefined - that's great defensive programming!
 
-💭 The only small thing is that it's easy to forget one of these checks somewhere...
+The only small thing is that it's easy to forget one of these checks somewhere...
 
-🚀 *Even better:* ReScript's Option type makes null safety automatic - you literally can't forget a check!
+*Even better:* ReScript's Option type makes null safety automatic - you literally can't forget a check!
 ____
 
 == RSR Compliance
 
 This project follows the *Rhodium Standard Repository (RSR)* framework:
 
-* ✅ *Type Safety*: ReScript with full type inference
-* ✅ *Offline First*: Zero network dependencies
-* ✅ *Complete Documentation*: See link:docs/[docs/]
-* ✅ *Security First*: See link:SECURITY.md[SECURITY.md]
-* ✅ *Open Governance*: TPCF Perimeter 3 (Community Sandbox)
-* ✅ *Dual Licensed*: MIT + Palimpsest v0.8
-* ✅ *Build Reproducibility*: Nix flake included
+* *Type Safety*: ReScript 12.2 with 100% sound type system
+* *Offline First*: Zero network dependencies
+* *Complete Documentation*: See link:docs/[docs/]
+* *Security First*: See link:SECURITY.md[SECURITY.md]
+* *Open Governance*: TPCF Perimeter 3 (Community Sandbox)
+* *Licensed*: PMPL-1.0-or-later
+* *Build Reproducibility*: Deno + justfile
 
 See link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] for full details.
 
@@ -200,23 +235,24 @@ We welcome contributions! See link:CONTRIBUTING.md[CONTRIBUTING.md] for:
 
 This is a *TPCF Perimeter 3* project - all contributions are welcome!
 
-== Licenses
+== License
 
-This project is *dual-licensed*:
+// SPDX-License-Identifier: PMPL-1.0-or-later
 
-1. *Palimpsest-MPL-1.0 License* - See link:LICENSE-MIT.txt[LICENSE-MIT.txt]
-2. *Palimpsest License v0.8* - See link:LICENSE-PALIMPSEST.txt[LICENSE-PALIMPSEST.txt]
+This project is licensed under the *Palimpsest License (PMPL-1.0-or-later)*.
 
-You may use this software under *either* license.
+See link:LICENSE[LICENSE] for the full license text.
 
 == Roadmap
 
-* [x] Phase 1: Core patterns (15 patterns)
-* [ ] Phase 2: Full pattern library (50+ patterns)
-* [ ] Phase 3: VS Code extension
-* [ ] Phase 4: WYSIWYG editor
-* [ ] Phase 5: Tutorial system with gamification
-* [ ] Phase 6: Multi-language support (Elm, Haskell, PureScript)
+* [x] Phase 1: Foundation -- Types, Glyphs, Narrative modules
+* [x] Phase 2: Pattern library -- 52 patterns across 21 categories
+* [x] Phase 3: Detection engine -- Scanner + Analyser
+* [x] Phase 4: Testing -- 38 tests across 6 suites
+* [x] Phase 5: CLI interface -- scan/patterns/legend/stats commands
+* [ ] Phase 6: VS Code extension / PanLL integration
+
+See link:ROADMAP.adoc[ROADMAP.adoc] for detailed milestones.
 
 == Citations
 
@@ -224,18 +260,18 @@ If you use this project in academic research, please cite:
 
 [source,bibtex]
 ----
-@software{rescript_evangeliser_2024,
+@software{rescript_evangeliser_2026,
   title = {ReScript Evangeliser: Progressive Code Transformation for Learning},
-  author = {Hyperpolymath},
-  year = {2024},
-  url = {https://github.com/Hyperpolymath/rescript-evangeliser},
+  author = {Jonathan D.A. Jewell},
+  year = {2026},
+  url = {https://github.com/hyperpolymath/rescript-evangeliser},
   note = {RSR Bronze-compliant, TPCF Perimeter 3}
 }
 ----
 
 == Community
 
-* *GitHub*: https://github.com/Hyperpolymath/rescript-evangeliser/issues[Issues] and https://github.com/Hyperpolymath/rescript-evangeliser/discussions[Discussions]
+* *GitHub*: https://github.com/hyperpolymath/rescript-evangeliser/issues[Issues] and https://github.com/hyperpolymath/rescript-evangeliser/discussions[Discussions]
 * *ReScript Forum*: https://forum.rescript-lang.org[forum.rescript-lang.org]
 * *Discord*: ReScript community server
 
@@ -248,13 +284,16 @@ If you use this project in academic research, please cite:
 
 == Status
 
-* *Version*: 0.1.0 (Alpha)
+* *Version*: 0.5.0 (Alpha)
 * *RSR Level*: Bronze
-* *Build Status*: ✅ Passing
-* *Last Updated*: 2024-12-26
+* *Patterns*: 52 across 21 categories
+* *Tests*: 38 across 6 suites
+* *CI Workflows*: 12, all passing
+* *Build Status*: Passing
+* *Last Updated*: 2026-03-13
 
 ---
 
-Made with ❤️ for JavaScript developers curious about ReScript.
+Made with care for JavaScript developers curious about ReScript.
 
-*Remember*: You were close! 🚀
+*Remember*: You were close!
