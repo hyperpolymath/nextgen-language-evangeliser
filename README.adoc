@@ -1,4 +1,4 @@
-= ReScript Evangeliser
+= ReScript (and AffineScript) Evangeliser
 
 image:https://img.shields.io/badge/RSR-Bronze-CD7F32[RSR Bronze,link=docs/RSR_COMPLIANCE.md]
 image:https://img.shields.io/badge/License-PMPL--1.0--or--later-blue.svg[License: PMPL-1.0-or-later,link="https://github.com/hyperpolymath/palimpsest-license"]
