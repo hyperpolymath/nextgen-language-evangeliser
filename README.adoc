@@ -23,6 +23,11 @@ ReScript Evangeliser is a library and toolkit that helps JavaScript developers l
 
 *We never shame developers.* Your JavaScript is good! ReScript just makes some things even better.
 
+For those TypeScript, CoffeScript, and other developer looking for true type safety, we hope to give the opportunity to extend your code to touch those areas that TypeScript cannot reach (for reasons of history and path dependency). We hope the Evangeliser can work out ways to plug the gaps that can't be filled and, in that very rare case, to encourage you to make the leap to a life embracing TypeScriptm.
+
+And for those [UTTER NUTCASES] who want to try to explore the power and overcome the complexity of learning AffineScript, well, we have started to embrace that project too -
+A work in progress, but we would love to invite you to join us in building the next generation of type safe, affine coding.
+
 == Quick Start
 
 === Prerequisites
