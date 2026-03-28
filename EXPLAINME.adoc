@@ -2,7 +2,7 @@
 
 = ReScript Evangeliser — EXPLAINME
 
-== "Celebrate good, minimize bad, show better"
+== Celebrate good, minimize bad, show better
 
 [quote, README.adoc]
 ____
