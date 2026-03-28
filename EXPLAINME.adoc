@@ -1,27 +1,41 @@
-= Rescript Evangeliser — EXPLAINME
-:toc: preamble
+// SPDX-License-Identifier: PMPL-1.0-or-later
 
-This document backs up the claims made in README with evidence and rationale.
+= ReScript Evangeliser — EXPLAINME
 
-== What Is This?
+== "Celebrate good, minimize bad, show better"
 
-Rescript Evangeliser is a hyperpolymath project. See README.adoc for usage.
+[quote, README.adoc]
+____
+A pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers ReScript through progressive code transformation, without shame.
+____
 
-== Why These Choices?
+The evangeliser detects 52 patterns across 21 categories in existing JavaScript, then shows equivalent ReScript with encouragement rather than criticism.
+It uses progressive disclosure (RAW, FOLDED, GLYPHED views) and Makaton-inspired glyphs to make concepts visual.
+See link:README.adoc[] for the full pattern catalogue and quick start.
 
-=== Language
+**Caveat:** The pattern count (52) is the implemented library size in `Patterns.res`. AffineScript evangelism support is early-stage.
 
-The language(s) used in this project were chosen per the hyperpolymath
-language policy (see CLAUDE.md for the full list of allowed/banned languages).
+=== Evidence
 
-=== Architecture
+[cols="2,3", options="header"]
+|===
+| Path | Proves
 
-Architecture decisions are documented in `.machine_readable/` checkpoint files.
+| `src/Patterns.res`
+| 52 pattern definitions across 21 categories -- the core detection library
 
-== Alternatives Considered
+| `src/Analyser.res` / `src/Analyser.resi`
+| Pattern analysis engine with public interface -- takes JS, returns matches
 
-(To be filled in as the project matures.)
+| `src/Narrative.res`
+| "You were close!" encouragement narratives -- the shame-free philosophy in code
 
-== Proof of Claims
+| `src/Glyphs.res`
+| Makaton-inspired glyph system -- visual concept representation
 
-(Link formal verification results from the `proven` repo where applicable.)
+| `src/Scanner.res` / `src/Scanner.resi`
+| File/project scanner with public interface -- batch analysis entry point
+
+| `src/Output.res`
+| Three output formats (plain, markdown, html) -- progressive disclosure
+|===
