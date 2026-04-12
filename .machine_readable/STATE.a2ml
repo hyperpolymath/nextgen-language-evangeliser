@@ -1,0 +1,26 @@
+;; SPDX-License-Identifier: PMPL-1.0-or-later
+;; STATE.a2ml — rescript-evangeliser project state
+;; Migrated from root STATE.scm on 2026-04-12
+
+(state
+  (metadata
+    (version "1.0.0")
+    (project "rescript-evangeliser")
+    (last-updated "2026-01-10"))
+
+  (current-position
+    (phase "Active Development")
+    (overall-completion 50)
+    (working-features ()))
+
+  (route-to-mvp
+    (milestones
+      (v1.0
+        (items "Initial setup" "Core functionality")
+        (status "in-progress"))))
+
+  (blockers-and-issues ())
+
+  (critical-next-actions ())
+
+  (session-history ()))

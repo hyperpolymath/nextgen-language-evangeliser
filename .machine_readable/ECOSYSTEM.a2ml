@@ -1,0 +1,19 @@
+;; SPDX-License-Identifier: PMPL-1.0-or-later
+;; ECOSYSTEM.a2ml — rescript-evangeliser ecosystem position
+;; Migrated from root ECOSYSTEM.scm on 2026-04-12
+
+(ecosystem
+  (version "1.0")
+  (name "rescript-evangeliser")
+  (type "project")
+  (purpose "ReScript evangelism — educational materials, examples, and tools for adopting ReScript")
+
+  (position-in-ecosystem
+    (role "component")
+    (layer "application")
+    (description "Advocacy and resource hub for ReScript language adoption within hyperpolymath estate"))
+
+  (related-projects ())
+
+  (what-this-is "Educational materials, worked examples, and advocacy tools for the ReScript language")
+  (what-this-is-not ()))
