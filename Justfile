@@ -8,6 +8,8 @@
 # - Use ReScript, not TypeScript
 
 # List all available recipes
+import? "contractile.just"
+
 default:
     @just --list
 

@@ -1,51 +1,21 @@
-# SPDX-License-Identifier: MPL-2.0-or-later
-name: npm/bun Blocker
+# SPDX-License-Identifier: PMPL-1.0-or-later
+name: NPM/Bun Blocker
 on: [push, pull_request]
+
+permissions:
+  contents: read
+
 jobs:
   check:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Check for npm/bun usage in new files
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Block npm/bun
         run: |
-          # Check for new bun.lockb files
-          NEW_BUN=$(git diff --name-only --diff-filter=A HEAD~1 2>/dev/null | grep -E 'bun\.lockb$' || true)
-
-          # Check for npm scripts calling npm/bun in new or modified files
-          NPM_CALLS=$(git diff HEAD~1 2>/dev/null | grep -E '^\+.*(npm|bun)\s+(run|install|start|test|build)' | grep -v '#' || true)
-
-          ERRORS=""
-
-          if [ -n "$NEW_BUN" ]; then
-            ERRORS="${ERRORS}New bun.lockb detected. Use Deno instead.
-${NEW_BUN}
-"
-          fi
-
-          if [ -n "$NPM_CALLS" ]; then
-            ERRORS="${ERRORS}npm/bun commands in new code. Use Deno tasks instead.
-${NPM_CALLS}
-"
-          fi
-
-          if [ -n "$ERRORS" ]; then
-            echo -e "$ERRORS"
-            echo ""
-            echo "Per language policy, use Deno instead of npm/bun for:"
-            echo "  - Package management: deno.json imports"
-            echo "  - Task running: deno task <name>"
-            echo "  - Scripts: deno run script.ts"
+          if [ -f "package-lock.json" ] || [ -f "bun.lockb" ] || [ -f ".npmrc" ]; then
+            echo "❌ npm/bun artifacts detected. Use Deno instead."
             exit 1
           fi
-
-          echo "Deno policy enforced (no new npm/bun usage)"
-
-      - name: Verify deno.json exists
-        run: |
-          if [ ! -f "deno.json" ]; then
-            echo "Warning: deno.json not found"
-            echo "Consider adding deno.json for Deno configuration"
-          else
-            echo "deno.json found"
-          fi
+          echo "✅ No npm/bun violations"
