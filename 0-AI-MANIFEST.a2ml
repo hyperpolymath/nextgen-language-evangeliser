@@ -4,7 +4,7 @@
 
 ## WHAT IS THIS?
 
-This is the AI manifest for **[YOUR-REPO-NAME]**. It declares:
+This is the AI manifest for **nextgen-languages-evangeliser**. It declares:
 - Canonical file locations (where things MUST be, and nowhere else)
 - Critical invariants (rules that must NEVER be violated)
 - Repository structure and organization
@@ -92,7 +92,7 @@ Entry points:
 This repo follows the **Dual-Track** architecture:
 
 ```
-[YOUR-REPO-NAME]/
+nextgen-languages-evangeliser/
 ├── 0-AI-MANIFEST.a2ml         # THIS FILE (start here)
 ├── README.adoc                 # High-level pitch — excitement and awe (Rich Human)
 ├── EXPLAINME.adoc              # Developer deep-dive — how it works (Rich Nerd)

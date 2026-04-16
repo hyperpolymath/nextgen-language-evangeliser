@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
-// CLI: Entry point for the rescript-evangeliser command-line tool
+// CLI: Entry point for the nextgen-languages-evangeliser command-line tool
 // Usage: evangeliser scan <file.js> | patterns | legend
 
 open Types
@@ -17,6 +17,7 @@ type cliOptions = {
   format: string,
   difficulty: option<difficultyLevel>,
   view: viewLayer,
+  target: targetLang,
 }
 
 let parseArgs = (args: array<string>): cliOptions => {
@@ -28,6 +29,7 @@ let parseArgs = (args: array<string>): cliOptions => {
   let format = ref("plain")
   let difficulty = ref(None)
   let view = ref(RAW)
+  let target = ref(flagshipTarget)
 
   userArgs->Array.forEachWithIndex((_arg, idx) => {
     let arg = userArgs->Array.getUnsafe(idx)
@@ -52,6 +54,15 @@ let parseArgs = (args: array<string>): cliOptions => {
       | Some("glyphed") => view := GLYPHED
       | _ => ()
       }
+    | "--target" =>
+      switch userArgs->Array.get(idx + 1) {
+      | Some(t) =>
+        switch stringToTargetLang(t) {
+        | Some(lang) => target := lang
+        | None => () // unknown target: keep default (flagship)
+        }
+      | None => ()
+      }
     | _ =>
       // First non-flag arg after command is the file
       if idx > 0 && !(String.startsWith(arg, "--")) {
@@ -71,11 +82,12 @@ let parseArgs = (args: array<string>): cliOptions => {
     format: format.contents,
     difficulty: difficulty.contents,
     view: view.contents,
+    target: target.contents,
   }
 }
 
 let showHelp = (): string => {
-  `ReScript Evangeliser - "Celebrate good, minimize bad, show better"
+  `Nextgen Languages Evangeliser - "Celebrate good, minimize bad, show better"
 
 Usage:
   evangeliser scan <file.js>   Scan a JavaScript file for improvable patterns
@@ -88,10 +100,17 @@ Options:
   --format plain|markdown|html  Output format (default: plain)
   --difficulty beginner|intermediate|advanced  Filter patterns by difficulty
   --view raw|folded|glyphed     View layer (default: raw)
+  --target affinescript|rescript|rust|gleam|zig
+                                Target language for transformations
+                                (default: affinescript — the flagship target).
+                                Patterns that have not yet been ported to the
+                                requested target fall back to their first
+                                available example with a note.
 
 Examples:
   evangeliser scan app.js
   evangeliser scan utils.js --format markdown --view folded
+  evangeliser scan app.js --target rescript
   evangeliser patterns --difficulty beginner
 `
 }
@@ -108,6 +127,21 @@ let showStats = (): string => {
   stats.byCategory->Dict.toArray->Array.forEach(((key, count)) => {
     lines := lines.contents ++ `  ${key}: ${Int.toString(count)}\n`
   })
+
+  // Also count patterns per target, so users can see coverage at a glance.
+  let byTarget = Dict.make()
+  Patterns.patternLibrary->Array.forEach(p => {
+    p.targets->Array.forEach(t => {
+      let key = targetLangLabel(t.language)
+      let current = byTarget->Dict.get(key)->Option.getOr(0)
+      byTarget->Dict.set(key, current + 1)
+    })
+  })
+  lines := lines.contents ++ `\nBy target (patterns supplying that target):\n`
+  byTarget->Dict.toArray->Array.forEach(((key, count)) => {
+    lines := lines.contents ++ `  ${key}: ${Int.toString(count)}\n`
+  })
+
   lines.contents
 }
 
@@ -127,7 +161,7 @@ let run = (): unit => {
           let filtered = Patterns.getPatternsByDifficulty(diff)
           Analyser.analyseWithPatterns(code, filtered)
         }
-        Output.format(result, opts.view, opts.format)
+        Output.format(result, opts.view, opts.format, opts.target)
       } catch {
       | JsExn(e) =>
         let msg = e->JsExn.message->Option.getOr("Unknown error")

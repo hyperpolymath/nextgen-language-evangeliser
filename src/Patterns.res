@@ -1,10 +1,16 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
-// Pattern Library for ReScript Evangeliser
-// 50+ transformation patterns from JavaScript/TypeScript to ReScript
+// Pattern Library for Nextgen Languages Evangeliser
+// Multi-target transformation patterns from JavaScript/TypeScript to AffineScript (flagship) / ReScript (legacy)
 
 open Types
 
-// Helper to create pattern with glyphs
+// Helper to create a pattern with glyphs.
+//
+// Phase 1b note: the `~rescriptExample` parameter is preserved so all 52
+// existing call-sites compile unchanged. It is wrapped internally into
+// the new multi-target `targets` field as a single ReScript entry.
+// Patterns authored in Phase 2 onward will call `makePatternMultiTarget`
+// (below) to supply per-target examples including the flagship AffineScript.
 let makePattern = (
   ~id,
   ~name,
@@ -29,7 +35,45 @@ let makePattern = (
     jsPattern,
     confidence,
     jsExample,
-    rescriptExample,
+    targets: [{language: ReScript, code: rescriptExample}],
+    narrative,
+    glyphs: Glyphs.getGlyphsForPattern(category),
+    tags,
+    relatedPatterns,
+    learningObjectives,
+    commonMistakes,
+    bestPractices,
+  }
+}
+
+// Multi-target pattern constructor — use this for new (Phase 2+) patterns
+// that supply AffineScript (flagship) alongside ReScript (or any other
+// target language).
+let makePatternMultiTarget = (
+  ~id,
+  ~name,
+  ~category,
+  ~difficulty,
+  ~jsPattern,
+  ~confidence,
+  ~jsExample,
+  ~targets,
+  ~narrative,
+  ~tags,
+  ~relatedPatterns,
+  ~learningObjectives,
+  ~commonMistakes,
+  ~bestPractices,
+): pattern => {
+  {
+    id,
+    name,
+    category,
+    difficulty,
+    jsPattern,
+    confidence,
+    jsExample,
+    targets,
     narrative,
     glyphs: Glyphs.getGlyphsForPattern(category),
     tags,

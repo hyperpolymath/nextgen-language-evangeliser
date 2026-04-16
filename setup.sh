@@ -1,12 +1,12 @@
 #!/bin/sh
 # SPDX-License-Identifier: PMPL-1.0-or-later
-# setup.sh — Universal setup script for rescript-evangeliser
+# setup.sh — Universal setup script for nextgen-languages-evangeliser
 #
 # Detects your shell, platform, and installs prerequisites.
 # Then hands off to `just setup` for project-specific configuration.
 #
 # Usage:
-#   curl -fsSL https://raw.githubusercontent.com/hyperpolymath/rescript-evangeliser/main/setup.sh | sh
+#   curl -fsSL https://raw.githubusercontent.com/hyperpolymath/nextgen-languages-evangeliser/main/setup.sh | sh
 #   # or after cloning:
 #   ./setup.sh
 #
@@ -167,7 +167,7 @@ install_just() {
 
 # ── Main ──
 main() {
-    printf "%s=== rescript-evangeliser Setup ===%s\n\n" "$BOLD" "$RESET"
+    printf "%s=== nextgen-languages-evangeliser Setup ===%s\n\n" "$BOLD" "$RESET"
 
     # Detect environment
     SHELL_NAME=$(detect_shell)
@@ -198,8 +198,8 @@ main() {
     # Step 2: Check if we're in the repo directory
     if [ ! -f "Justfile" ] && [ ! -f "justfile" ]; then
         warn "Not in a repo directory (no Justfile found)"
-        info "Clone first: git clone https://github.com/hyperpolymath/rescript-evangeliser.git"
-        info "Then: cd rescript-evangeliser && ./setup.sh"
+        info "Clone first: git clone https://github.com/hyperpolymath/nextgen-languages-evangeliser.git"
+        info "Then: cd nextgen-languages-evangeliser && ./setup.sh"
         exit 1
     fi
 

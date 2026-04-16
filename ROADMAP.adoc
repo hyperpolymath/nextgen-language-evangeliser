@@ -1,22 +1,62 @@
 // SPDX-License-Identifier: MPL-2.0-or-later
-= Rescript Evangeliser Roadmap
+= Nextgen Languages Evangeliser — Roadmap
 
 == Current Status
 
-Initial development phase.
+Migration from *ReScript Evangeliser* to *Nextgen Languages Evangeliser* — Phase 1 in progress.
 
-== Milestones
+See link:CLAUDE.md[CLAUDE.md] and link:README.adoc[README.adoc] for project overview.
 
-=== v0.1.0 - Foundation
-* [ ] Core functionality
-* [ ] Basic documentation
-* [ ] CI/CD pipeline
+== Migration Phases
 
-=== v1.0.0 - Stable Release
-* [ ] Full feature set
-* [ ] Comprehensive tests
-* [ ] Production ready
+=== Phase 0 — Decide
+* [x] Pick pivot strategy: Option A (content rewrite, not mechanical translation)
+* [x] Commit to multilanguage future (flagship AffineScript, legacy ReScript, more to follow)
+* [x] Rename repo: `rescript-evangeliser` -> `nextgen-languages-evangeliser`
+* [x] Verify AffineScript toolchain buildable today (OCaml 5.1+, Dune 3.14+)
+* [x] Note: typed-wasm is a separate repo (downstream of AffineScript)
+
+=== Phase 1 — Rebrand + generalise engine
+* [-] Rebrand docs, metadata, contractiles, config files
+* [ ] Generalise `src/Types.res` for multi-target pattern representation
+* [ ] Thread multi-target through Narrative / Output / Analyser / CLI
+* [ ] Convert `src/Patterns.res` to multi-target shape (ReScript + AffineScript stub)
+* [ ] Update tests
+* [ ] Host language stays ReScript throughout
+
+=== Phase 2 — Pattern catalogue pivot
+* [ ] Design AffineScript-first catalogue around affine/linear safety concerns:
+  ** Use-after-free analogs (stale closures, detached refs)
+  ** Double-cleanup / double-free analogs
+  ** Accidental aliasing of owned state
+  ** Missing `using`/disposal, leaky listeners/timers
+  ** Resource sharing across async boundaries
+* [ ] Target ~12 curated patterns initially (depth over breadth)
+* [ ] Demote ReScript catalogue to legacy support
+* [ ] Preserve "You were close!" narrative voice
+
+=== Phase 3 — Host language port (gated on toolchain)
+* [ ] End-to-end "hello world -> typed-wasm -> WASM" proof-of-life
+* [ ] Port `src/` ReScript -> AffineScript module-by-module:
+  Types, Glyphs, Narrative, Scanner, Analyser, Output, Cli, Patterns (last)
+* [ ] Port `test/` in lockstep
+
+=== Phase 4 — Policy perimeter flip
+* [ ] Extend `ts-blocker.yml` to also reject new `.res` files outside `legacy/`
+* [ ] Add `affinescript-linter.yml` workflow
+* [ ] `justfile` recipe names stable, invocations swapped
+* [ ] Retire `rescript.json` (or demote to legacy)
+
+=== Phase 5 — Policy text + additional targets
+* [ ] `.claude/CLAUDE.md`: formalise V-in-ecosystem-only carveout
+* [ ] Zig as canonical FFI (no code change — already true per manifest)
+* [ ] Additional target backends: Rust, Gleam, Zig
 
 == Future Directions
 
-_To be determined based on community feedback._
+After Phase 5, the project becomes a general-purpose evangelisation platform for nextgen typed languages, with:
+
+* A shared engine (Scanner, Analyser, Output, Narrative) target-agnostic
+* Per-target catalogues authored by language advocates
+* Glyph system treated as a lingua franca across targets
+* Citation-stable URL via GitHub redirect from legacy `rescript-evangeliser` slug

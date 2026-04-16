@@ -1,19 +1,24 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
 
-= ReScript Evangeliser — EXPLAINME
+= Nextgen Languages Evangeliser — EXPLAINME
 
 == Celebrate good, minimize bad, show better
 
 [quote, README.adoc]
 ____
-A pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers ReScript through progressive code transformation, without shame.
+A pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers next-generation type-safe languages through progressive code transformation, without shame.
 ____
 
-The evangeliser detects 52 patterns across 21 categories in existing JavaScript, then shows equivalent ReScript with encouragement rather than criticism.
+The evangeliser detects patterns in existing JavaScript amenable to transformation, then shows equivalent code in one or more target languages — with encouragement rather than criticism.
 It uses progressive disclosure (RAW, FOLDED, GLYPHED views) and Makaton-inspired glyphs to make concepts visual.
 See link:README.adoc[] for the full pattern catalogue and quick start.
 
-**Caveat:** The pattern count (52) is the implemented library size in `Patterns.res`. AffineScript evangelism support is early-stage.
+**Current state:** this repo is the successor to *ReScript Evangeliser* and is mid-migration.
+The ReScript catalogue (originally 52 patterns across 21 categories) is preserved as a legacy target.
+Active pattern authorship has pivoted to *AffineScript*, focusing on affine/linear-safety concerns — use-after-free analogs, double-cleanup, aliasing of owned state, missing disposal.
+See link:ROADMAP.adoc[] for migration phases.
+
+**Caveat:** During Phases 1–2 the host language of this toolkit is still ReScript; Phase 3 ports it to AffineScript once the AffineScript → typed-wasm → WASM toolchain is stable enough to carry 2,400+ LOC of production code.
 
 === Evidence
 
@@ -22,20 +27,23 @@ See link:README.adoc[] for the full pattern catalogue and quick start.
 | Path | Proves
 
 | `src/Patterns.res`
-| 52 pattern definitions across 21 categories -- the core detection library
+| Multi-target pattern library — ReScript (legacy) and AffineScript (flagship) transformations, plus slots for future targets
 
 | `src/Analyser.res` / `src/Analyser.resi`
-| Pattern analysis engine with public interface -- takes JS, returns matches
+| Pattern analysis engine with public interface — takes JS, returns matches (target-aware)
 
 | `src/Narrative.res`
-| "You were close!" encouragement narratives -- the shame-free philosophy in code
+| "You were close!" encouragement narratives, per target — the shame-free philosophy in code
 
 | `src/Glyphs.res`
-| Makaton-inspired glyph system -- visual concept representation
+| Makaton-inspired glyph system — visual concept representation (target-agnostic)
 
 | `src/Scanner.res` / `src/Scanner.resi`
-| File/project scanner with public interface -- batch analysis entry point
+| File/project scanner with public interface — batch analysis entry point
 
 | `src/Output.res`
-| Three output formats (plain, markdown, html) -- progressive disclosure
+| Three output formats (plain, markdown, html) and three view layers (RAW, FOLDED, GLYPHED), per target
+
+| `src/Cli.res`
+| CLI entry point: `scan`, `patterns`, `legend`, `stats` with `--target` selection
 |===

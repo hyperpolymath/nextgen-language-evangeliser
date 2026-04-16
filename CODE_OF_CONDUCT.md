@@ -221,7 +221,7 @@ This Code of Conduct is a **living document** and may be updated based on commun
 For questions about this Code of Conduct:
 
 - **Maintainers**: See [MAINTAINERS.md](MAINTAINERS.md)
-- **GitHub Discussions**: [Community forum](https://github.com/Hyperpolymath/rescript-evangeliser/discussions)
+- **GitHub Discussions**: [Community forum](https://github.com/Hyperpolymath/nextgen-languages-evangeliser/discussions)
 
 ---
 

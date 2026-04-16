@@ -1,4 +1,4 @@
-# TEST-NEEDS.md — rescript-evangeliser
+# TEST-NEEDS.md — nextgen-languages-evangeliser
 
 ## CRG Grade: C — ACHIEVED 2026-04-04
 
@@ -28,5 +28,5 @@
 ## Run Tests
 
 ```bash
-cd /var/mnt/eclipse/repos/rescript-evangeliser && rescript build && npm test
+cd /var/mnt/eclipse/repos/nextgen-languages-evangeliser && rescript build && npm test
 ```

@@ -3,20 +3,26 @@
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath)
 
 @abstract:
-Declared intent and purpose for Rescript Evangeliser.
+Declared intent and purpose for Nextgen Languages Evangeliser (formerly Rescript Evangeliser).
 @end
 
 ## Purpose
 
-Rescript Evangeliser — // SPDX-License-Identifier: PMPL-1.0-or-later
+Nextgen Languages Evangeliser — a multi-target pattern detection engine, CLI, and educational
+toolkit that teaches JavaScript developers next-generation type-safe languages through progressive
+code transformation, without shame. Flagship target: AffineScript. Legacy target: ReScript.
+// SPDX-License-Identifier: PMPL-1.0-or-later
 
 ## Anti-Purpose
 
 This project is NOT:
 - A fork or wrapper around another tool
 - A monorepo (unless explicitly structured as one)
+- A compiler, type-checker, or language-server (those live in target-language repos)
+- A TypeScript advocacy tool (TS is the thing we move people off, not toward)
 
 ## If In Doubt
 
 If you are unsure whether a change is in scope, ask.
-Sensitive areas: ABI definitions, license headers, CI workflows.
+Sensitive areas: ABI definitions, license headers, CI workflows, target-language
+invariants (e.g. ReScript pattern catalogue is legacy-frozen; AffineScript catalogue is flagship and active).

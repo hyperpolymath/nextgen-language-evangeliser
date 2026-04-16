@@ -171,7 +171,7 @@ jobs:
     - name: Upload VSIX artifact
       uses: actions/upload-artifact@v3
       with:
-        name: rescript-evangeliser-vsix
+        name: nextgen-languages-evangeliser-vsix
         path: extension/*.vsix
 
   performance:

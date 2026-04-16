@@ -2,57 +2,73 @@
 
 ## Project Overview
 
-**ReScript Evangeliser** is a project dedicated to promoting and advocating for the ReScript programming language. ReScript is a robustly typed language that compiles to efficient and human-readable JavaScript.
+**Nextgen Languages Evangeliser** is a pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers next-generation type-safe languages through progressive code transformation — without shame.
+
+**Flagship target:** AffineScript (affine/linear type system, borrow checking, quantity checking, WASM backend).
+
+**Supported targets:** AffineScript (flagship), ReScript (legacy), with more to follow (Rust, Gleam, Zig being the likely next additions).
+
+This project is the successor to *ReScript Evangeliser*. The ReScript pattern library is preserved as a legacy target; active pattern authorship now centres on affine/linear safety concerns teachable from idiomatic JavaScript.
 
 ## Project Purpose
 
 This repository serves as a resource hub for:
-- Educational materials about ReScript
-- Example projects and code snippets
-- Tools and utilities to help developers adopt ReScript
-- Community content to evangelize ReScript's benefits
+- Educational materials about next-generation type-safe languages (AffineScript first)
+- Pattern catalogues showing equivalent transformations from JavaScript to target languages
+- Tools that detect amenable patterns in existing JS and encourage adoption
+- Community content that evangelises type-safe coding without shaming incumbent code
 
 ## Technology Stack
 
 ### Core Technologies
-- **ReScript**: Primary application code - compiles to JS, type-safe
-- **Deno**: Runtime & package management - replaces Node/npm/bun
-- **Nickel**: Configuration language - type-safe config
+- **AffineScript** — flagship target language (teaching subject)
+- **typed-wasm** — separate repo; AffineScript's downstream codegen layer (AffineScript → typed-wasm → WASM)
+- **ReScript** — current host application language (during Phase 1/2 of migration), legacy target
+- **Deno** — runtime & package management (replaces Node/npm/bun)
+- **Nickel** — configuration language
+- **Zig** — FFI bridge (canonical, per `0-AI-MANIFEST.a2ml`)
 
 ### Language Policy (Hyperpolymath Standard)
 
 **ALLOWED:**
-- ReScript (primary application code)
+- AffineScript (application code, once Phase 3 port completes)
+- ReScript (current application code; demoted to legacy target after Phase 3)
 - Deno (runtime & package management)
+- Zig (FFI, systems code)
 - Bash/POSIX Shell (scripts, automation)
-- JavaScript (only where ReScript cannot - minimal glue code)
+- JavaScript (only where ReScript/AffineScript cannot — minimal glue code)
 - Nickel (configuration)
 
 **BANNED:**
-- TypeScript (use ReScript)
+- TypeScript (use AffineScript or ReScript)
 - Node.js (use Deno)
 - npm/bun (use Deno)
 - Makefile (use justfile)
+- V (use Zig, except inside V-ecosystem-specific projects)
 
-### Key ReScript Features to Understand
-- **Type Safety**: 100% sound type system with excellent inference
-- **Fast Compilation**: Compiles to readable JavaScript in milliseconds
-- **JavaScript Interop**: Seamless integration with existing JavaScript code
-- **Functional Programming**: First-class support for functional patterns
-- **Pattern Matching**: Powerful pattern matching with exhaustiveness checking
+### Key Features to Evangelise
+
+Per target, the pitch differs. The engine is target-aware:
+
+- **AffineScript (flagship):** affine/linear types, use-at-most-once guarantees, borrow checking, quantity type theory, compile-time resource safety, WASM deployment.
+- **ReScript (legacy):** sound type inference, Option/Result, pattern matching, pipe operator, zero-cost JS interop.
 
 ## Project Structure
 
 ```
-rescript-evangeliser/
-├── src/              # ReScript source files (.res)
-│   ├── Types.res     # Core type definitions
-│   ├── Glyphs.res    # Makaton-inspired glyph system
-│   ├── Narrative.res # Encouraging narrative generation
-│   └── Patterns.res  # Pattern library (50+ patterns)
-├── scripts/          # Deno build/validation scripts
-├── docs/             # Documentation and guides
-├── rescript.json     # ReScript build configuration
+nextgen-languages-evangeliser/
+├── src/              # Application source (ReScript today, AffineScript post-Phase 3)
+│   ├── Types.res     # Core type model — multi-target pattern representation
+│   ├── Glyphs.res    # Makaton-inspired glyph system (target-agnostic)
+│   ├── Narrative.res # "You were close!" narrative generation (target-aware)
+│   ├── Patterns.res  # Pattern library (multi-target)
+│   ├── Scanner.res   # Regex pattern detection engine
+│   ├── Analyser.res  # Result aggregation and reporting
+│   ├── Output.res    # RAW/FOLDED/GLYPHED rendering (multi-target)
+│   └── Cli.res       # CLI entry point
+├── test/             # Test suites
+├── docs/             # Documentation
+├── rescript.json     # Host build config (current)
 ├── deno.json         # Deno configuration
 ├── justfile          # Task orchestration (NOT Makefile)
 ├── Mustfile.epx      # Deployment contract
@@ -62,26 +78,18 @@ rescript-evangeliser/
 ## Development Guidelines
 
 ### Code Style
-- Follow ReScript's official style guide
-- Use meaningful variable and function names
-- Prefer pattern matching over if/else when appropriate
+- Follow the host language's official style guide (ReScript today; AffineScript post-Phase 3)
+- Use meaningful names; prefer pattern matching over if/else
 - Leverage the type system to make invalid states unrepresentable
 - Write interface files (.resi) for public APIs
 - Add SPDX license headers to all source files
 
 ### Best Practices
-1. **Type-First Design**: Design types before implementation
-2. **Immutability**: Prefer immutable data structures
-3. **Pure Functions**: Write pure functions when possible
-4. **Documentation**: Document complex type definitions and public APIs
-5. **Error Handling**: Use Result and Option types instead of exceptions
-
-### ReScript-Specific Patterns
-- Use `@react.component` for React components
-- Leverage pipe operator (`->`) for data transformations
-- Use labeled arguments for better API clarity
-- Prefer records over tuples for structured data
-- Use variants for state machines and tagged unions
+1. **Type-First Design** — Design types before implementation
+2. **Immutability** — Prefer immutable data structures
+3. **Pure Functions** — Write pure functions when possible
+4. **Documentation** — Document complex type definitions and public APIs
+5. **Error Handling** — Use Result and Option types (not exceptions)
 
 ## Common Commands
 
@@ -111,61 +119,21 @@ just fmt
 just validate-rsr
 ```
 
-## Working with ReScript
-
-### Module System
-- Each .res file is automatically a module
-- Modules are capitalized (filename.res becomes Filename module)
-- Use .resi files to define module interfaces
-- Modules can be nested using module bindings
-
-### JavaScript Interop
-- Use `@module` for importing JS modules
-- Use `@val` for accessing global values
-- Use `@send` for calling JS methods
-- Raw JS can be embedded with `%%raw()`
-
-### Type Definitions
-- External JavaScript libraries need ReScript bindings
-- Create bindings in separate files (e.g., `ExternalLib.res`)
-- Consider contributing bindings to @rescript community packages
-
 ## Build System
 
 This project uses:
 - **Deno**: For build scripts and task running
 - **justfile**: For task orchestration (NOT Makefile)
-- **ReScript**: Uses its own compiler (rescript/bsb)
-
-### Key Configuration Files
-
-**rescript.json**
-```json
-{
-  "name": "rescript-evangeliser",
-  "sources": ["src"],
-  "package-specs": { "module": "es6", "in-source": true },
-  "suffix": ".res.js",
-  "uncurried": true
-}
-```
-
-**deno.json**
-```json
-{
-  "tasks": {
-    "build": "deno run -A scripts/build.ts",
-    "validate": "deno run -A scripts/validate.ts"
-  }
-}
-```
+- **ReScript**: Current host compiler (bsb)
+- **AffineScript**: Planned host compiler post-Phase 3 (OCaml 5.1+, Dune 3.14+; emits typed-wasm IR, which compiles to WASM)
 
 ## Dependencies
 
 ### Runtime
 - Deno (latest stable)
-- ReScript 11+
+- ReScript 12.2+ (current host)
 - @rescript/core
+- AffineScript compiler (planned, Phase 3+)
 
 ### Package Management
 - **Primary**: Guix (guix.scm)
@@ -174,53 +142,64 @@ This project uses:
 
 ## Evangelism Goals
 
-1. **Demonstrate Value**: Show concrete benefits of ReScript
-2. **Lower Barriers**: Make adoption as easy as possible
-3. **Share Success Stories**: Document real-world wins
-4. **Build Community**: Foster a welcoming environment
-5. **Create Resources**: Provide learning materials and tools
+1. **Demonstrate Value** — Show concrete benefits of each supported target
+2. **Lower Barriers** — Make adoption as easy as possible
+3. **Share Success Stories** — Document real-world wins
+4. **Build Community** — Foster a welcoming environment
+5. **Create Resources** — Provide learning materials and tools
 
 ## Philosophy: "Celebrate Good, Minimize Bad, Show Better"
 
 We **never** shame developers. Instead:
 
-1. **Celebrate**: Recognize what their JavaScript does well
-2. **Minimize**: Gently acknowledge minor limitations
-3. **Better**: Show how ReScript enhances the pattern
-4. **Safety**: Explain type-level guarantees
-5. **Example**: Provide concrete, encouraging examples
+1. **Celebrate** — Recognize what their JavaScript does well
+2. **Minimize** — Gently acknowledge minor limitations
+3. **Better** — Show how the target language enhances the pattern
+4. **Safety** — Explain type-level (and affine/linear) guarantees
+5. **Example** — Provide concrete, encouraging examples
+
+## Migration Status (ReScript → AffineScript)
+
+This repo is mid-migration from ReScript Evangeliser to Nextgen Languages Evangeliser. Phases:
+
+- **Phase 0** ✅ — Decide (option A content rewrite, multilang future, rename repo, toolchain verified)
+- **Phase 1** 🚧 — Rebrand + generalise engine for multi-target (host stays ReScript)
+- **Phase 2** — Pattern catalogue pivot: affine/linear-safety-focused AffineScript patterns
+- **Phase 3** — Host language port ReScript → AffineScript (gated on toolchain WASM maturity)
+- **Phase 4** — Policy perimeter flip (ts-blocker extended, affinescript linter added)
+- **Phase 5** — Zig/V policy text formalisation
 
 ## Resources
 
-### Official Documentation
+### AffineScript
+- Compiler: https://github.com/hyperpolymath/affinescript
+- Toolchain: OCaml 5.1+, Dune 3.14+
+- Downstream codegen: typed-wasm (separate repo) → WebAssembly
+
+### ReScript (legacy target)
 - [ReScript Documentation](https://rescript-lang.org/docs)
 - [ReScript Forum](https://forum.rescript-lang.org)
 - [ReScript GitHub](https://github.com/rescript-lang)
-
-### Community
-- ReScript Discord
-- Twitter: @rescriptlang
-- ReScript Blog
 
 ## Notes for Claude
 
 When working on this project:
 - Prioritize type safety and correctness
-- Suggest idiomatic ReScript patterns
-- Consider JavaScript interop implications
+- Suggest idiomatic patterns for whichever target is being discussed
+- Treat AffineScript as the flagship target; ReScript as a well-supported legacy target
+- When adding patterns, lead with the AffineScript transformation and keep ReScript as secondary
 - Help maintain clear documentation
 - Encourage best practices in evangelism materials
-- Focus on making ReScript accessible to newcomers
-- Highlight ReScript's unique advantages over TypeScript/JavaScript
 - **Use Deno, not npm/bun**
 - **Use justfile, not Makefile**
-- **Use ReScript, not TypeScript**
+- **Use Zig for FFI, not V (except inside V-ecosystem projects)**
+- **Source host language: ReScript during Phases 1-2, AffineScript from Phase 3 onward**
 - Add SPDX license headers to new source files
 
 ## Project Philosophy
 
-**Make ReScript Approachable**: The goal is to help developers discover and adopt ReScript by:
-- Showing practical examples
+**Make next-generation languages approachable**: The goal is to help developers discover and adopt affine/linear type systems and other nextgen features by:
+- Showing practical examples from code they already write
 - Addressing common concerns
 - Demonstrating real benefits
 - Providing migration paths

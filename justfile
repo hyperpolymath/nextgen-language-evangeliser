@@ -1,4 +1,4 @@
-# justfile for ReScript Evangeliser
+# justfile for Nextgen Languages Evangeliser
 # https://github.com/casey/just
 # SPDX-License-Identifier: PMPL-1.0-or-later
 #

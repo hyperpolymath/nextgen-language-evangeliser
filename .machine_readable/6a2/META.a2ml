@@ -1,7 +1,8 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
-# META.a2ml — Rescript Evangeliser meta-level information
+# META.a2ml — Nextgen Languages Evangeliser meta-level information
+# Renamed from Rescript Evangeliser on 2026-04-16
 [metadata]
 version = "1.0.0"
 last-updated = "2026-04-11"

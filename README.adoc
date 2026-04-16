@@ -1,4 +1,4 @@
-= ReScript (and AffineScript) Evangeliser
+= Nextgen Languages Evangeliser
 
 image:https://img.shields.io/badge/RSR-Bronze-CD7F32[RSR Bronze,link=docs/RSR_COMPLIANCE.md]
 image:https://img.shields.io/badge/License-PMPL--1.0--or--later-blue.svg[License: PMPL-1.0-or-later,link="https://github.com/hyperpolymath/palimpsest-license"]
@@ -6,47 +6,57 @@ image:https://img.shields.io/badge/License-PMPL--1.0--or--later-blue.svg[License
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
 image:[TPCF: Perimeter 3,link=docs/TPCF.md]
-image:[ReScript First]
+image:[AffineScript First]
 image:https://img.shields.io/badge/Deno-Runtime-000000.svg[Deno Runtime]
 
-> *Celebrate good, minimize bad, show better* -- A pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers ReScript through progressive code transformation, without shame.
+> *Celebrate good, minimize bad, show better* -- A pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers next-generation type-safe languages through progressive code transformation, without shame.
+
+NOTE: This project is the successor to *ReScript Evangeliser*. The ReScript catalogue is preserved as a legacy target while we pivot the flagship to *AffineScript*. See link:ROADMAP.adoc[ROADMAP.adoc] for migration phases.
 
 == What is This?
 
-ReScript Evangeliser is a library and toolkit that helps JavaScript developers learn ReScript by:
+Nextgen Languages Evangeliser is a library and toolkit that helps JavaScript developers learn affine/linear-typed and other next-generation languages by:
 
-* *Detecting patterns* in existing JS code (52 patterns across 21 categories)
-* *Showing transformations* to equivalent ReScript code
+* *Detecting patterns* in existing JS code amenable to transformation
+* *Showing transformations* to equivalent code in each supported target
 * *Explaining with encouragement* using the "You were close!" philosophy
 * *Visualizing concepts* with Makaton-inspired glyphs
 * *Progressive disclosure* through 3 view layers (RAW -> FOLDED -> GLYPHED) and 3 output formats (plain, markdown, html)
 
-*We never shame developers.* Your JavaScript is good! ReScript just makes some things even better.
+*We never shame developers.* Your JavaScript is good! Next-generation type systems just make some things even safer.
 
-For those TypeScript, CoffeScript, and other developer looking for true type safety, we hope to give the opportunity to extend your code to touch those areas that TypeScript cannot reach (for reasons of history and path dependency). We hope the Evangeliser can work out ways to plug the gaps that can't be filled and, in that very rare case, to encourage you to make the leap to a life embracing TypeScriptm.
+=== Supported targets
 
-And for those [UTTER NUTCASES] who want to try to explore the power and overcome the complexity of learning AffineScript, well, we have started to embrace that project too -
-A work in progress, but we would love to invite you to join us in building the next generation of type safe, affine coding.
+[cols="2,2,3"]
+|===
+|*Target* |*Status* |*Pitch*
+
+|*AffineScript* |Flagship |Affine/linear types, borrow checking, quantity type theory; emits typed-wasm (separate repo) -> WebAssembly
+|*ReScript* |Legacy (maintained) |Sound inference, Option/Result, pattern matching, JS interop
+|*Rust, Gleam, Zig, …* |Planned |Roadmap — see link:ROADMAP.adoc[ROADMAP.adoc]
+|===
+
+For those on TypeScript or CoffeeScript: we want to help you reach type-safety guarantees the incumbent tooling cannot give you — without making you throw your existing code away. For the adventurous who want to explore AffineScript's affine/linear guarantees from scratch, this repo is aimed at you.
 
 == Quick Start
 
 === Prerequisites
 
 * https://deno.land[Deno] (latest stable)
-* https://rescript-lang.org[ReScript] 12.2+
+* https://rescript-lang.org[ReScript] 12.2+ (current host language; see link:ROADMAP.adoc[ROADMAP.adoc] for AffineScript port)
 
 === Installation
 
 [source,bash]
 ----
 # Clone the repository
-git clone https://github.com/hyperpolymath/rescript-evangeliser.git
-cd rescript-evangeliser
+git clone https://github.com/hyperpolymath/nextgen-languages-evangeliser.git
+cd nextgen-languages-evangeliser
 
 # Install dependencies
 just install
 
-# Build ReScript sources
+# Build host sources
 just build
 ----
 
@@ -57,7 +67,7 @@ just build
 # Scan a JavaScript file for patterns
 deno run --allow-read bin/evangeliser.js scan <file.js>
 
-# List all 52 available patterns
+# List all available patterns (with their target languages)
 deno run --allow-read bin/evangeliser.js patterns
 
 # Show the glyph legend
@@ -71,7 +81,7 @@ deno run --allow-read bin/evangeliser.js stats
 
 [source,bash]
 ----
-# Run tests (38 tests across 6 suites)
+# Run tests
 just test
 
 # Watch mode for development
@@ -86,22 +96,25 @@ just ci
 
 == Features
 
-=== 52 Transformation Patterns
+=== Multi-target Pattern Catalogue
 
-Categories include:
+Each pattern carries example transformations for multiple target languages. Categories include:
 
-* Null safety -> Option types
-* Async/await -> Promise types
-* Try/catch -> Result types
-* Array operations -> Pipe operator
-* Conditionals -> Pattern matching
-* OOP -> Functional programming
-* Classes -> Records
-* And 14 more categories (21 total)
+* Null safety -> Option types (ReScript) / total functions (AffineScript)
+* Resource management -> affine ownership (AffineScript) / explicit disposal
+* Aliasing of mutable state -> borrow checking (AffineScript)
+* Async/await -> Promise types / effect systems
+* Try/catch -> Result types / typed error channels
+* Array operations -> pipe operator / iterator patterns
+* Conditionals -> pattern matching / total case analysis
+* OOP -> functional programming / records over classes
+* ...and more
+
+The AffineScript catalogue prioritises affine/linear-safety patterns: use-after-free analogs, double-cleanup, detached references, accidental aliasing of owned state, missing `using`/disposal, and similar concerns that the type system can make unrepresentable.
 
 === Three View Layers
 
-1. *RAW*: Side-by-side JavaScript/ReScript comparison with narrative
+1. *RAW*: Side-by-side JavaScript/target comparison with narrative
 2. *FOLDED*: Organized sections with collapsible regions
 3. *GLYPHED*: Symbol-annotated code showing semantic meaning
 
@@ -120,22 +133,25 @@ Visual symbols that transcend syntax across 21 glyph categories:
 * Flow (pipe operator)
 * Branch (pattern matching)
 * Crystal (immutability)
-* And 16 more
+* Seal (affine ownership)
+* ...and more
 
 === Scanner + Analyser Detection Engine
 
-Regex-based pattern matching engine that scans JavaScript source files and identifies patterns amenable to ReScript transformation. The Analyser aggregates Scanner results into categorised reports with narrative explanations.
+Regex-based pattern matching engine that scans JavaScript source files and identifies patterns amenable to transformation. The Analyser aggregates Scanner results into categorised reports with narrative explanations per-target.
 
 === CLI Interface
 
-Four commands: `scan`, `patterns`, `legend`, `stats`. Supports RAW/FOLDED/GLYPHED view layers and plain/markdown/html output formats.
+Four commands: `scan`, `patterns`, `legend`, `stats`. Supports RAW/FOLDED/GLYPHED view layers, plain/markdown/html output formats, and `--target` selection.
 
 == Technology Stack
 
 === Primary Technologies
 
-* *ReScript 12.2*: All application logic (Types, Glyphs, Narrative, Patterns, Scanner, Analyser, Output, CLI)
+* *ReScript 12.2* (current host): All application logic (Types, Glyphs, Narrative, Patterns, Scanner, Analyser, Output, CLI)
+* *AffineScript* (planned host, Phase 3+): OCaml 5.1+ toolchain; emits typed-wasm IR (separate repo) -> WebAssembly
 * *Deno*: Runtime and package management
+* *Zig*: FFI layer (canonical per manifest)
 
 === Language Policy
 
@@ -145,39 +161,35 @@ Per Hyperpolymath Standard:
 |===
 |*Allowed* |*Banned*
 
-|ReScript |TypeScript
+|AffineScript, ReScript |TypeScript
 |Deno |Node.js/npm/bun
 |justfile |Makefile
+|Zig (FFI) |V (outside V ecosystem)
 |===
+
+See link:CLAUDE.md[CLAUDE.md] and link:.claude/CLAUDE.md[.claude/CLAUDE.md] for the full policy.
 
 == Project Structure
 
 [source]
 ----
-rescript-evangeliser/
-+-- src/                    # ReScript source files
-|   +-- Types.res           # Core type definitions
+nextgen-languages-evangeliser/
++-- src/                    # Host source (ReScript today, AffineScript post-Phase 3)
+|   +-- Types.res           # Core type model (multi-target)
 |   +-- Glyphs.res          # Makaton-inspired symbol system
-|   +-- Narrative.res       # Encouraging message generation
-|   +-- Patterns.res        # 52 transformation patterns
+|   +-- Narrative.res       # Encouraging message generation (target-aware)
+|   +-- Patterns.res        # Multi-target transformation patterns
 |   +-- Scanner.res         # Pattern detection engine
 |   +-- Scanner.resi        # Scanner interface
 |   +-- Analyser.res        # Result aggregation and reporting
 |   +-- Analyser.resi       # Analyser interface
-|   +-- Output.res          # RAW/FOLDED/GLYPHED formatting
+|   +-- Output.res          # RAW/FOLDED/GLYPHED formatting (multi-target)
 |   +-- Cli.res             # CLI entry point (scan/patterns/legend/stats)
 +-- test/                   # Test suites
-|   +-- Types_test.res      # Types tests
-|   +-- Glyphs_test.res     # Glyphs tests
-|   +-- Narrative_test.res  # Narrative tests
-|   +-- Patterns_test.res   # Patterns tests
-|   +-- Scanner_test.res    # Scanner tests
-|   +-- Analyser_test.res   # Analyser tests
-|   +-- run_all.js          # Deno test runner
 +-- bin/
 |   +-- evangeliser.js      # CLI entry point
 +-- docs/                   # Documentation
-+-- rescript.json           # ReScript configuration
++-- rescript.json           # Host (ReScript) configuration
 +-- deno.json               # Deno configuration
 +-- justfile                # Task orchestration
 +-- Mustfile.epx            # Deployment contract
@@ -191,11 +203,11 @@ We *never* shame developers. Instead:
 
 1. *Celebrate*: Recognize what their JavaScript does well
 2. *Minimize*: Gently acknowledge minor limitations
-3. *Better*: Show how ReScript enhances the pattern
-4. *Safety*: Explain type-level guarantees
+3. *Better*: Show how the target language enhances the pattern
+4. *Safety*: Explain type-level (and affine/linear) guarantees
 5. *Example*: Provide concrete, encouraging examples
 
-Example narrative:
+Example narrative (ReScript target):
 
 ____
 *You were close!* You're already thinking about null and undefined - that's great defensive programming!
@@ -205,11 +217,21 @@ The only small thing is that it's easy to forget one of these checks somewhere..
 *Even better:* ReScript's Option type makes null safety automatic - you literally can't forget a check!
 ____
 
+Example narrative (AffineScript target):
+
+____
+*You were close!* You're already disposing of the resource in a `finally` block - that's careful code!
+
+The only small thing is that if another closure still holds a reference, the dispose runs but the alias lives on...
+
+*Even better:* AffineScript's affine types make the resource vanish from the type environment at disposal - no alias can survive, no double-free can compile.
+____
+
 == RSR Compliance
 
 This project follows the *Rhodium Standard Repository (RSR)* framework:
 
-* *Type Safety*: ReScript 12.2 with 100% sound type system
+* *Type Safety*: ReScript 12.2 host today; AffineScript (affine/linear types, borrow checking) post-Phase 3
 * *Offline First*: Zero network dependencies
 * *Complete Documentation*: See link:docs/[docs/]
 * *Security First*: See link:SECURITY.md[SECURITY.md]
@@ -227,6 +249,7 @@ See link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] for full details.
 * link:CHANGELOG.md[CHANGELOG.md] - Version history
 * link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] - RSR framework compliance
 * link:docs/TPCF.md[TPCF.md] - Contribution framework
+* link:ROADMAP.adoc[ROADMAP.adoc] - Migration phases & future targets
 
 == Contributing
 
@@ -234,7 +257,7 @@ We welcome contributions! See link:CONTRIBUTING.md[CONTRIBUTING.md] for:
 
 * Code of Conduct
 * Development setup
-* Pattern authoring guide
+* Pattern authoring guide (multi-target)
 * Testing requirements
 * Pull request process
 
@@ -250,12 +273,12 @@ See link:LICENSE[LICENSE] for the full license text.
 
 == Roadmap
 
-* [x] Phase 1: Foundation -- Types, Glyphs, Narrative modules
-* [x] Phase 2: Pattern library -- 52 patterns across 21 categories
-* [x] Phase 3: Detection engine -- Scanner + Analyser
-* [x] Phase 4: Testing -- 38 tests across 6 suites
-* [x] Phase 5: CLI interface -- scan/patterns/legend/stats commands
-* [ ] Phase 6: VS Code extension / PanLL integration
+* [x] Phase 0: Decide migration path (option A content rewrite, multilanguage future)
+* [-] Phase 1: Rebrand + generalise engine for multi-target (host stays ReScript)
+* [ ] Phase 2: Pattern catalogue pivot — affine/linear-safety-focused AffineScript patterns
+* [ ] Phase 3: Host language port (ReScript -> AffineScript), gated on toolchain WASM maturity
+* [ ] Phase 4: Policy perimeter flip (ts-blocker extended, affinescript linter added)
+* [ ] Phase 5: Zig/V policy formalisation; additional targets (Rust, Gleam)
 
 See link:ROADMAP.adoc[ROADMAP.adoc] for detailed milestones.
 
@@ -265,40 +288,41 @@ If you use this project in academic research, please cite:
 
 [source,bibtex]
 ----
-@software{rescript_evangeliser_2026,
-  title = {ReScript Evangeliser: Progressive Code Transformation for Learning},
+@software{nextgen_languages_evangeliser_2026,
+  title = {Nextgen Languages Evangeliser: Progressive Code Transformation for Affine/Linear-Typed Languages},
   author = {Jonathan D.A. Jewell},
   year = {2026},
-  url = {https://github.com/hyperpolymath/rescript-evangeliser},
-  note = {RSR Bronze-compliant, TPCF Perimeter 3}
+  url = {https://github.com/hyperpolymath/nextgen-languages-evangeliser},
+  note = {Successor to rescript-evangeliser; RSR Bronze-compliant, TPCF Perimeter 3}
 }
 ----
 
 == Community
 
-* *GitHub*: https://github.com/hyperpolymath/rescript-evangeliser/issues[Issues] and https://github.com/hyperpolymath/rescript-evangeliser/discussions[Discussions]
+* *GitHub*: https://github.com/hyperpolymath/nextgen-languages-evangeliser/issues[Issues] and https://github.com/hyperpolymath/nextgen-languages-evangeliser/discussions[Discussions]
+* *AffineScript*: https://github.com/hyperpolymath/affinescript[hyperpolymath/affinescript]
 * *ReScript Forum*: https://forum.rescript-lang.org[forum.rescript-lang.org]
-* *Discord*: ReScript community server
 
 == Acknowledgments
 
-* *ReScript Team*: For creating an amazing language
+* *AffineScript Team*: For the flagship target — affine/linear types, borrow checker, QTT
+* *ReScript Team*: For seeding this evangeliser's original catalogue and philosophy
 * *Makaton*: Inspiration for the glyph system
 * *Deno Team*: For the excellent runtime
 * *Contributors*: See link:.well-known/humans.txt[humans.txt]
 
 == Status
 
-* *Version*: 0.5.0 (Alpha)
+* *Version*: 0.6.0-alpha (migrating from rescript-evangeliser 0.5.x)
 * *RSR Level*: Bronze
-* *Patterns*: 52 across 21 categories
-* *Tests*: 38 across 6 suites
-* *CI Workflows*: 12, all passing
+* *Targets*: 2 active (AffineScript flagship, ReScript legacy), more planned
+* *Tests*: 38 across 6 suites (being updated for multi-target)
+* *CI Workflows*: 16, all passing
 * *Build Status*: Passing
-* *Last Updated*: 2026-03-13
+* *Last Updated*: 2026-04-16
 
 ---
 
-Made with care for JavaScript developers curious about ReScript.
+Made with care for JavaScript developers curious about next-generation languages.
 
 *Remember*: You were close!

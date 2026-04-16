@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
-// Narrative generation for ReScript Evangeliser
+// Narrative generation for Nextgen Languages Evangeliser
 // Philosophy: "Celebrate good, minimize bad, show better"
 // - NEVER shame developers
 // - ALWAYS celebrate what their JavaScript does well

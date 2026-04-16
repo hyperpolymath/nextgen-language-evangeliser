@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
-// Makaton-inspired glyph system for ReScript Evangeliser
+// Makaton-inspired glyph system for Nextgen Languages Evangeliser
 // Glyphs transcend syntax to show semantic meaning.
 
 open Types

@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
-# ECOSYSTEM.a2ml — Rescript Evangeliser ecosystem position
+# ECOSYSTEM.a2ml — Nextgen Languages Evangeliser ecosystem position
 [metadata]
 version = "1.0"
 last-updated = "2026-04-11"
 
 [project]
-name = "Rescript Evangeliser"
+name = "Nextgen Languages Evangeliser"
 purpose = "image:https://img.shields.io/badge/license-Palimpsest--MPL--1.0-purple.svg[Palim"
 role = "project"
 

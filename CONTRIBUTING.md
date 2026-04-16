@@ -1,6 +1,8 @@
-# Contributing to ReScript Evangeliser
+# Contributing to Nextgen Languages Evangeliser
 
 Thank you for your interest in contributing! 🎉
+
+> **Note:** This project is mid-migration from *ReScript Evangeliser* to *Nextgen Languages Evangeliser* (flagship target: AffineScript). Some sections below still reference the ReScript-centric dev setup — these will be updated through Phases 1–3. See `ROADMAP.adoc`.
 
 This project follows the **Compassionate Code Contribution Pledge (CCCP)** and **Tri-Perimeter Contribution Framework (TPCF) - Perimeter 3**.
 
@@ -27,8 +29,8 @@ Our contribution process mirrors our teaching philosophy:
 
 ```bash
 # Fork and clone
-git clone https://github.com/YOUR_USERNAME/rescript-evangeliser.git
-cd rescript-evangeliser/extension
+git clone https://github.com/YOUR_USERNAME/nextgen-languages-evangeliser.git
+cd nextgen-languages-evangeliser/extension
 
 # Install dependencies
 npm install
@@ -333,7 +335,7 @@ Contributors are recognized in:
 
 ## 🎯 Roadmap Priorities
 
-Current priorities (see [GitHub Projects](https://github.com/Hyperpolymath/rescript-evangeliser/projects)):
+Current priorities (see [GitHub Projects](https://github.com/Hyperpolymath/nextgen-languages-evangeliser/projects)):
 
 1. **High Priority**:
    - Expanding pattern library (50 → 100+ patterns)
@@ -437,6 +439,6 @@ You retain copyright of your contributions.
 
 ---
 
-**Thank you for contributing to ReScript Evangeliser!** 🚀
+**Thank you for contributing to Nextgen Languages Evangeliser!** 🚀
 
 Remember: You were close! We're here to help make it even better together. 💙

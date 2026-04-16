@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
 // Template: QUICKSTART-USER.adoc — 5-minute path to working software
-// Replace rescript-evangeliser, Rescript Evangeliser — See README.adoc for details., just run, Rescript Evangeliser started successfully. with actuals
-= rescript-evangeliser — Quick Start for Users
+// Replace nextgen-languages-evangeliser, Nextgen Languages Evangeliser — See README.adoc for details., just run, Nextgen Languages Evangeliser started successfully. with actuals
+= nextgen-languages-evangeliser — Quick Start for Users
 :toc:
 :toclevels: 2
 
-== What is rescript-evangeliser?
+== What is nextgen-languages-evangeliser?
 
-Rescript Evangeliser — See README.adoc for details.
+Nextgen Languages Evangeliser — See README.adoc for details.
 
 == Prerequisites
 
@@ -37,8 +37,8 @@ Before you begin, ensure you have:
 [source,bash]
 ----
 # Clone and set up
-git clone https://github.com/hyperpolymath/rescript-evangeliser.git
-cd rescript-evangeliser
+git clone https://github.com/hyperpolymath/nextgen-languages-evangeliser.git
+cd nextgen-languages-evangeliser
 just setup
 ----
 
@@ -61,7 +61,7 @@ just stapeln-run
 
 [source,bash]
 ----
-just install --portable --prefix=./rescript-evangeliser-portable
+just install --portable --prefix=./nextgen-languages-evangeliser-portable
 ----
 
 == First Run
@@ -75,7 +75,7 @@ Expected output:
 
 [source]
 ----
-Rescript Evangeliser started successfully.
+Nextgen Languages Evangeliser started successfully.
 ----
 
 == Self-Diagnostic
@@ -102,7 +102,7 @@ just heal
 * **In-app**: `just run --help`
 * **Guided tour**: `just tour`
 * **Report a problem**: `just help-me` (pre-fills diagnostic context)
-* **Wiki**: https://github.com/hyperpolymath/rescript-evangeliser/wiki
+* **Wiki**: https://github.com/hyperpolymath/nextgen-languages-evangeliser/wiki
 
 == Uninstall
 

@@ -1,5 +1,5 @@
 ; SPDX-License-Identifier: PMPL-1.0-or-later
-; TRUST.contractile — Trust boundaries for rescript-evangeliser
+; TRUST.contractile — Trust boundaries for nextgen-languages-evangeliser
 ; Defines what LLM/SLM agents are trusted to do without asking.
 ;
 ; Part of the contractile family: MUST, TRUST, DUST, INTENT, ADJUST
@@ -35,7 +35,7 @@
 
 (trust-contractile
   (version "1.0.0")
-  (repo "rescript-evangeliser")
+  (repo "nextgen-languages-evangeliser")
 
   (trust-level "maximal")  ; maximal | standard | restricted | minimal
 

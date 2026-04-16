@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
 // Template: QUICKSTART-MAINTAINER.adoc — packaging, deploying, and maintaining
-// Replace rescript-evangeliser, {{PACKAGE_NAME}}, {{DEPS}} with actuals
-= rescript-evangeliser — Quick Start for Platform Maintainers
+// Replace nextgen-languages-evangeliser, {{PACKAGE_NAME}}, {{DEPS}} with actuals
+= nextgen-languages-evangeliser — Quick Start for Platform Maintainers
 :toc:
 :toclevels: 2
 
 == Overview
 
-This guide covers packaging, deploying, and maintaining rescript-evangeliser for
+This guide covers packaging, deploying, and maintaining nextgen-languages-evangeliser for
 distribution on your platform.
 
 == Runtime Dependencies
@@ -18,8 +18,8 @@ distribution on your platform.
 
 [source,bash]
 ----
-git clone https://github.com/hyperpolymath/rescript-evangeliser.git
-cd rescript-evangeliser
+git clone https://github.com/hyperpolymath/nextgen-languages-evangeliser.git
+cd nextgen-languages-evangeliser
 just build-release
 ----
 
@@ -46,7 +46,7 @@ nix build
 [source,bash]
 ----
 just stapeln-export    # Generates Containerfile
-podman build -t rescript-evangeliser .
+podman build -t nextgen-languages-evangeliser .
 ----
 
 === Manual Package
@@ -125,5 +125,5 @@ Each instance has isolated config, data, and logs.
 
 == Reporting Issues
 
-* Upstream: https://github.com/hyperpolymath/rescript-evangeliser/issues
+* Upstream: https://github.com/hyperpolymath/nextgen-languages-evangeliser/issues
 * With diagnostic: `just help-me` (pre-fills context)

@@ -1,5 +1,5 @@
 {
-  description = "rescript-evangeliser - {project-description}";
+  description = "nextgen-languages-evangeliser - {project-description}";
 
   # *REMINDER: Update inputs with actual dependencies*
   inputs = {
@@ -47,7 +47,7 @@
           inherit buildInputs nativeBuildInputs;
 
           shellHook = ''
-            echo "🚀 rescript-evangeliser development environment"
+            echo "🚀 nextgen-languages-evangeliser development environment"
             echo "Language: rescript"
             echo ""
             echo "Available commands:"
@@ -65,7 +65,7 @@
 
         # Packages
         packages.default = pkgs.stdenv.mkDerivation {
-          pname = "rescript-evangeliser";
+          pname = "nextgen-languages-evangeliser";
           version = "0.1.0";
           src = ./.;
 
@@ -75,14 +75,14 @@
             # *REMINDER: Add build commands*
             # For Rust: cargo build --release
             # For Elixir: mix compile
-            # For Ada: gprbuild -P rescript-evangeliser.gpr -XMODE=release
+            # For Ada: gprbuild -P nextgen-languages-evangeliser.gpr -XMODE=release
           '';
 
           installPhase = ''
             mkdir -p $out/bin
             # *REMINDER: Add install commands*
-            # cp target/release/rescript-evangeliser $out/bin/  # Rust
-            # cp bin/rescript-evangeliser $out/bin/  # Ada
+            # cp target/release/nextgen-languages-evangeliser $out/bin/  # Rust
+            # cp bin/nextgen-languages-evangeliser $out/bin/  # Ada
           '';
 
           meta = with pkgs.lib; {
@@ -97,14 +97,14 @@
         # Apps
         apps.default = {
           type = "app";
-          program = "${self.packages.${system}.default}/bin/rescript-evangeliser";
+          program = "${self.packages.${system}.default}/bin/nextgen-languages-evangeliser";
         };
 
         # Checks (CI/CD integration)
         checks = {
           build = self.packages.${system}.default;
           # *REMINDER: Add test checks*
-          test = pkgs.runCommand "test-rescript-evangeliser" {
+          test = pkgs.runCommand "test-nextgen-languages-evangeliser" {
             buildInputs = [ self.packages.${system}.default ];
           } ''
             # Run tests here

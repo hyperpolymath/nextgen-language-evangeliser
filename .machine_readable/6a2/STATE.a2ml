@@ -1,16 +1,16 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
-# STATE.a2ml — Rescript Evangeliser project state
+# STATE.a2ml — Nextgen Languages Evangeliser project state
 [metadata]
-project = "rescript-evangeliser"
+project = "nextgen-languages-evangeliser"
 version = "1.0.0"
 last-updated = "2026-01-10T13:50:33+00:00"
 status = "active"
 session = "converted from scheme — 2026-04-11"
 
 [project-context]
-name = "Rescript Evangeliser"
+name = "Nextgen Languages Evangeliser"
 purpose = """"""
 completion-percentage = 50
 

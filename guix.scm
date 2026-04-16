@@ -1,5 +1,5 @@
 ; SPDX-License-Identifier: PMPL-1.0-or-later
-;; guix.scm — GNU Guix package definition for rescript-evangeliser
+;; guix.scm — GNU Guix package definition for nextgen-languages-evangeliser
 ;; Usage: guix shell -f guix.scm
 
 (use-modules (guix packages)
@@ -7,12 +7,12 @@
              (guix licenses))
 
 (package
-  (name "rescript-evangeliser")
+  (name "nextgen-languages-evangeliser")
   (version "0.1.0")
   (source #f)
   (build-system gnu-build-system)
-  (synopsis "rescript-evangeliser")
-  (description "rescript-evangeliser — part of the hyperpolymath ecosystem.")
-  (home-page "https://github.com/hyperpolymath/rescript-evangeliser")
+  (synopsis "nextgen-languages-evangeliser")
+  (description "nextgen-languages-evangeliser — part of the hyperpolymath ecosystem.")
+  (home-page "https://github.com/hyperpolymath/nextgen-languages-evangeliser")
   (license ((@@ (guix licenses) license) "PMPL-1.0-or-later"
              "https://github.com/hyperpolymath/palimpsest-license")))

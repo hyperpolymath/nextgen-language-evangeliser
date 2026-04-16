@@ -1,34 +1,41 @@
-= rescript-evangeliser - Citation Guide
+= nextgen-languages-evangeliser - Citation Guide
 :toc:
+
+NOTE: This project was renamed from `rescript-evangeliser` in 2026. Pre-rename citations remain valid via GitHub's auto-redirect from the old slug.
 
 == BibTeX
 
 [source,bibtex]
 ----
-@software{rescript-evangeliser_2025,
+@software{nextgen-languages-evangeliser_2026,
   author = {Polymath, Hyper},
-  title = {rescript-evangeliser},
-  year = {2025},
-  url = {https://github.com/hyperpolymath/rescript-evangeliser},
+  title = {nextgen-languages-evangeliser},
+  year = {2026},
+  url = {https://github.com/hyperpolymath/nextgen-languages-evangeliser},
+  note = {Successor to rescript-evangeliser (2025)},
   license = {PMPL-1.0-or-later}
 }
 ----
 
 == Harvard Style
 
-Polymath, H. (2025) _rescript-evangeliser_ [Computer software]. Available at: https://github.com/hyperpolymath/rescript-evangeliser
+Polymath, H. (2026) _nextgen-languages-evangeliser_ [Computer software]. Available at: https://github.com/hyperpolymath/nextgen-languages-evangeliser
 
 == OSCOLA
 
-Hyper Polymath, 'rescript-evangeliser' (2025) <https://github.com/hyperpolymath/rescript-evangeliser>
+Hyper Polymath, 'nextgen-languages-evangeliser' (2026) <https://github.com/hyperpolymath/nextgen-languages-evangeliser>
 
 == MLA
 
-Polymath, Hyper. "rescript-evangeliser." 2025, github.com/hyperpolymath/rescript-evangeliser.
+Polymath, Hyper. "nextgen-languages-evangeliser." 2026, github.com/hyperpolymath/nextgen-languages-evangeliser.
 
 == APA 7
 
-Polymath, H. (2025). _rescript-evangeliser_ [Computer software]. GitHub. https://github.com/hyperpolymath/rescript-evangeliser
+Polymath, H. (2026). _nextgen-languages-evangeliser_ [Computer software]. GitHub. https://github.com/hyperpolymath/nextgen-languages-evangeliser
+
+== Legacy Citations (pre-rename)
+
+If you cited `rescript-evangeliser` before the 2026 rename, those citations remain valid. The repository history is preserved and the old URL redirects.
 
 == See Also
 

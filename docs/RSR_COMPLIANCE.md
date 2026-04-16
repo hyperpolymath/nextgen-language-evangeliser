@@ -2,7 +2,7 @@
 
 ## Rhodium Standard Repository (RSR) Bronze Level
 
-**Project**: ReScript Evangeliser
+**Project**: Nextgen Languages Evangeliser
 **Version**: 0.1.0
 **Date**: 2024-11-22
 **Compliance Level**: Bronze ✅
@@ -11,7 +11,7 @@
 
 ## Executive Summary
 
-ReScript Evangeliser achieves **Bronze-level compliance** with the Rhodium Standard Repository (RSR) framework. This document details our compliance across all 11 categories.
+Nextgen Languages Evangeliser achieves **Bronze-level compliance** with the Rhodium Standard Repository (RSR) framework. This document details our compliance across all 11 categories.
 
 ## 1. Type Safety ✅
 
@@ -349,7 +349,7 @@ just compile
 **Questions about RSR compliance?**
 
 - See [MAINTAINERS.md](MAINTAINERS.md)
-- Open an issue: [GitHub Issues](https://github.com/Hyperpolymath/rescript-evangeliser/issues)
+- Open an issue: [GitHub Issues](https://github.com/Hyperpolymath/nextgen-languages-evangeliser/issues)
 - Security: [.well-known/security.txt](.well-known/security.txt)
 
 ---
