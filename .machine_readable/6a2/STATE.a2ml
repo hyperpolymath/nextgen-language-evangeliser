@@ -1,0 +1,38 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# STATE.a2ml — Rescript Evangeliser project state
+[metadata]
+project = "rescript-evangeliser"
+version = "1.0.0"
+last-updated = "2026-01-10T13:50:33+00:00"
+status = "active"
+session = "converted from scheme — 2026-04-11"
+
+[project-context]
+name = "Rescript Evangeliser"
+purpose = """"""
+completion-percentage = 50
+
+[position]
+phase = "Active Development"   # design | implementation | testing | maintenance | archived
+maturity = "experimental"  # experimental | alpha | beta | production | lts
+
+[route-to-mvp]
+milestones = [
+  # No milestones recorded
+]
+
+[blockers-and-issues]
+issues = [
+  # No blockers recorded
+]
+
+[critical-next-actions]
+actions = [
+  # No actions recorded
+]
+
+[maintenance-status]
+last-run-utc = "2026-01-10T13:50:33+00:00T00:00:00Z"
+last-result = "unknown"  # unknown | pass | warn | fail

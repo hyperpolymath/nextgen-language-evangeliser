@@ -10,7 +10,7 @@
   title = {rescript-evangeliser},
   year = {2025},
   url = {https://github.com/hyperpolymath/rescript-evangeliser},
-  license = {AGPL-3.0-or-later}
+  license = {PMPL-1.0-or-later}
 }
 ----
 
