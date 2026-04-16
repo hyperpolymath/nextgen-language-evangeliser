@@ -1,6 +1,6 @@
 # Maintainers
 
-This document lists the current maintainers of the ReScript Evangeliser project and describes their roles and responsibilities.
+This document lists the current maintainers of the Nextgen Languages Evangeliser project (formerly ReScript Evangeliser) and describes their roles and responsibilities.
 
 ## Current Maintainers
 

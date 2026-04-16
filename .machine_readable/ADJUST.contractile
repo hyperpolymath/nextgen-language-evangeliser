@@ -1,5 +1,5 @@
 ; SPDX-License-Identifier: PMPL-1.0-or-later
-; ADJUST.contractile — Accessibility invariants for rescript-evangeliser
+; ADJUST.contractile — Accessibility invariants for nextgen-languages-evangeliser
 ; "ADJUST" = Accessibility & Digital Justice for Universal Software & Technology
 ;
 ; Part of the contractile family: MUST, TRUST, DUST, INTENT, ADJUST
@@ -45,7 +45,7 @@
   (version "1.0.0")
   (full-name "Accessibility & Digital Justice for Universal Software & Technology")
   (standard "WCAG-2.2-AA")
-  (repo "rescript-evangeliser")
+  (repo "nextgen-languages-evangeliser")
 
   (invariants
     ; ── Visual ──

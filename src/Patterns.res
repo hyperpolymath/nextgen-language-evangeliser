@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
-// Pattern Library for ReScript Evangeliser
-// 50+ transformation patterns from JavaScript/TypeScript to ReScript
+// Pattern Library for Nextgen Languages Evangeliser
+// Multi-target transformation patterns from JavaScript/TypeScript to AffineScript (flagship) / ReScript (legacy)
 
 open Types
 

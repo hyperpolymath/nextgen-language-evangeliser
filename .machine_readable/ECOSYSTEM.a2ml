@@ -1,19 +1,27 @@
 ;; SPDX-License-Identifier: PMPL-1.0-or-later
-;; ECOSYSTEM.a2ml — rescript-evangeliser ecosystem position
+;; ECOSYSTEM.a2ml — nextgen-languages-evangeliser ecosystem position
 ;; Migrated from root ECOSYSTEM.scm on 2026-04-12
+;; Renamed from rescript-evangeliser on 2026-04-16
 
 (ecosystem
-  (version "1.0")
-  (name "rescript-evangeliser")
+  (version "1.1")
+  (name "nextgen-languages-evangeliser")
+  (predecessor "rescript-evangeliser")
   (type "project")
-  (purpose "ReScript evangelism — educational materials, examples, and tools for adopting ReScript")
+  (purpose "Nextgen typed-language evangelism — educational materials, examples, and tools for adopting AffineScript (flagship), ReScript (legacy), and future targets")
 
   (position-in-ecosystem
     (role "component")
     (layer "application")
-    (description "Advocacy and resource hub for ReScript language adoption within hyperpolymath estate"))
+    (description "Multi-target advocacy and resource hub for next-generation typed languages within the hyperpolymath estate"))
 
-  (related-projects ())
+  (related-projects
+    (flagship-target "hyperpolymath/affinescript")
+    (codegen-layer "hyperpolymath/typed-wasm")
+    (legacy-target "rescript-lang/rescript"))
 
-  (what-this-is "Educational materials, worked examples, and advocacy tools for the ReScript language")
-  (what-this-is-not ()))
+  (what-this-is "Educational materials, worked examples, and advocacy tools for affine/linear-typed and other next-generation languages (flagship: AffineScript)")
+  (what-this-is-not
+    "A compiler"
+    "A type-checker"
+    "A language-server (see affinescript repo for LSP)"))

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the ReScript Evangeliser project will be documented in this file.
+All notable changes to the Nextgen Languages Evangeliser project (formerly *ReScript Evangeliser*) will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Migration to **Nextgen Languages Evangeliser** — multi-target pattern catalogue
+- AffineScript added as flagship target (successor to ReScript as the teaching subject)
+- Roadmap with 6 migration phases (see `ROADMAP.adoc`)
+- Zig formalised as canonical FFI layer; V banned outside V-ecosystem work
 - ReScript source files (Types.res, Glyphs.res, Narrative.res, Patterns.res)
 - Deno configuration (deno.json) and build scripts
 - Mustfile.epx deployment contract
@@ -201,13 +205,13 @@ See [humans.txt](.well-known/humans.txt) for contributor recognition.
 - Watch this repository for releases
 - Subscribe to GitHub notifications
 - Follow announcements in GitHub Discussions
-- Check the [Releases page](https://github.com/Hyperpolymath/rescript-evangeliser/releases)
+- Check the [Releases page](https://github.com/Hyperpolymath/nextgen-languages-evangeliser/releases)
 
 ---
 
 **Questions about a release?**
 
-Ask in [GitHub Discussions](https://github.com/Hyperpolymath/rescript-evangeliser/discussions) or open an issue.
+Ask in [GitHub Discussions](https://github.com/Hyperpolymath/nextgen-languages-evangeliser/discussions) or open an issue.
 
-[Unreleased]: https://github.com/Hyperpolymath/rescript-evangeliser/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/Hyperpolymath/rescript-evangeliser/releases/tag/v0.1.0
+[Unreleased]: https://github.com/Hyperpolymath/nextgen-languages-evangeliser/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/Hyperpolymath/nextgen-languages-evangeliser/releases/tag/v0.1.0

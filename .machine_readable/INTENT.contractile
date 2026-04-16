@@ -1,5 +1,5 @@
 ; SPDX-License-Identifier: PMPL-1.0-or-later
-; INTENT.contractile — Purpose and scope for rescript-evangeliser
+; INTENT.contractile — Purpose and scope for nextgen-languages-evangeliser
 ; Helps LLM/SLM agents understand what this repo IS and IS NOT.
 ;
 ; Part of the contractile family: MUST, TRUST, DUST, INTENT, ADJUST
@@ -31,7 +31,7 @@
 
 (intent-contractile
   (version "1.0.0")
-  (repo "rescript-evangeliser")
+  (repo "nextgen-languages-evangeliser")
 
   ; === Purpose (what this repo IS) ===
   (purpose

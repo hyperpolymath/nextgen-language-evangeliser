@@ -1,11 +1,11 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
-# k9iser manifest for rescript-evangeliser
-# ReScript evangelism tool — Deno-based tooling to assist ReScript adoption and advocacy
+# k9iser manifest for nextgen-languages-evangeliser
+# Nextgen typed-language evangelism tool — Deno-based tooling to assist AffineScript/ReScript adoption and advocacy
 
 [project]
-name = "rescript-evangeliser"
+name = "nextgen-languages-evangeliser"
 safety_tier = "hunt"
 
 [[source]]

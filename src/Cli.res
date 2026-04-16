@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
-// CLI: Entry point for the rescript-evangeliser command-line tool
+// CLI: Entry point for the nextgen-languages-evangeliser command-line tool
 // Usage: evangeliser scan <file.js> | patterns | legend
 
 open Types
@@ -75,7 +75,7 @@ let parseArgs = (args: array<string>): cliOptions => {
 }
 
 let showHelp = (): string => {
-  `ReScript Evangeliser - "Celebrate good, minimize bad, show better"
+  `Nextgen Languages Evangeliser - "Celebrate good, minimize bad, show better"
 
 Usage:
   evangeliser scan <file.js>   Scan a JavaScript file for improvable patterns

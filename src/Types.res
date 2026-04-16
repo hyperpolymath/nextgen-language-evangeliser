@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
-// Core type definitions for ReScript Evangeliser
+// Core type definitions for Nextgen Languages Evangeliser
 // Philosophy: "Celebrate good, minimize bad, show better"
 
 type viewLayer = RAW | FOLDED | GLYPHED | WYSIWYG

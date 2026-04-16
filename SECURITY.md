@@ -2,7 +2,7 @@
 
 ## 🛡️ Security Philosophy
 
-Security is a **first-class concern** in ReScript Evangeliser. We follow a **10+ dimensional security model**:
+Security is a **first-class concern** in Nextgen Languages Evangeliser. We follow a **10+ dimensional security model**:
 
 1. **Input Validation** - All user input is validated and sanitized
 2. **Output Encoding** - Code transformations are safe from injection
@@ -75,7 +75,7 @@ Security issues include:
 └─────────────────────────────────────────┘
            ↓ (sandboxed parsing)
 ┌─────────────────────────────────────────┐
-│ ReScript Evangeliser Extension          │
+│ Nextgen Languages Evangeliser Extension          │
 │  ├─ AST Parser (Babel, sandboxed)       │
 │  ├─ Pattern Matcher (validated)         │
 │  ├─ Webview (Content Security Policy)   │
@@ -246,7 +246,7 @@ Security updates are released as soon as possible:
 - **Low**: Next regular release
 
 Subscribe to releases to stay informed:
-https://github.com/Hyperpolymath/rescript-evangeliser/releases
+https://github.com/Hyperpolymath/nextgen-languages-evangeliser/releases
 
 ## 📞 Contact
 

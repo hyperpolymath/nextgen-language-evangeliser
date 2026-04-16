@@ -1,8 +1,8 @@
 # Tri-Perimeter Contribution Framework (TPCF)
 
-## ReScript Evangeliser: Perimeter 3 (Community Sandbox)
+## Nextgen Languages Evangeliser: Perimeter 3 (Community Sandbox)
 
-**Project**: ReScript Evangeliser
+**Project**: Nextgen Languages Evangeliser
 **TPCF Level**: Perimeter 3
 **Governance**: Community-driven, fully open
 **Last Updated**: 2024-11-22
@@ -17,7 +17,7 @@ The **Tri-Perimeter Contribution Framework** defines three levels of contributio
 2. **Perimeter 2 (Stable)**: Reviewed contributions, production code
 3. **Perimeter 3 (Community Sandbox)**: Fully open, experimental, community-driven
 
-ReScript Evangeliser operates as **Perimeter 3** - a community sandbox with maximum openness.
+Nextgen Languages Evangeliser operates as **Perimeter 3** - a community sandbox with maximum openness.
 
 ---
 

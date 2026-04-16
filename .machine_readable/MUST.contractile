@@ -1,5 +1,5 @@
 ; SPDX-License-Identifier: PMPL-1.0-or-later
-; MUST.contractile — Baseline invariants for rescript-evangeliser
+; MUST.contractile — Baseline invariants for nextgen-languages-evangeliser
 ; These constraints MUST NOT be violated. K9 validators enforce them.
 ;
 ; Part of the contractile family: MUST, TRUST, DUST, INTENT, ADJUST
@@ -33,7 +33,7 @@
 
 (must-contractile
   (version "1.0.0")
-  (repo "rescript-evangeliser")
+  (repo "nextgen-languages-evangeliser")
 
   ; === Universal Invariants (apply to ALL repos) ===
 

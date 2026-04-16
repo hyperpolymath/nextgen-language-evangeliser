@@ -1,10 +1,10 @@
 ;; SPDX-License-Identifier: PMPL-1.0-or-later
-;; META.a2ml — rescript-evangeliser meta-information
+;; META.a2ml — nextgen-languages-evangeliser meta-information
 ;; Migrated from root META.scm on 2026-04-12
 
 (meta
   (version "1.0.0")
-  (project "rescript-evangeliser")
+  (project "nextgen-languages-evangeliser")
   (architecture-decisions ())
   (development-practices
     (code-style "standard")

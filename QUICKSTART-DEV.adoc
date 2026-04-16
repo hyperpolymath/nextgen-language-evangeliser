@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
 // Template: QUICKSTART-DEV.adoc — clone → build → test → PR
-// Replace rescript-evangeliser, {{BUILD_CMD}}, {{TEST_CMD}}, {{LANG_STACK}} with actuals
-= rescript-evangeliser — Quick Start for Developers
+// Replace nextgen-languages-evangeliser, {{BUILD_CMD}}, {{TEST_CMD}}, {{LANG_STACK}} with actuals
+= nextgen-languages-evangeliser — Quick Start for Developers
 :toc:
 :toclevels: 2
 
@@ -29,8 +29,8 @@ nix develop
 
 [source,bash]
 ----
-git clone https://github.com/hyperpolymath/rescript-evangeliser.git
-cd rescript-evangeliser
+git clone https://github.com/hyperpolymath/nextgen-languages-evangeliser.git
+cd nextgen-languages-evangeliser
 just setup-dev
 ----
 
@@ -52,7 +52,7 @@ just setup-dev
 
 [source]
 ----
-rescript-evangeliser/
+nextgen-languages-evangeliser/
 ├── src/                  # Source code
 ├── src/abi/              # Idris2 ABI definitions (if applicable)
 ├── ffi/zig/              # Zig FFI bridge (if applicable)
@@ -107,5 +107,5 @@ Or read `0-AI-MANIFEST.a2ml` and `.claude/CLAUDE.md` directly.
 == Get Help
 
 * **Architecture**: link:EXPLAINME.adoc[EXPLAINME.adoc]
-* **Wiki**: https://github.com/hyperpolymath/rescript-evangeliser/wiki
+* **Wiki**: https://github.com/hyperpolymath/nextgen-languages-evangeliser/wiki
 * **Report issue**: `just help-me`

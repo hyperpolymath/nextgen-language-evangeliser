@@ -1,4 +1,4 @@
-# justfile for ReScript Evangeliser
+# justfile for Nextgen Languages Evangeliser
 # https://github.com/casey/just
 # SPDX-License-Identifier: MIT OR Palimpsest-0.8
 #
@@ -194,7 +194,7 @@ help RECIPE:
 
 # Self-diagnostic — checks dependencies, permissions, paths
 doctor:
-    @echo "Running diagnostics for rescript-evangeliser..."
+    @echo "Running diagnostics for nextgen-languages-evangeliser..."
     @echo "Checking required tools..."
     @command -v just >/dev/null 2>&1 && echo "  [OK] just" || echo "  [FAIL] just not found"
     @command -v git >/dev/null 2>&1 && echo "  [OK] git" || echo "  [FAIL] git not found"
@@ -204,7 +204,7 @@ doctor:
 
 # Auto-repair common issues
 heal:
-    @echo "Attempting auto-repair for rescript-evangeliser..."
+    @echo "Attempting auto-repair for nextgen-languages-evangeliser..."
     @echo "Fixing permissions..."
     @find . -name "*.sh" -exec chmod +x {} \; 2>/dev/null || true
     @echo "Cleaning stale caches..."
@@ -213,7 +213,7 @@ heal:
 
 # Guided tour of key features
 tour:
-    @echo "=== rescript-evangeliser Tour ==="
+    @echo "=== nextgen-languages-evangeliser Tour ==="
     @echo ""
     @echo "1. Project structure:"
     @ls -la
@@ -228,12 +228,12 @@ tour:
 
 # Open feedback channel with diagnostic context
 help-me:
-    @echo "=== rescript-evangeliser Help ==="
+    @echo "=== nextgen-languages-evangeliser Help ==="
     @echo "Platform: $(uname -s) $(uname -m)"
     @echo "Shell: $SHELL"
     @echo ""
     @echo "To report an issue:"
-    @echo "  https://github.com/hyperpolymath/rescript-evangeliser/issues/new"
+    @echo "  https://github.com/hyperpolymath/nextgen-languages-evangeliser/issues/new"
     @echo ""
     @echo "Include the output of 'just doctor' in your report."
 

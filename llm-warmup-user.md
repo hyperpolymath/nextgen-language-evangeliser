@@ -1,6 +1,6 @@
-# LLM Warmup — rescript-evangeliser (User)
+# LLM Warmup — nextgen-languages-evangeliser (User)
 
-## What is rescript-evangeliser?
+## What is nextgen-languages-evangeliser?
 See README.adoc for overview.
 
 ## Key Commands

@@ -52,9 +52,9 @@ let formatRaw = (result: analysisResult, format: string): string => {
     "No patterns detected. Try pasting some JavaScript code!\n"
   } else {
     let header = switch format {
-    | "markdown" => "# ReScript Evangeliser - Analysis Results\n\n"
-    | "html" => "<h1>ReScript Evangeliser - Analysis Results</h1>\n"
-    | _ => bold("ReScript Evangeliser - Analysis Results") ++ "\n\n"
+    | "markdown" => "# Nextgen Languages Evangeliser - Analysis Results\n\n"
+    | "html" => "<h1>Nextgen Languages Evangeliser - Analysis Results</h1>\n"
+    | _ => bold("Nextgen Languages Evangeliser - Analysis Results") ++ "\n\n"
     }
 
     let summary = Analyser.summarise(result)
@@ -73,9 +73,9 @@ let formatFolded = (result: analysisResult, format: string): string => {
     "No patterns detected. Try pasting some JavaScript code!\n"
   } else {
     let header = switch format {
-    | "markdown" => "# ReScript Evangeliser - Analysis Results (Grouped)\n\n"
-    | "html" => "<h1>ReScript Evangeliser - Analysis Results (Grouped)</h1>\n"
-    | _ => bold("ReScript Evangeliser - Analysis Results (Grouped)") ++ "\n\n"
+    | "markdown" => "# Nextgen Languages Evangeliser - Analysis Results (Grouped)\n\n"
+    | "html" => "<h1>Nextgen Languages Evangeliser - Analysis Results (Grouped)</h1>\n"
+    | _ => bold("Nextgen Languages Evangeliser - Analysis Results (Grouped)") ++ "\n\n"
     }
 
     let summary = Analyser.summarise(result)
@@ -115,9 +115,9 @@ let formatGlyphed = (result: analysisResult, format: string): string => {
     "No patterns detected. Try pasting some JavaScript code!\n"
   } else {
     let header = switch format {
-    | "markdown" => "# ReScript Evangeliser - Glyph Overview\n\n"
-    | "html" => "<h1>ReScript Evangeliser - Glyph Overview</h1>\n"
-    | _ => bold("ReScript Evangeliser - Glyph Overview") ++ "\n\n"
+    | "markdown" => "# Nextgen Languages Evangeliser - Glyph Overview\n\n"
+    | "html" => "<h1>Nextgen Languages Evangeliser - Glyph Overview</h1>\n"
+    | _ => bold("Nextgen Languages Evangeliser - Glyph Overview") ++ "\n\n"
     }
 
     let uniquePatterns = Scanner.uniquePatterns(result.matches)

@@ -1,26 +1,42 @@
 ;; SPDX-License-Identifier: PMPL-1.0-or-later
-;; STATE.a2ml — rescript-evangeliser project state
+;; STATE.a2ml — nextgen-languages-evangeliser project state
 ;; Migrated from root STATE.scm on 2026-04-12
+;; Renamed from rescript-evangeliser on 2026-04-16
 
 (state
   (metadata
-    (version "1.0.0")
-    (project "rescript-evangeliser")
-    (last-updated "2026-01-10"))
+    (version "1.1.0")
+    (project "nextgen-languages-evangeliser")
+    (predecessor "rescript-evangeliser")
+    (last-updated "2026-04-16"))
 
   (current-position
-    (phase "Active Development")
-    (overall-completion 50)
-    (working-features ()))
+    (phase "Migration: Phase 1 — rebrand + engine generalisation")
+    (overall-completion 55)
+    (working-features
+      "ReScript target catalogue (52 patterns, 21 categories)"
+      "Scanner + Analyser detection engine"
+      "Narrative generation with 'You were close!' voice"
+      "Makaton-inspired glyph system"
+      "CLI: scan / patterns / legend / stats"
+      "RAW/FOLDED/GLYPHED view layers; plain/markdown/html outputs"))
 
   (route-to-mvp
     (milestones
-      (v1.0
-        (items "Initial setup" "Core functionality")
-        (status "in-progress"))))
+      (phase-0 (status "complete") (items "Decide pivot strategy" "Verify AffineScript toolchain"))
+      (phase-1 (status "in-progress") (items "Rebrand docs+metadata" "Generalise Types.res for multi-target"))
+      (phase-2 (status "pending") (items "Author AffineScript pattern catalogue (affine/linear safety)"))
+      (phase-3 (status "gated") (items "Host port ReScript -> AffineScript" "Gate: AffineScript->typed-wasm->WASM proof-of-life"))
+      (phase-4 (status "pending") (items "Policy perimeter flip" "ts-blocker + .res exception for legacy"))
+      (phase-5 (status "pending") (items "Additional targets: Rust, Gleam, Zig"))))
 
-  (blockers-and-issues ())
+  (blockers-and-issues
+    "AffineScript WASM codegen backend parity incomplete (Phase 3 gate)"
+    "GitHub repo rename still needs manual action by maintainer")
 
-  (critical-next-actions ())
+  (critical-next-actions
+    "Complete Phase 1a rebrand commit"
+    "Complete Phase 1b engine generalisation (Types.res -> multi-target)")
 
-  (session-history ()))
+  (session-history
+    (2026-04-16 "Phase 0 decisions locked; Phase 1 started; branch claude/migrate-to-affinescript-zig-U0iYX")))

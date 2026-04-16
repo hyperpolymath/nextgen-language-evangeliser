@@ -1,13 +1,13 @@
 # SPDX-License-Identifier: PMPL-1.0-or-later
-# stapeln.toml — Layer-based container build for rescript-evangeliser
+# stapeln.toml — Layer-based container build for nextgen-languages-evangeliser
 #
 # stapeln builds containers as composable layers (German: "to stack").
 # Each layer is independently cacheable, verifiable, and signable.
 
 [metadata]
-name = "rescript-evangeliser"
+name = "nextgen-languages-evangeliser"
 version = "0.1.0"
-description = "rescript evangeliser"
+description = "Nextgen Languages Evangeliser (formerly rescript-evangeliser)"
 author = "Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>"
 license = "PMPL-1.0-or-later"
 registry = "ghcr.io/hyperpolymath"
@@ -32,7 +32,7 @@ packages = ["deno"]
 cache = true
 
 [layers.build]
-description = "rescript-evangeliser build"
+description = "nextgen-languages-evangeliser build"
 extends = "toolchain"
 commands = ["deno cache src/main.ts"]
 

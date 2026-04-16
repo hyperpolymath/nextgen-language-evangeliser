@@ -1,4 +1,4 @@
-# GitLab CI configuration for ReScript Evangeliser
+# GitLab CI configuration for Nextgen Languages Evangeliser
 
 image: node:20
 
