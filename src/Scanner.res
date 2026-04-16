@@ -55,7 +55,9 @@ let scanPattern = (code: string, pattern: pattern): array<patternMatch> => {
               startLine,
               endLine,
               confidence: pattern.confidence,
-              transformation: Some(pattern.rescriptExample),
+              // Use flagship target's code as the offered transformation;
+              // falls back to whatever target the pattern does support.
+              transformation: Some(patternCodeFor(pattern, flagshipTarget)),
             },
           ])
       }

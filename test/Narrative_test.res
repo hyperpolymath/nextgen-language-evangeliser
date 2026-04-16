@@ -76,7 +76,7 @@ let testGenerateHint = () => {
     jsPattern: "",
     confidence: 0.9,
     jsExample: "",
-    rescriptExample: "",
+    targets: [{language: ReScript, code: ""}],
     narrative: {
       celebrate: "",
       minimize: "",

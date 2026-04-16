@@ -1,6 +1,9 @@
 // SPDX-License-Identifier: PMPL-1.0-or-later
 // Output: Format analysis results for terminal display
 // Supports RAW, FOLDED, and GLYPHED view layers
+// Target-aware: honours the requested target language, falls back to the
+// first target the pattern actually supplies if the requested one is
+// missing (e.g. AffineScript requested but pattern only ships ReScript).
 
 open Types
 
@@ -13,17 +16,25 @@ let dim = s => `\x1b[2m${s}\x1b[0m`
 let magenta = s => `\x1b[35m${s}\x1b[0m`
 
 // Format a single pattern match for RAW view
-let formatMatchRaw = (m: patternMatch, format: string): string => {
+let formatMatchRaw = (m: patternMatch, format: string, target: targetLang): string => {
   let glyphBar = m.pattern.glyphs->Array.join(" ")
   let diffStr = difficultyToString(m.pattern.difficulty)
   let narrative = Narrative.formatNarrative(m.pattern.narrative, format)
+  let effectiveTarget = patternEffectiveTarget(m.pattern, target)
+  let targetCode = patternCodeFor(m.pattern, target)
+  let targetLabel = targetLangLabel(effectiveTarget)
+  let targetTag = targetLangSyntaxTag(effectiveTarget)
+  let fallbackNote =
+    effectiveTarget == target
+      ? ""
+      : ` ${dim(`(fallback — pattern not yet ported to ${targetLangLabel(target)})`)}`
 
   switch format {
   | "markdown" =>
     `### ${glyphBar} ${m.pattern.name}\n\n` ++
     `**Difficulty:** ${diffStr} | **Confidence:** ${Float.toFixed(m.pattern.confidence *. 100.0, ~digits=0)}%\n\n` ++
     `**JavaScript:**\n\`\`\`javascript\n${m.pattern.jsExample}\n\`\`\`\n\n` ++
-    `**ReScript:**\n\`\`\`rescript\n${m.pattern.rescriptExample}\n\`\`\`\n\n` ++
+    `**${targetLabel}:**\n\`\`\`${targetTag}\n${targetCode}\n\`\`\`\n\n` ++
     narrative ++ "\n\n---\n"
 
   | "html" =>
@@ -31,7 +42,7 @@ let formatMatchRaw = (m: patternMatch, format: string): string => {
     `  <h3>${glyphBar} ${m.pattern.name}</h3>\n` ++
     `  <p><strong>Difficulty:</strong> ${diffStr} | <strong>Confidence:</strong> ${Float.toFixed(m.pattern.confidence *. 100.0, ~digits=0)}%</p>\n` ++
     `  <pre class="js"><code>${m.pattern.jsExample}</code></pre>\n` ++
-    `  <pre class="rescript"><code>${m.pattern.rescriptExample}</code></pre>\n` ++
+    `  <pre class="${targetTag}"><code>${targetCode}</code></pre>\n` ++
     narrative ++
     `\n</div>\n`
 
@@ -40,14 +51,14 @@ let formatMatchRaw = (m: patternMatch, format: string): string => {
     bold(`${glyphBar} ${m.pattern.name}`) ++ "\n" ++
     dim(`Difficulty: ${diffStr} | Confidence: ${Float.toFixed(m.pattern.confidence *. 100.0, ~digits=0)}%`) ++ "\n\n" ++
     cyan("JavaScript:") ++ "\n" ++ m.pattern.jsExample ++ "\n\n" ++
-    green("ReScript:") ++ "\n" ++ m.pattern.rescriptExample ++ "\n\n" ++
+    green(`${targetLabel}:`) ++ fallbackNote ++ "\n" ++ targetCode ++ "\n\n" ++
     narrative ++ "\n\n" ++
     dim("---") ++ "\n"
   }
 }
 
 // Format analysis results in RAW view (each match shown individually)
-let formatRaw = (result: analysisResult, format: string): string => {
+let formatRaw = (result: analysisResult, format: string, target: targetLang): string => {
   if result.matches->Array.length === 0 {
     "No patterns detected. Try pasting some JavaScript code!\n"
   } else {
@@ -60,7 +71,7 @@ let formatRaw = (result: analysisResult, format: string): string => {
     let summary = Analyser.summarise(result)
     let matches =
       result.matches
-      ->Array.map(m => formatMatchRaw(m, format))
+      ->Array.map(m => formatMatchRaw(m, format, target))
       ->Array.join("\n")
 
     header ++ summary ++ "\n\n" ++ matches
@@ -68,7 +79,7 @@ let formatRaw = (result: analysisResult, format: string): string => {
 }
 
 // Format analysis results in FOLDED view (grouped by category)
-let formatFolded = (result: analysisResult, format: string): string => {
+let formatFolded = (result: analysisResult, format: string, target: targetLang): string => {
   if result.matches->Array.length === 0 {
     "No patterns detected. Try pasting some JavaScript code!\n"
   } else {
@@ -99,7 +110,7 @@ let formatFolded = (result: analysisResult, format: string): string => {
         }
         let matchStr =
           matches
-          ->Array.map(m => formatMatchRaw(m, format))
+          ->Array.map(m => formatMatchRaw(m, format, target))
           ->Array.join("\n")
         catHeader ++ matchStr
       })
@@ -110,7 +121,7 @@ let formatFolded = (result: analysisResult, format: string): string => {
 }
 
 // Format analysis results in GLYPHED view (glyph-annotated summary)
-let formatGlyphed = (result: analysisResult, format: string): string => {
+let formatGlyphed = (result: analysisResult, format: string, _target: targetLang): string => {
   if result.matches->Array.length === 0 {
     "No patterns detected. Try pasting some JavaScript code!\n"
   } else {
@@ -143,17 +154,20 @@ let formatGlyphed = (result: analysisResult, format: string): string => {
   }
 }
 
-// Format results using the specified view layer
-let format = (result: analysisResult, view: viewLayer, outputFormat: string): string => {
+// Format results using the specified view layer and target language.
+let format = (result: analysisResult, view: viewLayer, outputFormat: string, target: targetLang): string => {
   switch view {
-  | RAW => formatRaw(result, outputFormat)
-  | FOLDED => formatFolded(result, outputFormat)
-  | GLYPHED => formatGlyphed(result, outputFormat)
-  | WYSIWYG => formatRaw(result, "html") // WYSIWYG falls back to HTML for now
+  | RAW => formatRaw(result, outputFormat, target)
+  | FOLDED => formatFolded(result, outputFormat, target)
+  | GLYPHED => formatGlyphed(result, outputFormat, target)
+  | WYSIWYG => formatRaw(result, "html", target) // WYSIWYG falls back to HTML for now
   }
 }
 
-// Format the pattern list for the `patterns` command
+// Format the pattern list for the `patterns` command.
+// Annotates each pattern with the set of targets it currently supports,
+// so users can see at a glance which patterns have been ported to
+// AffineScript and which are still ReScript-only.
 let formatPatternList = (format: string): string => {
   let stats = Patterns.getPatternStats()
   let header = switch format {
@@ -188,11 +202,15 @@ let formatPatternList = (format: string): string => {
         patterns
         ->Array.map(p => {
           let diffStr = difficultyToString(p.difficulty)
+          let targetTags =
+            p.targets
+            ->Array.map(t => targetLangLabel(t.language))
+            ->Array.join(", ")
           switch format {
           | "markdown" =>
-            `- **${p.name}** (${diffStr}) - ${p.narrative.celebrate}\n`
+            `- **${p.name}** (${diffStr}) [targets: ${targetTags}] - ${p.narrative.celebrate}\n`
           | _ =>
-            `  ${green(p.name)} ${dim(`[${diffStr}]`)} ${p.narrative.celebrate}\n`
+            `  ${green(p.name)} ${dim(`[${diffStr}]`)} ${dim(`[${targetTags}]`)} ${p.narrative.celebrate}\n`
           }
         })
         ->Array.join("")

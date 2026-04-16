@@ -62,7 +62,10 @@ let testPatternsHaveRequiredFields = () => {
     assert_(String.length(p.jsPattern) > 0, `Pattern ${p.id} missing jsPattern`)
     assert_(p.confidence > 0.0 && p.confidence <= 1.0, `Pattern ${p.id} confidence out of range`)
     assert_(String.length(p.jsExample) > 0, `Pattern ${p.id} missing jsExample`)
-    assert_(String.length(p.rescriptExample) > 0, `Pattern ${p.id} missing rescriptExample`)
+    assert_(p.targets->Array.length > 0, `Pattern ${p.id} has no target examples`)
+    p.targets->Array.forEach(t => {
+      assert_(String.length(t.code) > 0, `Pattern ${p.id} has empty code for target ${targetLangLabel(t.language)}`)
+    })
     assert_(String.length(p.narrative.celebrate) > 0, `Pattern ${p.id} missing narrative.celebrate`)
     assert_(String.length(p.narrative.minimize) > 0, `Pattern ${p.id} missing narrative.minimize`)
     assert_(String.length(p.narrative.better) > 0, `Pattern ${p.id} missing narrative.better`)

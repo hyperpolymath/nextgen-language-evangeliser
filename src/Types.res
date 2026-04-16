@@ -37,6 +37,19 @@ type semanticCategory =
   | State
   | Data
 
+// Target languages the evangeliser can emit examples for.
+// AffineScript is the flagship (Phase 2 onward); ReScript is the legacy
+// catalogue preserved during migration. Others are planned (Phase 5+).
+type targetLang =
+  | AffineScript
+  | ReScript
+  | Rust
+  | Gleam
+  | Zig
+
+// Flagship target — consumed by Cli/Output when --target is not specified.
+let flagshipTarget: targetLang = AffineScript
+
 // A Makaton-inspired glyph that represents semantic meaning beyond syntax
 type glyph = {
   symbol: string,
@@ -55,7 +68,17 @@ type narrative = {
   example: string,
 }
 
-// A transformation pattern from JavaScript to ReScript
+// A single target-language example for a pattern.
+// In Phase 1b, only `code` varies per target; narrative is shared at
+// pattern level. In Phase 2 this record can gain an optional per-target
+// narrative override so AffineScript's affine-safety pitch differs from
+// ReScript's Option-type pitch.
+type targetExample = {
+  language: targetLang,
+  code: string,
+}
+
+// A transformation pattern from JavaScript to one or more target languages.
 type pattern = {
   id: string,
   name: string,
@@ -64,7 +87,11 @@ type pattern = {
   jsPattern: string,
   confidence: float,
   jsExample: string,
-  rescriptExample: string,
+  // Multi-target: each entry pairs a target language with its example code.
+  // Patterns must have at least one target; the first target is used as
+  // fallback if --target requests a language this pattern has not been
+  // ported to yet.
+  targets: array<targetExample>,
   narrative: narrative,
   glyphs: array<string>,
   tags: array<string>,
@@ -172,5 +199,82 @@ let viewLayerToString = (view: viewLayer): string => {
   | FOLDED => "FOLDED"
   | GLYPHED => "GLYPHED"
   | WYSIWYG => "WYSIWYG"
+  }
+}
+
+// Canonical string name for a target language (lowercase, used in CLI args).
+let targetLangToString = (t: targetLang): string => {
+  switch t {
+  | AffineScript => "affinescript"
+  | ReScript => "rescript"
+  | Rust => "rust"
+  | Gleam => "gleam"
+  | Zig => "zig"
+  }
+}
+
+// Display-friendly label (capitalisation for rendering).
+let targetLangLabel = (t: targetLang): string => {
+  switch t {
+  | AffineScript => "AffineScript"
+  | ReScript => "ReScript"
+  | Rust => "Rust"
+  | Gleam => "Gleam"
+  | Zig => "Zig"
+  }
+}
+
+// Markdown / Rouge syntax-highlighter tag for a target language.
+let targetLangSyntaxTag = (t: targetLang): string => {
+  switch t {
+  | AffineScript => "affinescript"
+  | ReScript => "rescript"
+  | Rust => "rust"
+  | Gleam => "gleam"
+  | Zig => "zig"
+  }
+}
+
+let stringToTargetLang = (s: string): option<targetLang> => {
+  switch String.toLowerCase(s) {
+  | "affinescript" | "affine" | "as" => Some(AffineScript)
+  | "rescript" | "res" => Some(ReScript)
+  | "rust" | "rs" => Some(Rust)
+  | "gleam" => Some(Gleam)
+  | "zig" => Some(Zig)
+  | _ => None
+  }
+}
+
+// Find the example code for a specific target language in a pattern.
+// Returns None if the pattern has no entry for that target.
+let patternExampleFor = (p: pattern, lang: targetLang): option<targetExample> => {
+  p.targets->Array.find(t => t.language == lang)
+}
+
+// Get the code string for a specific target, falling back to the first
+// available target if the requested one is not present. Empty string if
+// the pattern has no targets at all (should never happen in practice).
+let patternCodeFor = (p: pattern, lang: targetLang): string => {
+  switch patternExampleFor(p, lang) {
+  | Some(t) => t.code
+  | None =>
+    switch p.targets->Array.get(0) {
+    | Some(t) => t.code
+    | None => ""
+    }
+  }
+}
+
+// The effective target for a pattern given a requested target: the
+// requested one if supported, else the pattern's first target (fallback).
+let patternEffectiveTarget = (p: pattern, requested: targetLang): targetLang => {
+  switch patternExampleFor(p, requested) {
+  | Some(_) => requested
+  | None =>
+    switch p.targets->Array.get(0) {
+    | Some(t) => t.language
+    | None => requested
+    }
   }
 }
