@@ -17,14 +17,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Deno configuration (deno.json) and build scripts
 - Mustfile.epx deployment contract
 - Nickel configuration (config.ncl)
-- Makefile blocker workflow (enforce justfile usage)
+- Makefile blocker workflow (enforce Justfile usage)
 - npm/bun blocker workflow (enforce Deno usage)
 - SPDX license headers on all ReScript source files
 
 === Changed
 - **BREAKING**: Migrated from TypeScript to ReScript (Hyperpolymath language policy)
 - **BREAKING**: Migrated from npm to Deno (Hyperpolymath language policy)
-- Updated justfile to use Deno tasks instead of npm scripts
+- Updated Justfile to use Deno tasks instead of npm scripts
 - Updated README.adoc to reflect ReScript/Deno stack
 - Updated CLAUDE.md with new language policy and structure
 - Updated .gitignore for ReScript and Deno artifacts
