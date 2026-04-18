@@ -15,7 +15,7 @@ nextgen-languages-evangeliser/
 ├── src/                  # Host source (ReScript today; AffineScript post-Phase 3)
 ├── config.ncl            # Nickel configuration
 ├── docs/                 # Usage and output documentation
-├── justfile / Justfile   # Task runner recipes
+├── Justfile / Justfile   # Task runner recipes
 └── deno.json             # Deno module config
 ```
 

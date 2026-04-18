@@ -43,7 +43,7 @@ This repository serves as a resource hub for:
 - TypeScript (use AffineScript or ReScript)
 - Node.js (use Deno)
 - npm/bun (use Deno)
-- Makefile (use justfile)
+- Makefile (use Justfile)
 - V (use Zig, except inside V-ecosystem-specific projects)
 
 ### Key Features to Evangelise
@@ -70,7 +70,7 @@ nextgen-languages-evangeliser/
 ├── docs/             # Documentation
 ├── rescript.json     # Host build config (current)
 ├── deno.json         # Deno configuration
-├── justfile          # Task orchestration (NOT Makefile)
+├── Justfile          # Task orchestration (NOT Makefile)
 ├── Mustfile.epx      # Deployment contract
 └── config.ncl        # Nickel configuration
 ```
@@ -191,7 +191,7 @@ When working on this project:
 - Help maintain clear documentation
 - Encourage best practices in evangelism materials
 - **Use Deno, not npm/bun**
-- **Use justfile, not Makefile**
+- **Use Justfile, not Makefile**
 - **Use Zig for FFI, not V (except inside V-ecosystem projects)**
 - **Source host language: ReScript during Phases 1-2, AffineScript from Phase 3 onward**
 - Add SPDX license headers to new source files
