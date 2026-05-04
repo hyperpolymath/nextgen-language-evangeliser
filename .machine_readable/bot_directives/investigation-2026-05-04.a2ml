@@ -17,6 +17,8 @@ workflow-yaml = "wellknown-enforcement.yml contained a split tr -d newline liter
 pages-config = "The Jekyll Pages workflow ran on every main push, but GitHub Pages is not enabled/configured for this repository."
 scorecard-config = "The scorecard enforcer published results from a job that also had a run step; OpenSSF rejects that publication shape."
 farm-dispatch = "Instant Sync reached peter-evans/repository-dispatch but GitHub returned Bad credentials for FARM_DISPATCH_TOKEN."
+job-if-context = "ci.yml and secret-scanner.yml used hashFiles() in job-level if expressions; GitHub rejects that context before creating jobs."
+stale-action-ref = "secret-scanner.yml pinned TruffleHog to a stale/nonexistent SHA, so the action reference could not be trusted."
 
 [root-cause]
 summary = "The fleet had no repo-local bot_directives contract, no working local gh authentication, stale CI policy files, and repo-level secrets/settings drift that bots cannot repair without credentials or repository settings access."
@@ -32,5 +34,7 @@ items = [
   "fixed malformed workflow YAML",
   "made Pages deployment manual until Pages is enabled",
   "made farm dispatch credential failure non-blocking while preserving a warning",
-  "changed Scorecard enforcer to local JSON enforcement without publishing"
+  "changed Scorecard enforcer to local JSON enforcement without publishing",
+  "replaced invalid job-level hashFiles gates",
+  "updated the stale TruffleHog action pin"
 ]

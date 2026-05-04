@@ -17,7 +17,7 @@ jobs:
   test:
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    if: hashFiles('extension/package.json') != ''
+    if: vars.RUN_EXTENSION_CI == 'true'
 
     strategy:
       matrix:
@@ -77,7 +77,7 @@ jobs:
   security:
     name: Security Audit
     runs-on: ubuntu-latest
-    if: hashFiles('extension/package.json') != ''
+    if: vars.RUN_EXTENSION_CI == 'true'
 
     steps:
     - name: Checkout code
@@ -143,6 +143,7 @@ jobs:
   build:
     name: Build Extension
     runs-on: ubuntu-latest
+    if: vars.RUN_EXTENSION_CI == 'true'
     needs: [test, security, rsr-compliance]
 
     steps:
@@ -180,7 +181,7 @@ jobs:
   performance:
     name: Performance Benchmarks
     runs-on: ubuntu-latest
-    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.RUN_EXTENSION_CI == 'true'
 
     steps:
     - name: Checkout code
@@ -226,7 +227,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: startsWith(github.ref, 'refs/tags/v') && vars.RUN_EXTENSION_CI == 'true'
     needs: [build]
     permissions:
       contents: write
