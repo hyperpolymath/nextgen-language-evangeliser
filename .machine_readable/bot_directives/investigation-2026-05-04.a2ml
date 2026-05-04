@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+#
+# investigation-2026-05-04.a2ml — why Hypatia/gitbot did not fully repair this repo
+
+[metadata]
+date = "2026-05-04"
+repo = "hyperpolymath/nextgen-language-evangeliser"
+
+[findings]
+remote-heads = "Only refs/heads/main exists. refs/pull/1..7 are historical PR heads and all PRs are closed+merged."
+github-cli = "Local gh token is invalid, so gh-based CI/log/security inspection cannot run from this checkout until re-authenticated."
+workflow-runs = "GitHub app reported no workflow runs for 27ef502, so there was no Actions failure artifact to consume for the GUI commit."
+bot-directives = "agent_instructions/README.adoc referenced bot_directives/, but the directory and fleet role directives were absent before this repair."
+ci-drift = "Legacy workflows still expected README.md/lowercase justfile and lacked top-level permissions declarations."
+policy-drift = "An older ts-blocker workflow did not understand repo-local JavaScript/Deno GUI exemptions."
+
+[root-cause]
+summary = "The fleet had no repo-local bot_directives contract, no working local gh authentication, and stale CI policy files that predated the later exemption-table approach."
+
+[repair]
+status = "patched"
+items = [
+  "added bot_directives roles/investigation metadata",
+  "documented Elixir/BEAM support roles",
+  "aligned CI checks with README.adoc and Justfile",
+  "added workflow permissions",
+  "documented Deno GUI JavaScript exemptions"
+]

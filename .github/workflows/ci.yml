@@ -10,6 +10,9 @@ on:
     # Run daily at 2am UTC to catch dependency issues
     - cron: '0 2 * * *'
 
+permissions:
+  contents: read
+
 jobs:
   test:
     name: Test on ${{ matrix.os }}
@@ -115,7 +118,7 @@ jobs:
         echo "Checking RSR Bronze compliance..."
 
         # Documentation
-        test -f README.md || (echo "Missing README.md" && exit 1)
+        test -f README.md || test -f README.adoc || (echo "Missing README.md or README.adoc" && exit 1)
         test -f CONTRIBUTING.md || (echo "Missing CONTRIBUTING.md" && exit 1)
         test -f CODE_OF_CONDUCT.md || (echo "Missing CODE_OF_CONDUCT.md" && exit 1)
         test -f SECURITY.md || (echo "Missing SECURITY.md" && exit 1)
@@ -133,7 +136,7 @@ jobs:
         test -f .well-known/humans.txt || (echo "Missing humans.txt" && exit 1)
 
         # Build system
-        test -f justfile || (echo "Missing justfile" && exit 1)
+        test -f justfile || test -f Justfile || (echo "Missing justfile or Justfile" && exit 1)
 
         echo "✅ RSR Bronze compliance verified!"
 
@@ -169,7 +172,7 @@ jobs:
         npx vsce package
 
     - name: Upload VSIX artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: nextgen-languages-evangeliser-vsix
         path: extension/*.vsix
@@ -225,6 +228,8 @@ jobs:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [build]
+    permissions:
+      contents: write
 
     steps:
     - name: Checkout code
@@ -248,7 +253,7 @@ jobs:
         npx vsce package
 
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
       with:
         files: extension/*.vsix
         generate_release_notes: true

@@ -19,6 +19,7 @@ Current host application language: ReScript (migration to AffineScript planned i
 | **Tauri 2.0+** | Mobile apps (iOS/Android) | Rust backend + web UI |
 | **Dioxus** | Mobile apps (native UI) | Pure Rust, React-like |
 | **Gleam** | Backend services | Runs on BEAM or compiles to JS |
+| **Elixir** | BEAM supervision and bot-role orchestration metadata | Support role only; not the host language or flagship target |
 | **Bash/POSIX Shell** | Scripts, automation | Keep minimal |
 | **JavaScript** | Only where ReScript/AffineScript cannot | MCP protocol glue, Deno APIs |
 | **Nickel** | Configuration language | For complex configs |
@@ -62,6 +63,32 @@ Both are FOSS with independent governance (no Big Tech).
 5. **No Python anywhere** - Use Julia for data/batch, Rust for systems, ReScript/AffineScript for apps
 6. **No Kotlin/Swift for mobile** - Use Tauri 2.0+ or Dioxus
 7. **No V outside the V ecosystem** - Use Zig
+
+### JavaScript Exemptions
+
+JavaScript is allowed only when it is generated ReScript output, Deno/browser runtime glue, or a launcher bridge that cannot currently be written in AffineScript without losing operability.
+
+| Path | Files | Rationale | Unblock condition |
+|------|-------|-----------|-------------------|
+| `bin/evangeliser.js` | 1 | Deno CLI shim importing compiled ReScript output | Replace when AffineScript host CLI is runnable directly |
+| `gui/server.js` | 1 | Local Deno HTTP bridge for the AffineScript GUI contract and compiled ReScript analyser | Replace when AffineScript-to-Deno/webview bridge is available |
+| `gui/app.js` | 1 | Browser-side event/render bridge for the GUI shell | Replace when AffineScript DOM/TEA bridge can drive this UI directly |
+
+### TypeScript Exemptions
+
+| Path | Files | Rationale | Unblock condition |
+|------|-------|-----------|-------------------|
+| `node_modules/` | generated | Deno-managed npm compatibility cache for ReScript tooling | Do not commit; local cache only |
+
+### BEAM / Elixir Roles
+
+Elixir is a support-role language for BEAM supervision of automation and fleet orchestration. It is not a target language in this repo and must not displace the ReScript host or AffineScript flagship path.
+
+| Role | Owner | Purpose | Boundary |
+|------|-------|---------|----------|
+| `hypatia` | Elixir supervisor role | Coordinate audit, merge, and policy sweeps across repos | May report and open patches; must not bypass repo-local CI evidence |
+| `gitbot-fleet` | Elixir worker pool role | Execute scoped branch, dependency, and workflow maintenance jobs | Must read `.machine_readable/bot_directives/roles.a2ml` before acting |
+| `repo-maintainer` | Human/Codex role | Apply local fixes and push verified changes | Owns final judgement when bot directives are absent or stale |
 
 ### Package Management
 

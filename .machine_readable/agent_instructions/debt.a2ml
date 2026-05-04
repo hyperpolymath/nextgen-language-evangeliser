@@ -9,7 +9,7 @@
 
 [metadata]
 version = "1.0.0"
-last-updated = "{{CURRENT_DATE}}"
+last-updated = "2026-05-04"
 
 # ============================================================================
 # DEBT ITEMS
@@ -33,6 +33,20 @@ last-updated = "{{CURRENT_DATE}}"
 # effort = "easy"
 # impact = "medium"
 # discovered = "2026-03-23"
+
+[[debt.should]]
+component = "github-cli-auth"
+issue = "Local gh token for hyperpolymath is invalid; GitHub Actions log/security inspection via gh cannot run until re-authenticated."
+effort = "easy"
+impact = "medium"
+discovered = "2026-05-04"
+
+[[debt.should]]
+component = "fleet-automation"
+issue = "Hypatia/gitbot fleet needs to consume .machine_readable/bot_directives/roles.a2ml before future sweeps."
+effort = "medium"
+impact = "medium"
+discovered = "2026-05-04"
 
 # ============================================================================
 # COULD — would fix eventually

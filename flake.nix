@@ -23,7 +23,7 @@
           # Language-specific dependencies:
           # gnat13  # Ada
           # cargo rustc  # Rust
-          # elixir  # Elixir
+          elixir  # BEAM supervision role tooling for Hypatia/gitbot fleet metadata
           # For build tools:
           just
           podman
@@ -37,7 +37,7 @@
           lychee  # Link validation
           # Language-specific:
           # rustfmt clippy  # Rust
-          # mix  # Elixir
+          rebar3  # Erlang/Elixir build helper used by OTP-role tooling
         ];
 
       in
@@ -56,10 +56,12 @@
             echo "  just build     # Build project"
             echo "  just test      # Run tests"
             echo "  just validate  # RSR compliance"
+            echo "  elixir --version  # Verify BEAM role tooling"
             echo ""
             # *REMINDER: Add language-specific environment setup*
             # export CARGO_HOME=$PWD/.cargo  # Rust
-            # export MIX_HOME=$PWD/.mix  # Elixir
+            export MIX_HOME=$PWD/.mix
+            export HEX_HOME=$PWD/.hex
           '';
         };
 

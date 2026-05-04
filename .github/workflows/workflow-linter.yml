@@ -47,8 +47,11 @@ jobs:
           errors=0
           for f in .github/workflows/*.yml .github/workflows/*.yaml; do
             [ -f "$f" ] || continue
-            # Look for uses: without SHA
-            if grep -E "uses:.*@v[0-9]" "$f" | grep -v "#"; then
-              echo "WARNING: $f has unpinned actions (missing SHA comment)"
+            UNPINNED=$(grep -nE '^[[:space:]]*uses:.*@' "$f" | grep -Ev '@[0-9a-f]{40}([[:space:]]+#|[[:space:]]*$)' || true)
+            if [ -n "$UNPINNED" ]; then
+              echo "ERROR: $f has unpinned actions:"
+              echo "$UNPINNED"
+              errors=$((errors + 1))
             fi
           done
+          exit $errors

@@ -20,6 +20,9 @@ Methodology-aware configuration for AI agents. Read by any AI agent
 
 | `debt.a2ml`
 | Meander debt — things found but not fixed, carried between sessions
+
+| `../bot_directives/roles.a2ml`
+| Fleet roles for Hypatia/gitbot-style automation, including Elixir/BEAM support-role boundaries
 |===
 
 == How Agents Use These

@@ -3,8 +3,9 @@
   "name": "@hyperpolymath/nextgen-languages-evangeliser",
   "version": "0.6.0-alpha",
   "license": "PMPL-1.0-or-later",
+  "exports": "./bin/evangeliser.js",
   "tasks": {
-    "build": "deno run -A npm:rescript build",
+    "build": "./scripts/rescript-build.sh",
     "build:watch": "deno run -A npm:rescript build -w",
     "clean": "deno run -A npm:rescript clean",
     "lint": "deno lint",
@@ -24,7 +25,7 @@
     "semiColons": false,
     "singleQuote": false,
     "proseWrap": "preserve",
-    "include": ["src/"]
+    "include": ["bin/", "gui/", "test/run_all.js", "deno.json"]
   },
   "lint": {
     "rules": {

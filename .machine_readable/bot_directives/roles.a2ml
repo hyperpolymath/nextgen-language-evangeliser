@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: PMPL-1.0-or-later
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# roles.a2ml — Hypatia/gitbot fleet role directives
+
+[metadata]
+version = "1.0.0"
+last-updated = "2026-05-04"
+scope = "nextgen-languages-evangeliser"
+
+[elixir]
+status = "support-role"
+purpose = "BEAM/OTP supervision model for automation roles"
+boundary = "Elixir may coordinate bot work; repository implementation remains ReScript now and AffineScript after the host migration gate."
+
+[[roles]]
+name = "hypatia"
+runtime = "elixir-supervisor"
+responsibility = "Coordinate fleet-wide audit, merge, security, and CI policy sweeps."
+must = [
+  "read repo-local .machine_readable and .claude/CLAUDE.md policy before changes",
+  "record why a repo is skipped",
+  "surface unauthenticated GitHub CLI or missing workflow runs as blockers"
+]
+must_not = [
+  "assume pull refs are unmerged branches",
+  "bypass repo-local verification evidence"
+]
+
+[[roles]]
+name = "gitbot-fleet"
+runtime = "elixir-worker-pool"
+responsibility = "Apply scoped branch, dependency, and workflow-maintenance patches."
+must = [
+  "check refs/heads separately from refs/pull",
+  "treat closed merged PR heads as historical evidence, not merge targets",
+  "update workflow permissions and action pinning when touching CI"
+]
+must_not = [
+  "rewrite main history",
+  "commit local generated caches such as node_modules"
+]
+
+[[roles]]
+name = "repo-maintainer"
+runtime = "human-or-codex"
+responsibility = "Make final merge and security decisions when bot directives are missing or stale."
+must = [
+  "verify local and origin refs match after push",
+  "document residual bot/fleet blockers in agent debt"
+]

@@ -28,6 +28,7 @@
       "Deno",
       "Rust",
       "Zig",           # canonical FFI
+      "Elixir",        # BEAM automation supervision role only
       "Bash",
       "JavaScript",    # minimal glue code only
       "Nickel",
@@ -45,6 +46,14 @@
     primary = "ReScript",        # current host language
     primary_planned = "AffineScript",  # post-Phase 3
     runtime = "Deno",
+
+    roles = {
+      elixir = {
+        status = "support",
+        purpose = "BEAM supervision metadata for Hypatia/gitbot-fleet style automation",
+        boundary = "not a host-language replacement and not a public transformation target",
+      },
+    },
   },
 
   # Build configuration

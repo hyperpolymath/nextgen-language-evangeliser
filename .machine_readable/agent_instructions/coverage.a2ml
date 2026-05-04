@@ -9,7 +9,7 @@
 
 [metadata]
 version = "1.0.0"
-last-updated = "{{CURRENT_DATE}}"
+last-updated = "2026-05-04"
 
 # ============================================================================
 # COVERAGE STATE
@@ -18,9 +18,45 @@ last-updated = "{{CURRENT_DATE}}"
 # visited and which have known MUSTs that were skipped.
 
 [coverage]
-total-components = 0
-visited-components = 0
-coverage-percent = 0
+total-components = 6
+visited-components = 6
+coverage-percent = 100
+
+[coverage.visited.git-refs]
+date = "2026-05-04"
+ring = 2
+fixes = 0
+notes = "Confirmed only remote branch is main; PR refs 1-7 are closed and merged."
+
+[coverage.visited.github-ci]
+date = "2026-05-04"
+ring = 2
+fixes = 4
+notes = "No workflow runs reported for GUI commit; patched workflow permissions, CI path casing, action pinning, and JS exemptions."
+
+[coverage.visited.security-policy]
+date = "2026-05-04"
+ring = 2
+fixes = 2
+notes = "Checked local security policy and strengthened workflow hygiene."
+
+[coverage.visited.deno-tooling]
+date = "2026-05-04"
+ring = 2
+fixes = 1
+notes = "Empty deno.lock identified as build/test blocker."
+
+[coverage.visited.bot-directives]
+date = "2026-05-04"
+ring = 2
+fixes = 2
+notes = "Added missing bot directives and investigation for Hypatia/gitbot fleet gap."
+
+[coverage.visited.elixir-roles]
+date = "2026-05-04"
+ring = 2
+fixes = 3
+notes = "Recorded Elixir as BEAM support-role tooling, not host or target language."
 
 # ============================================================================
 # VISITED COMPONENTS
