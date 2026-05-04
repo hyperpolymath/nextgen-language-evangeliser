@@ -20,6 +20,7 @@ farm-dispatch = "Instant Sync reached peter-evans/repository-dispatch but GitHub
 job-if-context = "ci.yml and secret-scanner.yml used hashFiles() in job-level if expressions; GitHub rejects that context before creating jobs."
 stale-action-ref = "secret-scanner.yml pinned TruffleHog to a stale/nonexistent SHA, so the action reference could not be trusted."
 trufflehog-args = "secret-scanner.yml passed --fail in extra_args even though the TruffleHog action adds --fail itself, causing a repeated flag failure before scanning."
+trufflehog-version = "The TruffleHog action uses Docker image tags without the git tag's v prefix; version must be 3.95.2 rather than v3.95.2."
 
 [root-cause]
 summary = "The fleet had no repo-local bot_directives contract, no working local gh authentication, stale CI policy files, and repo-level secrets/settings drift that bots cannot repair without credentials or repository settings access."
@@ -38,5 +39,6 @@ items = [
   "changed Scorecard enforcer to local JSON enforcement without publishing",
   "replaced invalid job-level hashFiles gates",
   "updated the stale TruffleHog action pin",
-  "removed duplicate TruffleHog --fail argument"
+  "removed duplicate TruffleHog --fail argument",
+  "aligned TruffleHog runtime version with its Docker tag"
 ]
