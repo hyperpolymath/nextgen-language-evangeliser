@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Nextgen Languages Evangeliser</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --bg: #f6f7f8;
+        --panel: #ffffff;
+        --ink: #17202a;
+        --muted: #667085;
+        --line: #d8dee6;
+        --accent: #007f7a;
+        --accent-strong: #075e5b;
+        --gold: #ad7c00;
+        --rust: #a04d2f;
+        --code: #111827;
+        --code-ink: #e8edf2;
+        --ok: #167348;
+        --shadow: 0 12px 28px rgba(20, 30, 45, 0.08);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: var(--bg);
+        color: var(--ink);
+        font: 14px/1.45 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      }
+
+      button,
+      select,
+      textarea {
+        font: inherit;
+      }
+
+      button,
+      select {
+        min-height: 36px;
+        border: 1px solid var(--line);
+        border-radius: 6px;
+        background: var(--panel);
+        color: var(--ink);
+      }
+
+      button {
+        padding: 0 12px;
+        cursor: pointer;
+      }
+
+      button.primary {
+        border-color: var(--accent);
+        background: var(--accent);
+        color: #fff;
+        font-weight: 650;
+      }
+
+      button.ghost {
+        background: transparent;
+      }
+
+      select {
+        padding: 0 30px 0 10px;
+      }
+
+      .app {
+        min-height: 100vh;
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+
+      .topbar {
+        display: grid;
+        grid-template-columns: minmax(220px, 1fr) auto;
+        gap: 16px;
+        align-items: center;
+        padding: 14px 18px;
+        border-bottom: 1px solid var(--line);
+        background: var(--panel);
+      }
+
+      .brand {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        min-width: 0;
+      }
+
+      .mark {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, var(--accent), var(--rust));
+        color: #fff;
+        font-weight: 800;
+        letter-spacing: 0;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 18px;
+        line-height: 1.2;
+      }
+
+      .subtitle {
+        margin-top: 2px;
+        color: var(--muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: flex-end;
+      }
+
+      .workspace {
+        min-height: 0;
+        display: grid;
+        grid-template-columns: minmax(320px, 0.95fr) minmax(420px, 1.25fr);
+        gap: 14px;
+        padding: 14px;
+      }
+
+      .pane {
+        min-width: 0;
+        min-height: 0;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        box-shadow: var(--shadow);
+        display: grid;
+        grid-template-rows: auto 1fr;
+      }
+
+      .pane-header {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        justify-content: space-between;
+        min-height: 52px;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .pane-title {
+        font-weight: 700;
+      }
+
+      .source-actions,
+      .result-actions {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+
+      textarea {
+        width: 100%;
+        height: 100%;
+        min-height: 420px;
+        resize: none;
+        border: 0;
+        padding: 16px;
+        outline: none;
+        background: #fbfcfd;
+        color: var(--code);
+        font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        tab-size: 2;
+      }
+
+      .results-body {
+        min-height: 0;
+        display: grid;
+        grid-template-rows: auto auto 1fr;
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+        padding: 12px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .stat {
+        min-width: 0;
+        padding: 10px;
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: #fbfcfd;
+      }
+
+      .stat strong {
+        display: block;
+        font-size: 18px;
+      }
+
+      .stat span {
+        color: var(--muted);
+        font-size: 12px;
+      }
+
+      .tabs {
+        display: flex;
+        gap: 4px;
+        padding: 8px 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .tab {
+        min-height: 34px;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+        border-bottom-color: transparent;
+      }
+
+      .tab[aria-selected="true"] {
+        color: var(--accent-strong);
+        border-color: var(--line);
+        border-bottom-color: var(--panel);
+        font-weight: 700;
+      }
+
+      .tab-panel {
+        min-height: 0;
+        overflow: auto;
+        padding: 12px;
+      }
+
+      .summary {
+        margin: 0 0 12px;
+        padding: 10px 12px;
+        border-left: 4px solid var(--accent);
+        background: #eef8f7;
+        white-space: pre-wrap;
+      }
+
+      .finding,
+      .pattern {
+        border: 1px solid var(--line);
+        border-radius: 8px;
+        background: var(--panel);
+        margin-bottom: 10px;
+        overflow: hidden;
+      }
+
+      .finding-header,
+      .pattern-header {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 10px;
+        align-items: start;
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--line);
+        background: #fbfcfd;
+      }
+
+      .glyphs {
+        font-size: 18px;
+        min-height: 24px;
+      }
+
+      .meta {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .pill {
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        padding: 2px 8px;
+        color: var(--muted);
+        font-size: 12px;
+        background: #fff;
+      }
+
+      .pill.good {
+        color: var(--ok);
+        border-color: #bfe3cf;
+        background: #f0faf4;
+      }
+
+      .pill.warn {
+        color: var(--gold);
+        border-color: #ead8a3;
+        background: #fff9e6;
+      }
+
+      .finding-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        padding: 12px;
+      }
+
+      .code-block {
+        min-width: 0;
+      }
+
+      .code-block label,
+      .narrative label {
+        display: block;
+        margin-bottom: 6px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      pre {
+        margin: 0;
+        max-width: 100%;
+        overflow: auto;
+        border-radius: 8px;
+        background: var(--code);
+        color: var(--code-ink);
+        padding: 12px;
+        font: 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      }
+
+      .narrative {
+        grid-column: 1 / -1;
+        border-top: 1px solid var(--line);
+        padding-top: 10px;
+      }
+
+      .narrative-list {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      .narrative-list p {
+        margin: 0;
+        padding: 10px;
+        border-radius: 8px;
+        background: #f7f9fb;
+      }
+
+      .catalogue {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 10px;
+      }
+
+      .pattern {
+        margin: 0;
+      }
+
+      .pattern-body {
+        padding: 10px 12px;
+      }
+
+      .legend-output,
+      .export-output {
+        white-space: pre-wrap;
+      }
+
+      .empty {
+        padding: 24px;
+        text-align: center;
+        color: var(--muted);
+        border: 1px dashed var(--line);
+        border-radius: 8px;
+      }
+
+      @media (max-width: 960px) {
+        .topbar,
+        .workspace {
+          grid-template-columns: 1fr;
+        }
+
+        .toolbar {
+          justify-content: flex-start;
+        }
+
+        .stats,
+        .finding-grid,
+        .narrative-list {
+          grid-template-columns: 1fr;
+        }
+
+        textarea {
+          min-height: 320px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header class="topbar">
+        <div class="brand">
+          <div class="mark" aria-hidden="true">AS</div>
+          <div>
+            <h1>Nextgen Languages Evangeliser</h1>
+            <div class="subtitle">AffineScript migration workbench</div>
+          </div>
+        </div>
+        <div class="toolbar">
+          <select id="target" aria-label="Target language">
+            <option value="affinescript">AffineScript</option>
+            <option value="rescript">ReScript</option>
+            <option value="rust">Rust</option>
+            <option value="gleam">Gleam</option>
+            <option value="zig">Zig</option>
+          </select>
+          <select id="view" aria-label="View layer">
+            <option value="raw">Raw</option>
+            <option value="folded">Folded</option>
+            <option value="glyphed">Glyphed</option>
+          </select>
+          <select id="difficulty" aria-label="Difficulty">
+            <option value="all">All</option>
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+          <button id="analyse" class="primary">Analyse</button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="pane">
+          <div class="pane-header">
+            <div class="pane-title">JavaScript Source</div>
+            <div class="source-actions">
+              <button id="sample" class="ghost">Sample</button>
+              <button id="clear" class="ghost">Clear</button>
+            </div>
+          </div>
+          <textarea id="source" spellcheck="false"></textarea>
+        </section>
+
+        <section class="pane">
+          <div class="pane-header">
+            <div class="pane-title">Analysis</div>
+            <div id="status" class="pill">Idle</div>
+          </div>
+          <div class="results-body">
+            <div class="stats">
+              <div class="stat"><strong id="statMatches">0</strong><span>matches</span></div>
+              <div class="stat"><strong id="statUnique">0</strong><span>patterns</span></div>
+              <div class="stat"><strong id="statCoverage">0%</strong><span>coverage</span></div>
+              <div class="stat"><strong id="statDifficulty">-</strong><span>difficulty</span></div>
+            </div>
+            <div class="tabs" role="tablist">
+              <button class="tab" data-tab="findings" role="tab" aria-selected="true">Findings</button>
+              <button class="tab" data-tab="patterns" role="tab" aria-selected="false">Patterns</button>
+              <button class="tab" data-tab="legend" role="tab" aria-selected="false">Legend</button>
+              <button class="tab" data-tab="export" role="tab" aria-selected="false">Output</button>
+            </div>
+            <div id="tabPanel" class="tab-panel"></div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <script type="module" src="/app.js"></script>
+  </body>
+</html>

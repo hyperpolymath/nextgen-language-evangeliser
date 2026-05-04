@@ -1,0 +1,246 @@
+// SPDX-License-Identifier: PMPL-1.0-or-later
+// AffineScript TEA GUI model for Nextgen Languages Evangeliser.
+//
+// The browser shell in this directory drives the current Deno/ReScript
+// analyser. This file is the AffineScript interface contract for the GUI:
+// model, messages, update, view, and subscriptions.
+
+enum TargetLang {
+  TargetAffineScript,
+  TargetReScript,
+  TargetRust,
+  TargetGleam,
+  TargetZig
+}
+
+enum ViewLayer {
+  ViewRaw,
+  ViewFolded,
+  ViewGlyphed
+}
+
+enum OutputTab {
+  FindingsTab,
+  PatternsTab,
+  LegendTab,
+  ExportTab
+}
+
+enum GuiMsg {
+  EditSource(String),
+  ChooseTarget(TargetLang),
+  ChooseView(ViewLayer),
+  ChooseDifficulty(String),
+  SelectTab(OutputTab),
+  RunAnalysis,
+  ReceiveAnalysis(String, Int),
+  AnalysisFailed(String),
+  LoadSample,
+  ClearSource
+}
+
+struct GuiModel {
+  source: String,
+  target: TargetLang,
+  view: ViewLayer,
+  difficulty: String,
+  active_tab: OutputTab,
+  last_summary: String,
+  match_count: Int,
+  is_busy: Bool,
+  status: String
+}
+
+fn sample_source() -> String {
+  "async function loadUser(id) {\n" ++
+  "  try {\n" ++
+  "    const response = await fetch(`/api/users/${id}`);\n" ++
+  "    const user = await response.json();\n" ++
+  "    const name = user ? user.name : 'Guest';\n" ++
+  "    return user?.settings?.theme || name;\n" ++
+  "  } catch (error) {\n" ++
+  "    console.error(error);\n" ++
+  "    return null;\n" ++
+  "  }\n" ++
+  "}"
+}
+
+fn evangeliser_init() -> GuiModel {
+  {
+    source: sample_source(),
+    target: TargetAffineScript,
+    view: ViewRaw,
+    difficulty: "all",
+    active_tab: FindingsTab,
+    last_summary: "Ready",
+    match_count: 0,
+    is_busy: false,
+    status: "Idle"
+  }
+}
+
+fn target_to_cli(target: TargetLang) -> String {
+  match target {
+    TargetAffineScript => "affinescript",
+    TargetReScript => "rescript",
+    TargetRust => "rust",
+    TargetGleam => "gleam",
+    TargetZig => "zig"
+  }
+}
+
+fn view_to_cli(view: ViewLayer) -> String {
+  match view {
+    ViewRaw => "raw",
+    ViewFolded => "folded",
+    ViewGlyphed => "glyphed"
+  }
+}
+
+fn tab_to_class(tab: OutputTab) -> String {
+  match tab {
+    FindingsTab => "findings",
+    PatternsTab => "patterns",
+    LegendTab => "legend",
+    ExportTab => "export"
+  }
+}
+
+fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
+  match msg {
+    EditSource(source) => {
+      source: source,
+      target: model.target,
+      view: model.view,
+      difficulty: model.difficulty,
+      active_tab: model.active_tab,
+      last_summary: model.last_summary,
+      match_count: model.match_count,
+      is_busy: false,
+      status: "Edited"
+    },
+    ChooseTarget(target) => {
+      source: model.source,
+      target: target,
+      view: model.view,
+      difficulty: model.difficulty,
+      active_tab: model.active_tab,
+      last_summary: model.last_summary,
+      match_count: model.match_count,
+      is_busy: false,
+      status: "Target " ++ target_to_cli(target)
+    },
+    ChooseView(view) => {
+      source: model.source,
+      target: model.target,
+      view: view,
+      difficulty: model.difficulty,
+      active_tab: model.active_tab,
+      last_summary: model.last_summary,
+      match_count: model.match_count,
+      is_busy: false,
+      status: "View " ++ view_to_cli(view)
+    },
+    ChooseDifficulty(difficulty) => {
+      source: model.source,
+      target: model.target,
+      view: model.view,
+      difficulty: difficulty,
+      active_tab: model.active_tab,
+      last_summary: model.last_summary,
+      match_count: model.match_count,
+      is_busy: false,
+      status: "Difficulty " ++ difficulty
+    },
+    SelectTab(active_tab) => {
+      source: model.source,
+      target: model.target,
+      view: model.view,
+      difficulty: model.difficulty,
+      active_tab: active_tab,
+      last_summary: model.last_summary,
+      match_count: model.match_count,
+      is_busy: false,
+      status: "Tab " ++ tab_to_class(active_tab)
+    },
+    RunAnalysis => {
+      source: model.source,
+      target: model.target,
+      view: model.view,
+      difficulty: model.difficulty,
+      active_tab: FindingsTab,
+      last_summary: model.last_summary,
+      match_count: model.match_count,
+      is_busy: true,
+      status: "Analysing"
+    },
+    ReceiveAnalysis(summary, match_count) => {
+      source: model.source,
+      target: model.target,
+      view: model.view,
+      difficulty: model.difficulty,
+      active_tab: FindingsTab,
+      last_summary: summary,
+      match_count: match_count,
+      is_busy: false,
+      status: "Complete"
+    },
+    AnalysisFailed(reason) => {
+      source: model.source,
+      target: model.target,
+      view: model.view,
+      difficulty: model.difficulty,
+      active_tab: ExportTab,
+      last_summary: reason,
+      match_count: 0,
+      is_busy: false,
+      status: "Failed"
+    },
+    LoadSample => {
+      source: sample_source(),
+      target: model.target,
+      view: model.view,
+      difficulty: model.difficulty,
+      active_tab: FindingsTab,
+      last_summary: "Sample loaded",
+      match_count: 0,
+      is_busy: false,
+      status: "Ready"
+    },
+    ClearSource => {
+      source: "",
+      target: model.target,
+      view: model.view,
+      difficulty: model.difficulty,
+      active_tab: FindingsTab,
+      last_summary: "Cleared",
+      match_count: 0,
+      is_busy: false,
+      status: "Idle"
+    }
+  }
+}
+
+fn evangeliser_view(model: GuiModel) -> String {
+  "<main class=\"evangeliser-gui\" data-target=\"" ++ target_to_cli(model.target) ++
+  "\" data-view=\"" ++ view_to_cli(model.view) ++
+  "\" data-tab=\"" ++ tab_to_class(model.active_tab) ++ "\">" ++
+  "<section class=\"source\"><textarea>" ++ model.source ++ "</textarea></section>" ++
+  "<section class=\"results\"><h1>Nextgen Languages Evangeliser</h1>" ++
+  "<p>" ++ model.last_summary ++ "</p>" ++
+  "<p>Matches: " ++ int_to_string(model.match_count) ++ "</p>" ++
+  "<p>Status: " ++ model.status ++ "</p></section></main>"
+}
+
+fn evangeliser_subs(model: GuiModel) -> String {
+  "DenoGuiBridge"
+}
+
+fn main() -> () {
+  tea_run({
+    init: evangeliser_init,
+    update: evangeliser_update,
+    view: evangeliser_view,
+    subscriptions: evangeliser_subs
+  })
+}

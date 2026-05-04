@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Nextgen Language Evangeliser
+GenericName=AffineScript Migration Workbench
+Comment=Scan JavaScript and view next-generation language transformations
+Exec=/home/hyperpolymath/nextgen-language-evangeliser/scripts/launch-gui.sh
+Path=/home/hyperpolymath/nextgen-language-evangeliser
+Terminal=false
+Categories=Development;Education;
+Icon=text-x-script
+StartupNotify=true
+Keywords=AffineScript;ReScript;JavaScript;Migration;Patterns;
