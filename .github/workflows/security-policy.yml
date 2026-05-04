@@ -7,7 +7,7 @@ jobs:
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Security checks
         run: |
           FAILED=false
@@ -20,7 +20,7 @@ jobs:
           fi
           
           # Block HTTP URLs (except localhost)
-          HTTP_URLS=$(grep -rE 'http://[^"'\'' )]+' --include="*.py" --include="*.js" --include="*.ts" --include="*.go" --include="*.rs" --include="*.yaml" --include="*.yml" --include="*.html" . 2>/dev/null | grep -vE '^\./(\.git|node_modules|lib)/' | grep -vE '^\./\.github/workflows/(security-policy|wellknown-enforcement)\.yml:' | grep -vE 'http://(localhost|127\.0\.0\.1|\$\{hostname\}|example\.com)|test|spec' | head -5 || true)
+          HTTP_URLS=$(grep -rE "http://[^\"' )]+" --include="*.py" --include="*.js" --include="*.ts" --include="*.go" --include="*.rs" --include="*.yaml" --include="*.yml" --include="*.html" . 2>/dev/null | grep -vE '^\./(\.git|node_modules|lib)/' | grep -vE '^\./\.github/workflows/(security-policy|wellknown-enforcement)\.yml:' | grep -vE 'http://(localhost|127\.0\.0\.1|\$\{hostname\}|example\.com)|test|spec' | head -5 || true)
           if [ -n "$HTTP_URLS" ]; then
             echo "❌ Non-local HTTP URLs found. Use HTTPS:"
             echo "$HTTP_URLS"
@@ -28,7 +28,7 @@ jobs:
           fi
           
           # Block hardcoded secrets patterns
-          SECRETS=$(grep -rEi '(api_key|apikey|secret_key|password)\s*[=:]\s*["'][A-Za-z0-9+/=]{20,}' --include="*.py" --include="*.js" --include="*.ts" --include="*.go" --include="*.rs" --include="*.env" . 2>/dev/null | grep -vE '^\./(\.git|node_modules|lib)/' | grep -v 'example\|sample\|test\|mock\|placeholder' | head -3 || true)
+          SECRETS=$(grep -rEi "(api_key|apikey|secret_key|password)[[:space:]]*[=:][[:space:]]*[\"'][A-Za-z0-9+/=]{20,}" --include="*.py" --include="*.js" --include="*.ts" --include="*.go" --include="*.rs" --include="*.env" . 2>/dev/null | grep -vE '^\./(\.git|node_modules|lib)/' | grep -v 'example\|sample\|test\|mock\|placeholder' | head -3 || true)
           if [ -n "$SECRETS" ]; then
             echo "❌ Potential hardcoded secrets detected!"
             FAILED=true
