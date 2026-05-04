@@ -13,9 +13,13 @@ workflow-runs = "GitHub app reported no workflow runs for 27ef502, so there was 
 bot-directives = "agent_instructions/README.adoc referenced bot_directives/, but the directory and fleet role directives were absent before this repair."
 ci-drift = "Legacy workflows still expected README.md/lowercase justfile and lacked top-level permissions declarations."
 policy-drift = "An older ts-blocker workflow did not understand repo-local JavaScript/Deno GUI exemptions."
+workflow-yaml = "wellknown-enforcement.yml contained a split tr -d newline literal that made GitHub and Scorecard treat the workflow as invalid YAML."
+pages-config = "The Jekyll Pages workflow ran on every main push, but GitHub Pages is not enabled/configured for this repository."
+scorecard-config = "The scorecard enforcer published results from a job that also had a run step; OpenSSF rejects that publication shape."
+farm-dispatch = "Instant Sync reached peter-evans/repository-dispatch but GitHub returned Bad credentials for FARM_DISPATCH_TOKEN."
 
 [root-cause]
-summary = "The fleet had no repo-local bot_directives contract, no working local gh authentication, and stale CI policy files that predated the later exemption-table approach."
+summary = "The fleet had no repo-local bot_directives contract, no working local gh authentication, stale CI policy files, and repo-level secrets/settings drift that bots cannot repair without credentials or repository settings access."
 
 [repair]
 status = "patched"
@@ -24,5 +28,9 @@ items = [
   "documented Elixir/BEAM support roles",
   "aligned CI checks with README.adoc and Justfile",
   "added workflow permissions",
-  "documented Deno GUI JavaScript exemptions"
+  "documented Deno GUI JavaScript exemptions",
+  "fixed malformed workflow YAML",
+  "made Pages deployment manual until Pages is enabled",
+  "made farm dispatch credential failure non-blocking while preserving a warning",
+  "changed Scorecard enforcer to local JSON enforcement without publishing"
 ]

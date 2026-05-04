@@ -84,8 +84,7 @@ jobs:
       - name: DNS security records check
         if: hashFiles('CNAME') != ''
         run: |
-          DOMAIN=$(cat CNAME 2>/dev/null | tr -d '
-')
+          DOMAIN=$(tr -d '\r\n' < CNAME 2>/dev/null)
           if [ -n "$DOMAIN" ]; then
             echo "Checking DNS for $DOMAIN..."
             # CAA record

@@ -15,8 +15,8 @@ jobs:
   scorecard:
     runs-on: ubuntu-latest
     permissions:
-      security-events: write
       id-token: write  # For OIDC
+      contents: read
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
@@ -25,26 +25,21 @@ jobs:
       - name: Run Scorecard
         uses: ossf/scorecard-action@62b2cac7ed8198b15735ed49ab1e5cf35480ba46 # v2.4.0
         with:
-          results_file: results.sarif
-          results_format: sarif
-          publish_results: true
-
-      - name: Upload SARIF
-        uses: github/codeql-action/upload-sarif@662472033e021d55d94146f66f6058822b0b39fd # v3
-        with:
-          sarif_file: results.sarif
+          results_file: results.json
+          results_format: json
+          publish_results: false
 
       - name: Check minimum score
         run: |
           # Parse score from results
-          SCORE=$(jq -r '.runs[0].tool.driver.properties.score // 0' results.sarif 2>/dev/null || echo "0")
+          SCORE=$(jq -r '.score // 0' results.json 2>/dev/null || echo "0")
 
           echo "OpenSSF Scorecard Score: $SCORE"
 
           # Minimum acceptable score (0-10 scale)
           MIN_SCORE=5
 
-          if [ "$(echo "$SCORE < $MIN_SCORE" | bc -l)" = "1" ]; then
+          if ! awk -v score="$SCORE" -v min="$MIN_SCORE" 'BEGIN { exit(score >= min ? 0 : 1) }'; then
             echo "::error::Scorecard score $SCORE is below minimum $MIN_SCORE"
             exit 1
           fi

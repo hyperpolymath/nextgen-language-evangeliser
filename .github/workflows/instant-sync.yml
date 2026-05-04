@@ -16,7 +16,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Propagation
-        uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0 # v3
+        id: dispatch
+        continue-on-error: true
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
         with:
           token: ${{ secrets.FARM_DISPATCH_TOKEN }}
           repository: hyperpolymath/.git-private-farm
@@ -30,4 +32,10 @@ jobs:
             }
 
       - name: Confirm
-        run: echo "::notice::Propagation triggered for ${{ github.event.repository.name }}"
+        if: always()
+        run: |
+          if [ "${{ steps.dispatch.outcome }}" = "failure" ]; then
+            echo "::warning::Propagation dispatch failed; rotate FARM_DISPATCH_TOKEN for hyperpolymath/.git-private-farm."
+          else
+            echo "::notice::Propagation triggered for ${{ github.event.repository.name }}"
+          fi

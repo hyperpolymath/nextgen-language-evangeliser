@@ -48,6 +48,20 @@ effort = "medium"
 impact = "medium"
 discovered = "2026-05-04"
 
+[[debt.should]]
+component = "instant-sync"
+issue = "FARM_DISPATCH_TOKEN is rejected by hyperpolymath/.git-private-farm; rotate the repository secret if automatic forge propagation should be authoritative."
+effort = "easy"
+impact = "medium"
+discovered = "2026-05-04"
+
+[[debt.should]]
+component = "github-pages"
+issue = "GitHub Pages is not enabled/configured for this repository; the Jekyll Pages workflow is manual-only until repository Pages settings are configured."
+effort = "easy"
+impact = "low"
+discovered = "2026-05-04"
+
 # ============================================================================
 # COULD — would fix eventually
 # ============================================================================
