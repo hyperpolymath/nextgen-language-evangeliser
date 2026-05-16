@@ -11,8 +11,6 @@ image:https://img.shields.io/badge/Deno-Runtime-000000.svg[Deno Runtime]
 
 > *Celebrate good, minimize bad, show better* -- A pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers next-generation type-safe languages through progressive code transformation, without shame.
 
-NOTE: This project is the successor to *ReScript Evangeliser*. The ReScript catalogue is preserved as a legacy target while we pivot the flagship to *AffineScript*. See link:ROADMAP.adoc[ROADMAP.adoc] for migration phases.
-
 == What is This?
 
 Nextgen Languages Evangeliser is a library and toolkit that helps JavaScript developers learn affine/linear-typed and other next-generation languages by:
