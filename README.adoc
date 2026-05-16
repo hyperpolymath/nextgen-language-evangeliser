@@ -197,9 +197,7 @@ nextgen-languages-evangeliser/
 
 == Philosophy: "Celebrate Good, Minimize Bad, Show Better"
 
-We *never* shame developers. Instead:
-
-1. *Celebrate*: Recognize what their JavaScript does well
+1. *Celebrate*: Recognize what JavaScript does well
 2. *Minimize*: Gently acknowledge minor limitations
 3. *Better*: Show how the target language enhances the pattern
 4. *Safety*: Explain type-level (and affine/linear) guarantees
