@@ -393,7 +393,7 @@ A: Absolutely! MIT OR Palimpsest license. We'd love to see your innovations!
 
 - GitHub Discussions: General questions
 - Issues: Specific concerns
-- Maintainers: See [MAINTAINERS.md](../MAINTAINERS.md)
+- Maintainers: See [MAINTAINERS.md](../MAINTAINERS.adoc)
 
 ---
 
