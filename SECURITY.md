@@ -22,7 +22,7 @@ Security is a **first-class concern** in Nextgen Languages Evangeliser. We follo
 If you discover a security vulnerability, please report it responsibly:
 
 **DO:**
-- ✅ Email security details to the maintainers (see [MAINTAINERS.md](MAINTAINERS.md))
+- ✅ Email security details to the maintainers (see [MAINTAINERS.md](MAINTAINERS.adoc))
 - ✅ Use encrypted email if possible (PGP key in [.well-known/security.txt](.well-known/security.txt))
 - ✅ Wait for response before public disclosure (max 90 days)
 - ✅ Provide detailed reproduction steps
@@ -212,7 +212,7 @@ When contributing code:
 - [ ] Input validation for all user data
 - [ ] Resource limits respected
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.adoc) for full guidelines.
 
 ## 🏆 Security Compliance
 
@@ -252,7 +252,7 @@ https://github.com/Hyperpolymath/nextgen-languages-evangeliser/releases
 
 For security concerns:
 
-- **Email**: See [MAINTAINERS.md](MAINTAINERS.md)
+- **Email**: See [MAINTAINERS.md](MAINTAINERS.adoc)
 - **PGP Key**: See [.well-known/security.txt](.well-known/security.txt)
 - **Security.txt**: RFC 9116 compliant file in [.well-known/](.well-known/)
 
