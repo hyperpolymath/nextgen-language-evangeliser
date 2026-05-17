@@ -246,7 +246,7 @@ See link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] for full details.
 * link:CONTRIBUTING.md[CONTRIBUTING.md] - How to contribute
 * link:CODE_OF_CONDUCT.md[CODE_OF_CONDUCT.md] - Community guidelines
 * link:SECURITY.md[SECURITY.md] - Security policies
-* link:CHANGELOG.md[CHANGELOG.md] - Version history
+* link:CHANGELOG.adoc[CHANGELOG.adoc] - Version history
 * link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] - RSR framework compliance
 * link:docs/TPCF.md[TPCF.md] - Contribution framework
 * link:ROADMAP.adoc[ROADMAP.adoc] - Migration phases & future targets

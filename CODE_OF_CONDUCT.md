@@ -209,7 +209,7 @@ This Code of Conduct is a **living document** and may be updated based on commun
 
 - Announced to the community
 - Open for discussion before finalization
-- Versioned and tracked in [CHANGELOG.md](CHANGELOG.md)
+- Versioned and tracked in [CHANGELOG.adoc](CHANGELOG.adoc)
 
 **Last Updated**: 2024-11-22
 **Version**: 1.0
