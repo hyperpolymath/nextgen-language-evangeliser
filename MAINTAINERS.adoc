@@ -1,4 +1,282 @@
 // SPDX-License-Identifier: MPL-2.0-or-later
+
+== Maintainers
+
+This document lists the current maintainers of the Nextgen Languages Evangeliser project (formerly ReScript Evangeliser) and describes their roles and responsibilities.
+
+=== Current Maintainers
+
+==== Lead Maintainer
+
+*Hyperpolymath*
+
+* *Role*: Project creator, lead maintainer, architecture decisions
+* *GitHub*: https://github.com/Hyperpolymath[@Hyperpolymath]
+* *Responsibilities*:
+** Overall project vision and direction
+** Major architectural decisions
+** Release management
+** Security vulnerability coordination
+** Community moderation
+* *Availability*: Best effort
+* *PGP Key*: See .well-known/security.txt
+
+==== Pattern Library Maintainers
+
+_Looking for volunteers!_
+
+* *Role*: Curate and maintain the JavaScript → ReScript pattern library
+* *Responsibilities*:
+** Review pattern submissions
+** Ensure pattern quality and accuracy
+** Organize patterns by category and difficulty
+** Write pattern documentation
+
+==== Documentation Maintainers
+
+_Looking for volunteers!_
+
+* *Role*: Maintain project documentation
+* *Responsibilities*:
+** Keep documentation up to date
+** Review documentation PRs
+** Improve clarity and accessibility
+** Coordinate translations (future)
+
+==== Testing Maintainers
+
+_Looking for volunteers!_
+
+* *Role*: Maintain test suite and CI/CD
+* *Responsibilities*:
+** Write and review tests
+** Maintain CI/CD pipelines
+** Ensure test coverage requirements
+** Performance testing and benchmarking
+
+=== Becoming a Maintainer
+
+We welcome new maintainers! The path to maintainership:
+
+==== Requirements
+
+[arabic]
+. *Consistent Contributions*: 3{plus} months of regular contributions
+. *Code Quality*: Demonstrates understanding of project standards
+. *Community Engagement*: Helpful in issues, discussions, PRs
+. *Code of Conduct*: Exemplifies our compassionate approach
+. *Reliability*: Can commit to ongoing involvement
+
+==== Process
+
+[arabic]
+. *Nomination*: Existing maintainers nominate candidates
+. *Discussion*: Team discusses candidate's fit
+. *Consensus*: All current maintainers must agree
+. *Invitation*: Candidate is invited to join
+. *Onboarding*: New maintainer receives access and training
+
+==== Maintainer Levels
+
+*Level 1: Triage*
+
+* Label and organize issues
+* Close duplicates and spam
+* Help users in discussions
+
+*Level 2: Reviewer*
+
+* Review pull requests
+* Merge approved PRs
+* Guide contributors
+
+*Level 3: Maintainer*
+
+* Full repository access
+* Make architectural decisions
+* Manage releases
+* Enforce Code of Conduct
+
+*Level 4: Lead*
+
+* Overall project direction
+* Conflict resolution
+* Security coordination
+* Community leadership
+
+=== Maintainer Responsibilities
+
+==== Code Review
+
+* Review PRs within 7 days
+* Provide constructive, compassionate feedback
+* Test changes locally when needed
+* Ensure CI passes before merge
+* Follow "Celebrate, Minimize, Better" philosophy
+
+==== Issue Management
+
+* Triage new issues within 48 hours
+* Label appropriately
+* Close duplicates with links to originals
+* Ask for clarification when needed
+* Be welcoming to new contributors
+
+==== Security
+
+* Monitor security advisories
+* Coordinate security fixes
+* Follow responsible disclosure
+* Update dependencies regularly
+
+==== Community
+
+* Model positive behavior
+* Enforce Code of Conduct fairly
+* Welcome new contributors
+* Recognize contributions
+* Foster inclusive environment
+
+==== Releases
+
+* Follow semantic versioning
+* Update CHANGELOG.md
+* Test release candidates
+* Announce releases
+* Monitor for issues post-release
+
+=== Emeritus Maintainers
+
+Maintainers who have moved on to other projects but whose contributions are forever appreciated:
+
+_None yet - this is a new project!_
+
+=== Decision Making
+
+==== Consensus Model
+
+For major decisions, we use *lazy consensus*:
+
+[arabic]
+. Proposal is shared publicly (GitHub Issue or Discussion)
+. Community has 7 days to object
+. If no objections, proposal is accepted
+. If objections, discussion continues until consensus
+
+==== Voting
+
+For rare cases where consensus fails:
+
+* Simple majority vote among Level 3{plus} maintainers
+* All votes are public
+* Decisions documented in issues/discussions
+
+==== Veto Rights
+
+Lead maintainer has veto power for:
+
+* Security-critical decisions
+* Code of Conduct enforcement
+* Legal/licensing issues
+
+Veto should be used sparingly and with explanation.
+
+=== Conflict Resolution
+
+==== Process
+
+[arabic]
+. *Direct Communication*: Parties attempt to resolve directly
+. *Mediation*: Another maintainer mediates
+. *Team Decision*: Maintainer team discusses and decides
+. *External Mediation*: If needed, involve neutral third party
+
+==== Principles
+
+* Assume good intent
+* Focus on project health, not personal preferences
+* Follow Code of Conduct
+* Document decisions
+* Move forward once decided
+
+=== Stepping Down
+
+Maintainers can step down at any time:
+
+[arabic]
+. *Notification*: Inform other maintainers
+. *Transition*: Help onboard replacement if possible
+. *Access Removal*: Repository access revoked
+. *Emeritus Status*: Recognized in this document
+. *Return Welcome*: Always welcome to return later
+
+=== Maintainer Resources
+
+==== Internal
+
+* *Maintainer Chat*: ++[++Private Discord channel++]++
+* *Security Email*: ++[++Secure mailing list++]++
+* *Calendar*: ++[++Shared calendar for releases++]++
+
+==== External
+
+* *GitHub Maintainer Guide*: https://opensource.guide/best-practices/
+* *VS Code Extension Best Practices*: https://code.visualstudio.com/api/references/extension-guidelines
+* *ReScript Community*: https://forum.rescript-lang.org/
+
+=== Time Commitment
+
+Maintainers are *volunteers*. Expected time commitment:
+
+* *Level 1*: 1-2 hours/week
+* *Level 2*: 2-4 hours/week
+* *Level 3*: 4-8 hours/week
+* *Level 4*: 8-12 hours/week
+
+These are guidelines, not requirements. *Life happens*. Communicate when unavailable.
+
+=== Compensation
+
+Currently, maintainership is *volunteer-based*. Future possibilities:
+
+* Open Collective funding
+* GitHub Sponsors
+* Corporate sponsorship
+* Grant funding
+
+Any compensation will be distributed fairly and transparently.
+
+=== Contact
+
+==== Public
+
+* *GitHub Issues*: Technical questions, bug reports
+* *GitHub Discussions*: General questions, ideas
+* *ReScript Forum*: Community discussion
+
+==== Private
+
+* *Security Issues*: See SECURITY.md
+* *Code of Conduct*: See CODE_OF_CONDUCT.md
+* *Other Private Matters*: Create a private security advisory on GitHub
+
+=== Acknowledgments
+
+Thank you to all maintainers, past and present, for your dedication to making ReScript accessible and welcoming!
+
+'''''
+
+*Want to become a maintainer?* Start contributing! We're always looking for dedicated community members.
+
+*Last Updated*: 2024-11-22
+
+////
+Appendix preserved verbatim from the legacy .adoc during the
+Item 11 .md/.adoc consolidation (Day 10 lossy-tail). 35 legacy-only
+content tokens were not present in the converted Markdown source;
+retained here so nothing is lost. Reviewer may de-duplicate prose.
+////
+
 = Maintainers
 :toc: preamble
 
