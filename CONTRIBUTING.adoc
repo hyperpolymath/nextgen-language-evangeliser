@@ -1,20 +1,457 @@
 // SPDX-License-Identifier: MPL-2.0-or-later
-= Contributing Guide
+= Contributing to Nextgen Languages Evangeliser
 
-== Getting Started
+Thank you for your interest in contributing! 🎉
 
-1. Fork the repository
-2. Create a feature branch from `main`
-3. Sign off commits (`git commit -s`)
-4. Submit a pull request
+[quote]
+____
+_Note:_ This project is mid-migration from _ReScript Evangeliser_ to _Nextgen Languages Evangeliser_ (flagship target: AffineScript). Some sections below still reference the ReScript-centric dev setup — these will be updated through Phases 1–3. See `ROADMAP.adoc`.
+____
 
-== Commit Guidelines
+This project follows the _Compassionate Code Contribution Pledge (CCCP)_ and _Tri-Perimeter Contribution Framework (TPCF) - Perimeter 3_.
 
-* Conventional commits: `type(scope): description`
-* Sign all commits (DCO required)
-* Atomic, focused commits
+== 🌟 Philosophy: "Celebrate Good, Minimize Bad, Show Better"
 
-== License
+Our contribution process mirrors our teaching philosophy:
 
-Contributions licensed under project license.
+. _Celebrate_: We appreciate every contribution, no matter how small
+. _Minimize_: We gently guide improvements without harsh criticism
+. _Better_: We collaboratively make the code even better
+. _Safety_: We ensure type safety and test coverage
+. _Example_: We provide concrete examples and mentorship
 
+== 🚀 Quick Start
+
+=== Prerequisites
+
+* Node.js 20+ (LTS recommended)
+* VS Code 1.85+
+* Git
+* Optional: Nix (for reproducible builds)
+
+=== Development Setup
+
+[source,bash]
+----
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/nextgen-languages-evangeliser.git
+cd nextgen-languages-evangeliser/extension
+
+# Install dependencies
+npm install
+
+# Compile TypeScript
+npm run compile
+
+# Run tests
+npm test
+
+# Launch extension in VS Code
+# Press F5 or Run > Start Debugging
+----
+
+=== First Contribution
+
+. _Find an issue_ labeled `good first issue` or `help wanted`
+. _Comment_ on the issue to claim it
+. _Create a branch_: `git checkout -b feature/your-feature-name`
+. _Make changes_ following our guidelines (below)
+. _Test thoroughly_: `npm test` and `npm run lint`
+. _Commit_: Use conventional commits (see below)
+. _Push_: `git push origin feature/your-feature-name`
+. _Open a Pull Request_: Describe your changes clearly
+
+== 📋 Contribution Types
+
+=== 1. Pattern Contributions (Most Welcome!)
+
+Add new JavaScript → ReScript transformation patterns.
+
+_Template_: See docs/PATTERN_AUTHORING.md[docs/PATTERN_AUTHORING.md]
+
+_Example_:
+[source,typescript]
+----
+{
+  id: 'my-pattern',
+  name: 'My Cool Pattern',
+  category: 'functional',
+  difficulty: 'beginner',
+  jsPattern: /const\s+(\w+)\s*=/,
+  jsExample: `const x = 42;`,
+  rescriptExample: `let x = 42`,
+  narrative: {
+    celebrate: "You're using const - you know about immutability!",
+    minimize: "The only small thing is const isn't always enforced...",
+    better: "ReScript makes immutability the default!",
+    safety: "The compiler ensures no accidental mutations.",
+    example: "See how let in ReScript is always immutable!"
+  },
+  glyphs: ['💎', '🛡️'],
+  tags: ['variables', 'immutability'],
+  relatedPatterns: [],
+  learningObjectives: ['Understand immutability by default'],
+  commonMistakes: ['Trying to reassign let bindings'],
+  bestPractices: ['Use let for immutable bindings, use ref for mutable ones']
+}
+----
+
+=== 2. Code Contributions
+
+_Areas_:
+* Core extension functionality
+* Pattern detection engine (AST parsing)
+* UI views (RAW/FOLDED/GLYPHED/WYSIWYG)
+* Test coverage improvements
+* Performance optimizations
+* Documentation
+
+=== 3. Documentation Contributions
+
+* Improving README, guides, tutorials
+* Adding code examples
+* Creating video scripts
+* Translating documentation
+* Writing blog posts
+
+=== 4. Testing Contributions
+
+* Unit tests for patterns
+* Integration tests
+* UI tests
+* Performance benchmarks
+* Security tests
+
+=== 5. Design Contributions
+
+* UI/UX improvements
+* Glyph designs
+* Color schemes
+* Accessibility enhancements
+
+== 📝 Guidelines
+
+=== Code Style
+
+We use TypeScript with strict mode:
+
+[source,typescript]
+----
+// ✅ Good
+function transformCode(code: string): string {
+  if (!code) {
+    throw new Error('Code is required');
+  }
+  return code.trim();
+}
+
+// ❌ Avoid
+function transformCode(code) { // Missing types
+  return code.trim(); // No validation
+}
+----
+
+_Rules_:
+* Strict TypeScript (`strict: true`)
+* No `any` types (use `unknown` and narrow)
+* Explicit return types for public functions
+* JSDoc comments for public APIs
+* Meaningful variable names
+
+=== Testing Requirements
+
+All contributions must include tests:
+
+[source,bash]
+----
+# Run all tests
+npm test
+
+# Run with coverage
+npm run test:coverage
+
+# Watch mode during development
+npm run test:watch
+----
+
+_Requirements_:
+* Unit tests for new functions
+* Integration tests for new features
+* 70%+ code coverage (enforced by CI)
+* All tests must pass
+
+=== Commit Message Format
+
+We use _Conventional Commits_:
+
+[listing]
+----
+<type>(<scope>): <description>
+
+[optional body]
+
+[optional footer]
+----
+
+_Types_:
+* `feat`: New feature
+* `fix`: Bug fix
+* `docs`: Documentation only
+* `style`: Code style (formatting, no logic change)
+* `refactor`: Code refactoring
+* `test`: Adding tests
+* `chore`: Build process, dependencies
+
+_Examples_:
+[listing]
+----
+feat(patterns): add null coalescing operator pattern
+
+Add detection and transformation for ?? operator to ReScript's
+Option.getOr pattern. Includes tests and documentation.
+
+Closes #42
+----
+
+[listing]
+----
+fix(parser): handle nested ternary expressions
+
+Previously nested ternaries caused parser to fail. Now properly
+handles up to 3 levels of nesting with pattern matching suggestion.
+
+Fixes #123
+----
+
+=== Code Review Process
+
+. _Automated Checks_:
+** CI runs tests and linting
+** RSR compliance verification
+** Coverage report generated
+
+. _Peer Review_:
+** At least one approval required
+** Constructive feedback following CCCP
+** Suggestions, not demands
+
+. _Maintainer Review_:
+** Final architectural review
+** Merge approval
+
+=== TPCF Perimeter 3: Community Sandbox
+
+This project is _fully open_ to contributions:
+
+* ✅ _No approval required_ for common changes
+* ✅ _Automated review_ for pattern additions
+* ✅ _Community-driven_ governance
+* ✅ _Inclusive_ decision-making
+
+See docs/TPCF.md[docs/TPCF.md] for full framework.
+
+== 🛡️ Security Contributions
+
+Security is critical! Please:
+
+. _Never_ commit secrets, API keys, or credentials
+. _Report_ vulnerabilities privately (see SECURITY.md[SECURITY.md])
+. _Test_ for common vulnerabilities (XSS, injection, etc.)
+. _Follow_ security checklist in SECURITY.md[SECURITY.md]
+
+== ♿ Accessibility
+
+We strive for _WCAG 2.1 AA compliance_:
+
+* Semantic HTML in webviews
+* Keyboard navigation support
+* Screen reader compatibility
+* Sufficient color contrast
+* No flashing/blinking elements
+
+== 🌍 Internationalization
+
+Currently English-only, but we welcome:
+
+* Translation contributions
+* i18n infrastructure
+* Localized examples
+* Cultural adaptations of narratives
+
+== 📊 Performance Standards
+
+All code must meet performance targets:
+
+* _Pattern detection_: <300ms
+* _Memory usage_: <100MB
+* _UI response_: <50ms
+
+Run benchmarks:
+[source,bash]
+----
+npm run benchmark
+----
+
+== 🎨 UI/UX Contributions
+
+When contributing to UI:
+
+. _Consistency_: Follow VS Code design guidelines
+. _Simplicity_: Progressive disclosure, not overwhelming
+. _Accessibility_: WCAG 2.1 AA minimum
+. _Performance_: 60fps animations, lazy loading
+
+== 🧪 Testing Patterns
+
+=== Unit Test Example
+
+[source,typescript]
+----
+import { detectPattern } from '../patterns/pattern-library';
+
+describe('Pattern Detection', () => {
+  it('should detect null check pattern', () => {
+    const code = 'if (x !== null && x !== undefined)';
+    const matches = detectPattern(code);
+
+    expect(matches).toHaveLength(1);
+    expect(matches[0].pattern.id).toBe('null-safety');
+  });
+
+  it('should handle edge case of nested null checks', () => {
+    const code = 'if (a && a.b && a.b.c)';
+    const matches = detectPattern(code);
+
+    expect(matches.length).toBeGreaterThan(0);
+  });
+});
+----
+
+== 📚 Documentation Standards
+
+When writing documentation:
+
+* _Clear_: Plain language, no jargon
+* _Concise_: Respect the reader's time
+* _Concrete_: Provide examples
+* _Encouraging_: Follow "celebrate good" philosophy
+* _Inclusive_: Consider diverse backgrounds
+
+== 🏆 Recognition
+
+Contributors are recognized in:
+
+* .well-known/humans.txt[humans.txt]
+* Release notes
+* GitHub contributors list
+* Annual "Top Contributors" spotlight
+
+== 🎯 Roadmap Priorities
+
+Current priorities (see https://github.com/Hyperpolymath/nextgen-languages-evangeliser/projects[GitHub Projects]):
+
+. _High Priority_:
+** Expanding pattern library (50 → 100+ patterns)
+** WYSIWYG view implementation
+** Tutorial system
+
+. _Medium Priority_:
+** Multi-language support (Elm, Haskell)
+** Performance optimizations
+** Accessibility improvements
+
+. _Low Priority_:
+** Theme customization
+** Custom glyph sets
+** Plugin system
+
+== 💬 Communication
+
+=== Channels
+
+* _GitHub Issues_: Bug reports, feature requests
+* _GitHub Discussions_: Questions, ideas, showcase
+* _Discord_: Real-time chat (ReScript community)
+* _Forum_: Long-form discussion (ReScript forum)
+
+=== Response Times
+
+We aim for:
+* _Issues_: Response within 48 hours
+* _PRs_: Initial review within 7 days
+* _Security_: Acknowledgment within 24 hours
+
+== 🙏 Code of Conduct
+
+This project follows the _Compassionate Code Contribution Pledge (CCCP)_:
+
+=== Our Pledge
+
+We pledge to make participation a harassment-free, psychologically safe experience for everyone, regardless of:
+
+* Age, body size, disability, ethnicity
+* Gender identity and expression
+* Level of experience, education, socio-economic status
+* Nationality, personal appearance, race, religion
+* Sexual identity and orientation
+
+=== Our Standards
+
+_Positive behaviors_:
+* ✅ Celebrating others' knowledge and contributions
+* ✅ Being respectful of differing viewpoints
+* ✅ Giving and gracefully accepting constructive feedback
+* ✅ Focusing on what's best for the community
+* ✅ Showing empathy towards other community members
+
+_Unacceptable behaviors_:
+* ❌ Harassment, trolling, insulting/derogatory comments
+* ❌ Public or private harassment
+* ❌ Publishing others' private information
+* ❌ Shaming developers for not knowing something
+* ❌ Any conduct inappropriate in a professional setting
+
+=== Enforcement
+
+Violations should be reported to project maintainers. All complaints will be reviewed and investigated promptly and fairly.
+
+_Consequences_:
+. _Warning_: Private, written warning
+. _Temporary Ban_: 30-day suspension
+. _Permanent Ban_: Permanent exclusion
+
+See full CODE_OF_CONDUCT.md[CODE_OF_CONDUCT.md].
+
+== 🎓 Learning Resources
+
+New to contributing? Check out:
+
+* https://github.com/firstcontributions/first-contributions[First Contributions]
+* https://opensource.guide/how-to-contribute/[How to Contribute to Open Source]
+* https://www.conventionalcommits.org/[Conventional Commits]
+* https://rescript-lang.org/docs[ReScript Documentation]
+
+== ❓ Questions?
+
+Don't hesitate to ask!
+
+* _GitHub Discussions_: For general questions
+* _Issues_: For specific technical questions
+* _Maintainers_: See MAINTAINERS.md[MAINTAINERS.md]
+
+'''
+
+== 📜 License
+
+By contributing, you agree that your contributions will be dual-licensed under:
+
+* _MIT License_ (LICENSE-MIT.txt)
+* _Palimpsest License v0.8_ (LICENSE-PALIMPSEST.txt)
+
+You retain copyright of your contributions.
+
+'''
+
+_Thank you for contributing to Nextgen Languages Evangeliser!_ 🚀
+
+Remember: You were close! We're here to help make it even better together. 💙
