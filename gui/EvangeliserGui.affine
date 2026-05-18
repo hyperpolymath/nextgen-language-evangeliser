@@ -66,7 +66,7 @@ fn sample_source() -> String {
 }
 
 fn evangeliser_init() -> GuiModel {
-  {
+  #{
     source: sample_source(),
     target: TargetAffineScript,
     view: ViewRaw,
@@ -108,7 +108,7 @@ fn tab_to_class(tab: OutputTab) -> String {
 
 fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
   match msg {
-    EditSource(source) => {
+    EditSource(source) => #{
       source: source,
       target: model.target,
       view: model.view,
@@ -119,7 +119,7 @@ fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
       is_busy: false,
       status: "Edited"
     },
-    ChooseTarget(target) => {
+    ChooseTarget(target) => #{
       source: model.source,
       target: target,
       view: model.view,
@@ -130,7 +130,7 @@ fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
       is_busy: false,
       status: "Target " ++ target_to_cli(target)
     },
-    ChooseView(view) => {
+    ChooseView(view) => #{
       source: model.source,
       target: model.target,
       view: view,
@@ -141,7 +141,7 @@ fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
       is_busy: false,
       status: "View " ++ view_to_cli(view)
     },
-    ChooseDifficulty(difficulty) => {
+    ChooseDifficulty(difficulty) => #{
       source: model.source,
       target: model.target,
       view: model.view,
@@ -152,7 +152,7 @@ fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
       is_busy: false,
       status: "Difficulty " ++ difficulty
     },
-    SelectTab(active_tab) => {
+    SelectTab(active_tab) => #{
       source: model.source,
       target: model.target,
       view: model.view,
@@ -163,7 +163,7 @@ fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
       is_busy: false,
       status: "Tab " ++ tab_to_class(active_tab)
     },
-    RunAnalysis => {
+    RunAnalysis => #{
       source: model.source,
       target: model.target,
       view: model.view,
@@ -174,7 +174,7 @@ fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
       is_busy: true,
       status: "Analysing"
     },
-    ReceiveAnalysis(summary, match_count) => {
+    ReceiveAnalysis(summary, match_count) => #{
       source: model.source,
       target: model.target,
       view: model.view,
@@ -185,7 +185,7 @@ fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
       is_busy: false,
       status: "Complete"
     },
-    AnalysisFailed(reason) => {
+    AnalysisFailed(reason) => #{
       source: model.source,
       target: model.target,
       view: model.view,
@@ -196,7 +196,7 @@ fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
       is_busy: false,
       status: "Failed"
     },
-    LoadSample => {
+    LoadSample => #{
       source: sample_source(),
       target: model.target,
       view: model.view,
@@ -207,7 +207,7 @@ fn evangeliser_update(msg: GuiMsg, model: GuiModel) -> GuiModel {
       is_busy: false,
       status: "Ready"
     },
-    ClearSource => {
+    ClearSource => #{
       source: "",
       target: model.target,
       view: model.view,
@@ -237,7 +237,7 @@ fn evangeliser_subs(model: GuiModel) -> String {
 }
 
 fn main() -> () {
-  tea_run({
+  tea_run(#{
     init: evangeliser_init,
     update: evangeliser_update,
     view: evangeliser_view,
