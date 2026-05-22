@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Scanner: public interface for JavaScript code pattern scanning
 
 // Scan a block of code against a specific set of patterns

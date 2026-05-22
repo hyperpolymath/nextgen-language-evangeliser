@@ -13,7 +13,7 @@ NOTE: This project was renamed from `rescript-evangeliser` in 2026. Pre-rename c
   year = {2026},
   url = {https://github.com/hyperpolymath/nextgen-languages-evangeliser},
   note = {Successor to rescript-evangeliser (2025)},
-  license = {PMPL-1.0-or-later}
+  license = {MPL-2.0}
 }
 ----
 

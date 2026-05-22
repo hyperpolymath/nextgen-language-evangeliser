@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Analyser: Orchestrates scanning and produces analysis results
 // Computes coverage, difficulty assessment, and pattern suggestions
 

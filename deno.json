@@ -2,7 +2,7 @@
   "$schema": "https://deno.land/x/deno/cli/schemas/config-file.v1.json",
   "name": "@hyperpolymath/nextgen-languages-evangeliser",
   "version": "0.6.0-alpha",
-  "license": "PMPL-1.0-or-later",
+  "license": "MPL-2.0",
   "exports": "./bin/evangeliser.js",
   "tasks": {
     "build": "./scripts/rescript-build.sh",

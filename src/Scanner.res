@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Scanner: Matches JavaScript code against pattern library using regex detection
 // Returns detailed patternMatch results with line numbers and confidence scores
 

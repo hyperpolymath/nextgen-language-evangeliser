@@ -1,8 +1,8 @@
 = Nextgen Languages Evangeliser
 
 image:https://img.shields.io/badge/RSR-Bronze-CD7F32[RSR Bronze,link=docs/RSR_COMPLIANCE.md]
-image:https://img.shields.io/badge/License-PMPL--1.0--or--later-blue.svg[License: PMPL-1.0-or-later,link="https://github.com/hyperpolymath/palimpsest-license"]
-// SPDX-License-Identifier: PMPL-1.0-or-later
+image:https://img.shields.io/badge/License-PMPL--1.0--or--later-blue.svg[License: MPL-2.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+// SPDX-License-Identifier: MPL-2.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
 image:[TPCF: Perimeter 3,link=docs/TPCF.md]
@@ -236,7 +236,7 @@ This project follows the *Rhodium Standard Repository (RSR)* framework:
 * *Complete Documentation*: See link:docs/[docs/]
 * *Security First*: See link:SECURITY.md[SECURITY.md]
 * *Open Governance*: TPCF Perimeter 3 (Community Sandbox)
-* *Licensed*: PMPL-1.0-or-later
+* *Licensed*: MPL-2.0
 * *Build Reproducibility*: Deno + Justfile
 
 See link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] for full details.
@@ -265,9 +265,9 @@ This is a *TPCF Perimeter 3* project - all contributions are welcome!
 
 == License
 
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 
-This project is licensed under the *Palimpsest License (PMPL-1.0-or-later)*.
+This project is licensed under the *Palimpsest License (MPL-2.0)*.
 
 See link:LICENSE[LICENSE] for the full license text.
 

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Output: Format analysis results for terminal display
 // Supports RAW, FOLDED, and GLYPHED view layers
 // Target-aware: honours the requested target language, falls back to the

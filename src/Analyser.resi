@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Analyser: public interface for code analysis orchestration
 
 // Run full analysis on JavaScript code using the built-in pattern library

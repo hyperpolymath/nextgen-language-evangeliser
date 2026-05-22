@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // CLI: Entry point for the nextgen-languages-evangeliser command-line tool
 // Usage: evangeliser scan <file.js> | patterns | legend
 

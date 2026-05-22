@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Makaton-inspired glyph system for Nextgen Languages Evangeliser
 // Glyphs transcend syntax to show semantic meaning.
 

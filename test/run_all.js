@@ -1,5 +1,5 @@
 #!/usr/bin/env -S deno run --allow-read --allow-env
-// SPDX-License-Identifier: PMPL-1.0-or-later
+// SPDX-License-Identifier: MPL-2.0
 // Test runner: imports all compiled test modules sequentially
 
 import "./Types_test.res.js"
