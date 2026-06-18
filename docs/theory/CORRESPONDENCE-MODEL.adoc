@@ -1,0 +1,237 @@
+// SPDX-License-Identifier: MPL-2.0
+= Correspondence Model: the engine that *classifies*, not translates
+:toc: macro
+:toclevels: 3
+:icons: font
+
+[NOTE]
+====
+*Status: living design spec.* This is the conceptual foundation for the engine —
+authored ahead of the toolchain (AffineScript/Idris2/Zig not yet installable here), so
+it is verified by inspection against estate exemplars, not yet by build. One worked
+example (JTV grammar v2) is stubbed pending repository access; see <<open-questions>>.
+====
+
+toc::[]
+
+== What this engine is (and is not)
+
+This is *Duolingo / Rosetta Stone for programming languages* — a
+language-*comprehension and transfer* engine. It works **one layer above text
+editing**, on *syntactic and semantic intention*, so that the effort a person spent
+learning language A *transfers* when they move to B (JS → TypeScript, Ruby, Prolog, C,
+or exotic targets like QPL, Arrow, JTV). *Transfer learning across languages is the
+product.*
+
+It is *not*:
+
+* *Not "the next best IDE."* It does not compete on contrast, project-management
+  widgets, pop-up notepads, shortcuts, or well-trodden attention/memory/workflow
+  ergonomics. That is **PanLL**'s job (PanLL + eNSAID = the _contact_ between human,
+  tool, task, and environment). This engine *feeds* PanLL; it is not PanLL.
+* *Not a linter.* "Proximal/distal scope-colouring" and "spot the missing `;` / extra
+  `)`" are precisely what this is *not*. The differentiator is an engine that
+  **computes and classifies cross-language equivalence**, not one that looks it up.
+* *Not a universal translator.* A verified any-language→any-language compiler with full
+  Curry–Howard fidelity would be nice; it is *not the goal*. We do not need — and will
+  not attempt — to do this "to the dot" on everything.
+
+== Division of labour
+
+[cols="1,3"]
+|===
+| *We build* | the general engine + the interface + the classification vocabulary +
+the residue model + a reference language pack.
+| *The community builds* | the *per-language modules* — which pairs of constructs are
+cognate vs. false-friend vs. novel, with their residues. These are authored as
+**cartridges** (see `standards/cartridges/`).
+|===
+
+The engine is language-agnostic. The nextgen-language collection is merely the
+substrate we dogfood.
+
+== The object model: Concept / Form / Transition
+
+[cols="1,3"]
+|===
+| *Concept* | The invariant / equivalence-class — the recurring _trope_ (e.g.
+"bind a name to a value", "iterate a collection", "fail recoverably").
+| *Form* | A representative of a Concept *in one language* (e.g. `let` in ReScript,
+`=` in Erlang, `def` in Python). A Concept has many Forms across many languages.
+| *Transition* | A directed correspondence Form(A) → Form(B): the Echo-refined map
+plus its *residue* (what is lost, added, or inverted in crossing).
+|===
+
+A *lesson* is a Concept presented through the learner's known Form, the target Form,
+and the Transition between them — narrated without shame ("you already know this;
+here's the catch").
+
+== Levels of objects (strata)
+
+Classification runs *per stratum of meaning*, not on flat text:
+
+. *Surface* — tokens, lexemes (`=`, `def`, `match`).
+. *Structure* — AST shape, scoping, arity.
+. *Semantic intention* — what the construct _does_ (bind? mutate? branch?).
+. *Abstraction / trope* — the Concept it instantiates.
+. *Cross-language invariant* — the preserved quantity certifying "same idea".
+
+The interface lets a learner move *up and down* these strata and *across* view-modes.
+A correspondence can hold at one stratum and break at another — and that divergence is
+itself the most valuable signal (see false friends, below).
+
+== The formal carrier
+
+The model is grounded in the estate's own formalism, not a bespoke mapping table.
+
+* *Carrier = Dyadic `Relation`*
+  (`proven-tests-and-benches/src/ProvenTests/TypeSafe/Dyadic.idr`):
+  `{ relates; reflexive; symmetric; transitive }`. Equivalence = refl ∧ sym ∧ trans —
+  the symmetries and transitivities, as a checkable structure.
+* *Crossings are lossy-with-residue = Echo fibre*
+  (`Echo f y := Σ (x : A), f x ≡ y`, `hyperpolymath/echo-types`, Agda): the residue
+  (a proof term) is precisely _what is lost or added_ going A→B. A non-isomorphic
+  Transition (e.g. the absence of `return` in ReScript) is a map whose residue we
+  *surface*, never hide.
+* *Typed residue-lenses = the three Echo bridges* (`Bridge.idr`): `EchoChoreo`
+  (protocol/sequencing), `EchoEpistemic` (visibility/knowledge), `EchoTropical`
+  (cost, min-plus). Extensible.
+* *Composition = transitivity; symmetry distinguishes iso from retraction.* A clean
+  isomorphism ⇒ no residue (true equivalence); a retraction ⇒ one-way loss
+  (residue = the delta).
+* *`invariant-path` = the governance front-end.* It anchors each equivalence _claim_ to
+  its two code locations plus a witness (proof/test), human-in-the-loop and editable.
+
+[IMPORTANT]
+====
+*Honesty note on "knot theory."* The owner's framing — *types → carrier · tropes →
+recurring equivalence-figures · knot theory → certificate* — is load-bearing for
+intuition, but there is *no literal knot-invariant computation* here, and the
+knot-theory lens is flagged (by the owner) as "perceived as rhetoric, pending
+historical confirmation". We use *invariant* in the precise sense of a _preserved
+quantity that certifies "same idea"_, and keep knot theory as an aspirational lens, not
+a faked dependency.
+====
+
+[#taxonomy]
+== The Rosetta false-friends taxonomy
+
+The one judgement that matters is *"is this safe to transfer, or is it a trap?"*
+`def` → `define` might be _nothing but a rename_ — or it might look like that and not
+be. So the Dyadic relation is not a boolean `relates`; it is a *typed/graded*
+`CorrespondenceKind`, realised as grades of the Echo fibre:
+
+[cols="1,3,2"]
+|===
+| Kind | Signature | Pedagogy
+
+| *Cognate / true friend*
+| Intention + behaviour coincide; residue ≈ ∅. _Example:_ `def` → `define`.
+  But "just a rename" is a hypothesis to *verify*, never assume.
+| *Transfer directly.*
+
+| *False friend / homonym*
+| Surface matches, semantics diverge. _Example:_ BASIC `=` (mutable assignment) vs.
+  Erlang `=` (single-assignment bind/unify). Detected by *per-stratum* classification:
+  surface-corresponds ∧ semantics-diverge **is** the false-friend signature.
+| *Flag the trap.*
+
+| *Antonym / inverted*
+| Related but behaves oppositely. _Examples:_ 0- vs. 1-indexing; truthiness
+  conventions; stack-growth direction. Residue = the flip.
+| *Remap the intuition.*
+
+| *Alien realization*
+| Same intention, foreign mechanism, large residue. _Example:_ subtraction in a
+  reversible/add-only language (JTV) is `add` run backwards; divide via reversed
+  repeated-add. Also: recursion-only languages, CPS, monadic IO for "just print".
+| *Bridge with effort; explain the machinery.*
+
+| *Novel / no anchor*
+| Forward fibre empty: `∄ x. f x ≡ y`. The target has a concept with nothing to map
+  _from_. _Examples:_ static types coming from assembly + JS; ownership/borrowing;
+  affine/linear use-once; Prolog `cut`; JTV totality and information-flow labels.
+| *Teach de novo — there is no transfer.*
+
+| *Vanished*
+| Backward fibre empty: `∄ y`. A concept the learner relied on is _gone_.
+  _Examples:_ `return` in ReScript; `null` in a null-free language; mutable variables
+  in a pure language.
+| *Un-learn / re-route.*
+|===
+
+The residue therefore ranges from ∅ (true iso) through inverted/large to
+empty-in-either-direction (novel / vanished). This taxonomy *is* the Duolingo/Rosetta
+pedagogy: transfer cognates, warn on false friends, remap antonyms, bridge the alien,
+teach the novel, re-route the vanished.
+
+== Engine ↔ cartridge boundary
+
+We cannot do this "to the dot", and we do not try. Responsibilities split cleanly:
+
+* *Engine (ours):* the `CorrespondenceKind` vocabulary, the residue/fibre model, the
+  per-stratum classifier, the Dyadic/Echo carrier, and the certifiable Idris2/Echo math
+  — applied *where it pays* (high-value or dangerous correspondences), not everywhere.
+* *Cartridge (per-language, community):* the _facts_ — for this language, which Forms
+  instantiate which Concepts, and for each Transition the kind + residue + a witness.
+
+A cartridge fact, sketched:
+
+[source]
+----
+(transition
+  (concept   "name-binding")
+  (from      (lang "basic")   (form "X = 5"))
+  (to        (lang "erlang")  (form "X = 5"))
+  (kind      false-friend)            ; surface-cognate, semantic-divergent
+  (strata    (surface corresponds) (semantic diverges))
+  (residue   "BASIC rebinds destructively; Erlang binds once and unifies — \
+              re-`=` fails unless the value matches")
+  (witness   "proofs/erlang_single_assignment.idr"))   ; optional, where it pays
+----
+
+== Rendering: "levels of objects", not chrome
+
+The view-modes are the rendered strata, switchable and non-destructive (each conforms
+to the estate *overlay-protocol* — additive, non-modifying, idempotent, Idris2-ABI
+proved):
+
+* *focus* — show only what's needed now;
+* *glyph* — Makaton-style symbols (accessible, low-cognitive-load);
+* *blockly / scratch* — flowchart of structure;
+* *raw code* — the text itself;
+* *side-by-side* — multi-language diff with step-sync.
+
+Accessibility is a first-class contract, not a coat of paint: Hyperpolymath
+Accessibility Standard, Level *A* minimum → *AA* (keyboard-only operation, ≥4.5:1
+contrast, colourblind-safe palettes, ARIA/screen-reader, reduced-motion, plain-language
+mode, high-contrast glyph variants).
+
+== Downstream: feeding PanLL
+
+The engine *emits*, it does not own the IDE. Analyses become `octads` written to
+VeriSimDB (`:8097`) plus `Groove` signals; PanLL panels subscribe and re-render.
+Relevant octad types: `inline-annotation` (per-construct claims),
+`ecosystem-link` (intra-program relationships), `proof-status` (where a Transition
+carries a witness). Ergonomics are read from `.machine_readable/ENSAID_CONFIG.a2ml`.
+
+[#open-questions]
+== Open questions / placeholders
+
+* *JTV grammar v2* — the canonical worked example for *alien-realization* and
+  *novel/no-anchor* kinds. The `julia-the-viper` repo is a not-checked-out submodule
+  and currently outside session scope; constructs to be tagged against <<taxonomy>>
+  once the grammar is available. From the T1 proof spec, JTV is reversible + total +
+  effect-typed (I/O, state, crypto) + information-flow-typed (public/private/secret) +
+  capability-secured — i.e. dense with novel-concept correspondences.
+* *Stratum granularity* — whether 5 strata suffice, or "intention" needs splitting
+  (operational vs. denotational).
+* *Where the math pays* — the policy for when a Transition _must_ carry an Idris2/Echo
+  witness vs. an asserted-but-unproven classification.
+
+== References
+
+* `proven-tests-and-benches/src/ProvenTests/TypeSafe/Dyadic.idr`, `…/Bridge.idr`
+* `hyperpolymath/echo-types` — loss-with-residue (Agda)
+* `standards/overlay-protocol/`, `standards/ensaid-config/`,
+  `standards/accessibility/`, `standards/cartridges/`, `standards/panll-panels/`
