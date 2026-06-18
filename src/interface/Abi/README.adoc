@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: MPL-2.0
+= ABI seam — the correspondence model (Idris2)
+
+The formally-typed core of the engine that *classifies* cross-language
+correspondences. Typecheck with `idris2 --typecheck abi.ipkg` from the repo root.
+
+== Modules
+
+* `Abi.Carrier` — the carrier of an equivalence *claim*: a `Relation` (with its
+  reflexive / symmetric / transitive properties and `isEquivalence`) and the
+  `Residue` of a crossing — the grades of the Echo fibre, from `None` (true iso)
+  through `Inverted` / `Lossy` to `AbsentSource` / `AbsentTarget` (empty fibre).
+* `Abi.Correspondence` — `Concept` / `Form` / `Transition`, the six
+  `CorrespondenceKind`s (cognate / false-friend / antonym / alien-realization /
+  novel / vanished), the `Stratum` ladder, each kind's `pedagogy` and
+  `residueShape`, and the precise *false-friend signature* (`isFalseFriendShape`):
+  corresponds at the `Surface` stratum yet diverges at the `Intention` stratum.
+
+See `docs/theory/CORRESPONDENCE-MODEL.adoc` for the full design.
+
+== Licence note (cite, don't import)
+
+This seam is original *MPL-2.0* code. It is conceptually grounded in two estate
+libraries but deliberately does **not** import them, to keep the licence clean:
+
+* the Dyadic `Relation` from `hyperpolymath/proven-tests-and-benches`
+  (AGPL-3.0-or-later, son-shared) — importing it would relicense this repo by
+  linkage;
+* the Echo loss-with-residue fibre `Echo f y := Sigma (x : A), f x = y` from
+  `hyperpolymath/echo-types` (Agda).
+
+The shapes are re-expressed here as fresh MPL-2.0 source rather than depended on.
+`abi.ipkg` therefore lists `depends = base` only.
+
+== Status
+
+Authored ahead of the toolchain: Idris2 is not present in every environment, so
+this is verified by `idris2 --typecheck abi.ipkg` in a tooled session / CI, not
+yet in the authoring environment. The Zig FFI side of the seam
+(`src/interface/ffi/`) and the AffineScript host binding that consumes this ABI
+follow as later slices of the abstraction-model pivot.
