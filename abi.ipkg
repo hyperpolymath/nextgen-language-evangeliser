@@ -1,0 +1,26 @@
+-- SPDX-License-Identifier: MPL-2.0
+-- Copyright (c) 2026 Jonathan D.A. Jewell <j.d.a.jewell@open.ac.uk>
+--
+-- Idris2 package for the formally-typed ABI seam of the correspondence engine.
+--
+-- The seam lives in a single, case-consistent directory src/interface/Abi/
+-- (uppercase) so the physical path matches the `module Abi.*` namespace on
+-- EVERY filesystem (Idris2 requires capitalised namespace components).
+--
+-- Typecheck with the package (not a bare --check, which warns on module/path):
+--   idris2 --typecheck abi.ipkg      (or --build)
+
+package abi
+
+version = 0.1.0
+
+authors = "Jonathan D.A. Jewell"
+
+brief = "Formally-typed ABI seam (Idris2): Concept/Form/Transition + the six CorrespondenceKinds, grounded in Dyadic + Echo"
+
+sourcedir = "src/interface"
+
+depends = base
+
+modules = Abi.Carrier
+        , Abi.Correspondence
