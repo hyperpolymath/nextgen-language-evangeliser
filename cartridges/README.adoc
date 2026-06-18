@@ -1,0 +1,56 @@
+// SPDX-License-Identifier: MPL-2.0
+= Cartridges — per-language correspondence packs
+
+*We build the engine + this contract; the community authors cartridges.* A
+**cartridge** is a per-language pack of correspondence *facts* the engine
+classifies and teaches. The engine is language-agnostic; a cartridge supplies the
+language-specific knowledge.
+
+== What a cartridge declares
+
+For each cross-language `transition` (a directed Form(from) -> Form(to)):
+
+* `concept` — the invariant / trope it instantiates (e.g. `name-binding`);
+* `from` / `to` — the `Form`s (`language` slug + `surface` snippet);
+* `kind` — the `CorrespondenceKind`: `cognate` / `false-friend` / `antonym` /
+  `alien-realization` / `novel` / `vanished`;
+* `residue` — the Echo-fibre grade (`none` / `inverted` / `lossy` /
+  `absent-source` / `absent-target`) + a note of what is lost, added, or inverted;
+* `strata` (optional) — per-stratum verdicts; the *false-friend signature* is
+  `surface: true` AND `intention: false`;
+* `narrative` (optional) — shame-free guidance (celebrate / minimise / better /
+  safety / example);
+* `witness` (optional) — a path to a proof/test anchoring the claim, used where
+  the certifiable math pays.
+
+This vocabulary mirrors the Idris2 ABI at `src/interface/Abi/Correspondence.idr`
+and the Zig FFI at `src/interface/ffi/`, so cartridges, proofs, and the C
+boundary all describe one model.
+
+== Schema and reference
+
+* Schema: `correspondence-cartridge.schema.json` (JSON Schema draft 2020-12).
+* Reference: `reference/worked-examples.cartridge.json` — one transition per kind,
+  using the canonical examples from `docs/theory/CORRESPONDENCE-MODEL.adoc`.
+
+== Authoring a cartridge
+
+. Copy the reference pack and replace its transitions with your language pair(s).
+. Validate against the schema, e.g. with any JSON Schema validator:
++
+[source,sh]
+----
+# example (Deno):
+deno run --allow-read npm:ajv-cli validate \
+  -s cartridges/correspondence-cartridge.schema.json \
+  -d cartridges/reference/worked-examples.cartridge.json
+----
+. Choose your own `spdx` for your cartridge — the engine does not dictate it.
+
+Estate-wide cartridges live in `hyperpolymath/standards` (`standards/cartridges/`);
+this directory holds the schema this engine defines plus its reference pack.
+
+== Licence
+
+The schema and reference pack here are *MPL-2.0*. Cartridge authors license their
+own packs as they choose (the `spdx` field).

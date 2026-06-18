@@ -1,0 +1,98 @@
+{
+  "$schema": "../correspondence-cartridge.schema.json",
+  "spdx": "MPL-2.0",
+  "name": "worked-examples",
+  "version": "0.1.0",
+  "description": "Reference cartridge: one correspondence per CorrespondenceKind, using the canonical worked examples from docs/theory/CORRESPONDENCE-MODEL.adoc. Proves the schema covers all six grades of the Echo fibre.",
+  "languages": ["python", "scheme", "basic", "erlang", "c", "julia", "jtv", "assembly", "rescript", "javascript"],
+  "transitions": [
+    {
+      "concept": "function-definition",
+      "from": { "language": "python", "surface": "def f(): ..." },
+      "to": { "language": "scheme", "surface": "(define (f) ...)" },
+      "kind": "cognate",
+      "residue": { "shape": "none" },
+      "strata": [
+        { "stratum": "surface", "holds": false },
+        { "stratum": "intention", "holds": true }
+      ],
+      "narrative": {
+        "celebrate": "You already define functions — this is the very same idea.",
+        "better": "`define` is just the Scheme spelling of `def`.",
+        "safety": "Same binding intent; verify before assuming it is only a rename.",
+        "example": "def f(): return 1   <->   (define (f) 1)"
+      }
+    },
+    {
+      "concept": "name-binding",
+      "from": { "language": "basic", "surface": "X = 5" },
+      "to": { "language": "erlang", "surface": "X = 5" },
+      "kind": "false-friend",
+      "residue": {
+        "shape": "lossy",
+        "note": "BASIC rebinds destructively; Erlang binds once and unifies — re-`=` fails a match rather than overwriting."
+      },
+      "strata": [
+        { "stratum": "surface", "holds": true },
+        { "stratum": "intention", "holds": false }
+      ],
+      "narrative": {
+        "celebrate": "You have used `=` for assignment for years — that intuition is real.",
+        "safety": "In Erlang `=` is single-assignment bind / unify, not store.",
+        "example": "X = 5, X = 6   %% the second match FAILS"
+      }
+    },
+    {
+      "concept": "array-indexing",
+      "from": { "language": "c", "surface": "a[0]" },
+      "to": { "language": "julia", "surface": "a[1]" },
+      "kind": "antonym",
+      "residue": { "shape": "inverted", "note": "0-based vs 1-based: the first element flips index." },
+      "strata": [
+        { "stratum": "surface", "holds": true },
+        { "stratum": "intention", "holds": true },
+        { "stratum": "structure", "holds": false }
+      ]
+    },
+    {
+      "concept": "subtraction",
+      "from": { "language": "c", "surface": "a - b" },
+      "to": { "language": "jtv", "surface": "uncall add a b" },
+      "kind": "alien-realization",
+      "residue": {
+        "shape": "lossy",
+        "note": "JTV is reversible / add-only: subtraction is `add` run backwards; divide via reversed repeated-add."
+      },
+      "strata": [
+        { "stratum": "intention", "holds": true },
+        { "stratum": "structure", "holds": false }
+      ]
+    },
+    {
+      "concept": "static-types",
+      "from": { "language": "assembly", "surface": "(no analog)" },
+      "to": { "language": "rescript", "surface": "let x: int = 5" },
+      "kind": "novel",
+      "residue": {
+        "shape": "absent-source",
+        "note": "Coming from assembly + JS there is no prior anchor for a static type system — teach de novo."
+      },
+      "strata": [
+        { "stratum": "intention", "holds": false }
+      ]
+    },
+    {
+      "concept": "early-return",
+      "from": { "language": "javascript", "surface": "return x" },
+      "to": { "language": "rescript", "surface": "x  /* last expression is the value */" },
+      "kind": "vanished",
+      "residue": {
+        "shape": "absent-target",
+        "note": "ReScript has no `return`; a block evaluates to its last expression — re-route the habit."
+      },
+      "strata": [
+        { "stratum": "intention", "holds": false }
+      ]
+    }
+  ]
+}
