@@ -2,7 +2,7 @@
 // Validate every *.cartridge.json under cartridges/ against the correspondence
 // schema (JSON Schema draft 2020-12). Deno + ajv.
 //
-//   deno run -A scripts/validate-cartridges.js
+//   deno run -A --no-lock scripts/validate-cartridges.js
 //   just validate-cartridges
 //
 // Exits non-zero if any cartridge fails — suitable for CI.

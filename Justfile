@@ -79,7 +79,7 @@ validate:
 # Validate cartridges against the correspondence schema (Deno + ajv)
 validate-cartridges:
     @echo "🧩 Validating cartridges..."
-    @deno run -A scripts/validate-cartridges.js
+    @deno run -A --no-lock scripts/validate-cartridges.js
 
 # Validate RSR compliance
 validate-rsr:
