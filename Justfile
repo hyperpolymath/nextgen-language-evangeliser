@@ -237,9 +237,9 @@ help-me:
     @echo ""
     @echo "Include the output of 'just doctor' in your report."
 
-# Run panic-attacker pre-commit scan
+# Run panic-attack pre-commit scan
 assail:
-    @command -v panic-attack >/dev/null 2>&1 && panic-attack assail . || echo "panic-attack not found — install from https://github.com/hyperpolymath/panic-attacker"
+    @command -v panic-attack >/dev/null 2>&1 && panic-attack assail . || echo "panic-attack not found — install from https://github.com/hyperpolymath/panic-attack"
 
 
 # Print the current CRG grade (reads from READINESS.md '**Current Grade:** X' line)

@@ -1,0 +1,43 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# AGENTIC.a2ml — AI agent constraints and capabilities
+[metadata]
+version = "0.1.0"
+last-updated = "2026-06-18"
+project = "nextgen-languages-evangeliser"
+
+[agent-permissions]
+can-edit-source = true
+can-edit-tests = true
+can-edit-docs = true
+can-edit-config = true
+can-create-files = true
+
+[agent-constraints]
+# What AI agents must NOT do in this repo:
+# - Never relicense. This is a sole-owner repo; keep SPDX = MPL-2.0 on every
+#   file. No bulk SPDX sweeps (estate licence guardrail).
+# - Never use banned languages (TypeScript, Python, Go, V) or Makefiles (use
+#   the Justfile).
+# - Never reframe this as a universal translator or a Curry-Howard-fidelity
+#   compiler. It *classifies* cross-language correspondences and teaches the
+#   transfer; see docs/theory/CORRESPONDENCE-MODEL.adoc.
+# - Never shame the source language. Narratives keep the
+#   celebrate / minimise / better / safety / example voice.
+# - Never claim a green build from an untooled environment. AffineScript,
+#   Idris2, Zig and Deno may be absent here — author now, verify in CI.
+# - Never place state files in the repository root (must live in
+#   .machine_readable/).
+
+[maintenance-integrity]
+fail-closed = true
+require-evidence-per-step = true
+allow-silent-skip = false
+require-rerun-after-fix = true
+release-claim-requires-hard-pass = true
+
+[automation-hooks]
+# on-enter:  Read 0-AI-MANIFEST.a2ml, then .machine_readable/6a2/STATE.a2ml
+# on-exit:   Update 6a2/STATE.a2ml with session outcomes
+# on-commit: Run `just validate-rsr`

@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# NEUROSYM.a2ml — Neurosymbolic integration metadata
+[metadata]
+version = "0.1.0"
+last-updated = "2026-06-18"
+project = "nextgen-languages-evangeliser"
+
+[hypatia-config]
+scan-enabled = true
+scan-depth = "standard"   # quick | standard | deep
+report-format = "logtalk"
+
+[static-analysis-gate]
+# panic-attack assail runs in .github/workflows/static-analysis-gate.yml.
+# It fails the build only on critical findings and skips gracefully when the
+# binary is unavailable in the runner.
+panic-attack-enabled = true
+fail-on = "critical"
+
+[symbolic-rules]
+# Project-specific symbolic rules (illustrative):
+# - { name = "no-shame-narrative", pattern = "stupid|wrong code|bad code", severity = "high" }
+# - { name = "no-universal-translator-claim", pattern = "universal translator|curry-?howard fidelity", severity = "medium" }
+
+[neural-config]
+# The engine's own correspondence classifier IS this repo's domain
+# neurosymbolic surface: a symbolic Dyadic relation + a graded Echo
+# loss-with-residue fibre -> a typed CorrespondenceKind
+# (cognate / false-friend / antonym / alien-realization / novel / vanished).
+# See docs/theory/CORRESPONDENCE-MODEL.adoc.
+# confidence-threshold = 0.85
