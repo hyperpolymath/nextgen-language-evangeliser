@@ -2,10 +2,9 @@
 # Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
 # META.a2ml — Nextgen Languages Evangeliser meta-level information
-# Renamed from Rescript Evangeliser on 2026-04-16
 [metadata]
-version = "1.0.0"
-last-updated = "2026-04-11"
+version = "1.1.0"
+last-updated = "2026-06-18"
 
 [project-info]
 license = "MPL-2.0"
@@ -13,7 +12,12 @@ author = "Jonathan D.A. Jewell (hyperpolymath)"
 
 [architecture-decisions]
 decisions = [
-  # No ADRs recorded
+  "ADR-1 Classify, don't translate — name the CorrespondenceKind + residue; no universal translator, no Curry-Howard-fidelity goal",
+  "ADR-2 Carrier = Dyadic relation + Echo loss-with-residue (proven-tests-and-benches + echo-types); invariant-path is the governance front-end",
+  "ADR-3 Engine vs cartridge — we build the engine/interface/vocabulary; per-language facts are cartridges (standards/cartridges)",
+  "ADR-4 Host ReScript -> AffineScript (Zig FFI + Idris2 ABI seams); ReScript banned in new code",
+  "ADR-5 Emit into PanLL (octads -> VeriSimDB -> panels); not itself the IDE",
+  "ADR-6 Knot-theory framing is an aspirational lens, not a literal computation",
 ]
 
 [development-practices]

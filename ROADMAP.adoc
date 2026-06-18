@@ -3,60 +3,83 @@
 
 == Current Status
 
-Migration from *ReScript Evangeliser* to *Nextgen Languages Evangeliser* — Phase 1 in progress.
+*Identity re-point in progress.* The project is now *Duolingo / Rosetta Stone for
+programming languages* — a language-comprehension and transfer engine that *classifies*
+cross-language correspondences (it does not translate, lint, or build IDEs). The
+correspondence-model spec and standards hygiene have landed; the abstraction-model pivot
+is next.
 
-See link:CLAUDE.md[CLAUDE.md] and link:README.adoc[README.adoc] for project overview.
+See link:docs/theory/CORRESPONDENCE-MODEL.adoc[CORRESPONDENCE-MODEL.adoc] (canonical
+design), link:CLAUDE.md[CLAUDE.md], and link:README.adoc[README.adoc] for overview.
 
-== Migration Phases
+== Milestones
 
-=== Phase 0 — Decide
-* [x] Pick pivot strategy: Option A (content rewrite, not mechanical translation)
-* [x] Commit to multilanguage future (flagship AffineScript, legacy ReScript, more to follow)
-* [x] Rename repo: `rescript-evangeliser` -> `nextgen-languages-evangeliser`
-* [x] Verify AffineScript toolchain buildable today (OCaml 5.1+, Dune 3.14+)
-* [x] Note: typed-wasm is a separate repo (downstream of AffineScript)
+=== M0 — Correspondence-model spec ✅
+* [x] Establish the engine identity: *classify, not translate* (and not an IDE, not a linter)
+* [x] Concept / Form / Transition object model
+* [x] Six `CorrespondenceKind`s (cognate / false-friend / antonym / alien-realization / novel / vanished) as graded Echo fibres
+* [x] Strata ("levels of objects": surface → structure → intention → trope → invariant)
+* [x] Formal carrier: Dyadic `Relation` + Echo loss-with-residue; `invariant-path` as governance front-end
+* [x] Honesty caveat recorded: "knot theory" is an aspirational lens, not a computation
 
-=== Phase 1 — Rebrand + generalise engine
-* [-] Rebrand docs, metadata, contractiles, config files
-* [ ] Generalise `src/Types.res` for multi-target pattern representation
-* [ ] Thread multi-target through Narrative / Output / Analyser / CLI
-* [ ] Convert `src/Patterns.res` to multi-target shape (ReScript + AffineScript stub)
-* [ ] Update tests
-* [ ] Host language stays ReScript throughout
+=== M1 — Standards / repo hygiene ✅
+* [x] Repo renamed `rescript-evangeliser` → `nextgen-languages-evangeliser`
+* [x] Estate machine-readable artefacts + SPDX present
+* [x] Language-policy perimeter aligned (Deno, Justfile, Zig FFI; TS/Python/Go/V banned; ReScript legacy)
 
-=== Phase 2 — Pattern catalogue pivot
-* [ ] Design AffineScript-first catalogue around affine/linear safety concerns:
-  ** Use-after-free analogs (stale closures, detached refs)
-  ** Double-cleanup / double-free analogs
-  ** Accidental aliasing of owned state
-  ** Missing `using`/disposal, leaky listeners/timers
-  ** Resource sharing across async boundaries
-* [ ] Target ~12 curated patterns initially (depth over breadth)
-* [ ] Demote ReScript catalogue to legacy support
-* [ ] Preserve "You were close!" narrative voice
+=== M2 — Identity re-point + abstraction-model pivot →
+* [-] Re-point identity documentation to the corrected purpose (this pass)
+* [ ] Implement Concept / Form / Transition in `src/Types.res` (engine model, not pattern-list)
+* [ ] Implement `CorrespondenceKind` + per-stratum classification in Analyser
+* [ ] Thread kind-aware, shame-free narratives through `src/Narrative.res`
+* [ ] Reframe `src/Patterns.res` as a *reference language pack* (Forms + Transitions, not "JS→AffineScript patterns")
+* [ ] Update tests for the classify-not-translate model
 
-=== Phase 3 — Host language port (gated on toolchain)
-* [ ] End-to-end "hello world -> typed-wasm -> WASM" proof-of-life
-* [ ] Port `src/` ReScript -> AffineScript module-by-module:
-  Types, Glyphs, Narrative, Scanner, Analyser, Output, Cli, Patterns (last)
+=== M3 — Browser multi-pane GUI →
+* [ ] Browser multi-pane workspace as the primary surface
+* [ ] Overlay view-layers: focus / glyph / blockly-flowchart / raw-code / side-by-side
+* [ ] View-layers conform to the estate overlay-protocol (additive, idempotent)
+* [ ] Accessibility: Hyperpolymath Accessibility Standard Level A → AA (keyboard-only, ≥4.5:1 contrast, ARIA, reduced-motion, plain-language mode)
+* [ ] CLI/TUI retained as the offline fallback
+
+=== M4 — AffineScript host port (Zig FFI + Idris2 ABI) →
+* [ ] End-to-end "hello world → typed-wasm → WASM" proof-of-life
+* [ ] Port `src/` ReScript → AffineScript (`.res` → `.affine`), module-by-module
+* [ ] Zig FFI seam + Idris2 ABI seam for the certifiable carrier
 * [ ] Port `test/` in lockstep
+* [ ] Note: ReScript banned in _new_ code; AffineScript remains a first-class teaching target and the future host
 
-=== Phase 4 — Policy perimeter flip
-* [ ] Extend `ts-blocker.yml` to also reject new `.res` files outside `legacy/`
-* [ ] Add `affinescript-linter.yml` workflow
-* [ ] `justfile` recipe names stable, invocations swapped
-* [ ] Retire `rescript.json` (or demote to legacy)
+=== M5 — Cartridge contract + 2nd language pack →
+* [ ] Specify the cartridge fact format (concept / from / to / kind / strata / residue / witness)
+* [ ] Wire `standards/cartridges/` as the community authoring surface
+* [ ] Ship the reference language pack as the worked exemplar
+* [ ] Author a second language pack to validate the engine is language-agnostic (JTV is the canonical alien-realization / novel exemplar)
 
-=== Phase 5 — Policy text + additional targets
-* [ ] `.claude/CLAUDE.md`: formalise V-in-ecosystem-only carveout
-* [ ] Zig as canonical FFI (no code change — already true per manifest)
-* [ ] Additional target backends: Rust, Gleam, Zig
+=== M6 — Proofs/benches + PanLL octad emission →
+* [ ] Carry Idris2/Echo witnesses where the math pays (high-value / dangerous Transitions)
+* [ ] Benches via `proven-tests-and-benches`
+* [ ] Emit `octads` → VeriSimDB (`:8097`) + `Groove` signals; PanLL panels subscribe
+* [ ] Read ergonomics from `.machine_readable/ENSAID_CONFIG.a2ml`
+
+== Division of labour
+
+* *We build* — the general engine + interface + classification vocabulary + residue model + a reference language pack.
+* *The community builds* — the per-language modules as *cartridges* (`standards/cartridges/`).
+
+The engine is language-agnostic; the nextgen-language collection is merely the substrate we dogfood.
+
+== Toolchain honesty
+
+AffineScript / Idris2 / Zig / Deno may be absent in some environments. Material is
+*authored now and verified in CI* — we do not claim local green builds we cannot run. The
+JTV grammar-v2 worked example remains stubbed pending repository access.
 
 == Future Directions
 
-After Phase 5, the project becomes a general-purpose evangelisation platform for nextgen typed languages, with:
+Beyond M6, the project is a general transfer-learning platform across programming
+languages:
 
-* A shared engine (Scanner, Analyser, Output, Narrative) target-agnostic
-* Per-target catalogues authored by language advocates
-* Glyph system treated as a lingua franca across targets
-* Citation-stable URL via GitHub redirect from legacy `rescript-evangeliser` slug
+* A shared, language-agnostic engine (scan → classify → narrate → emit) feeding PanLL
+* Per-language correspondence cartridges authored by language advocates
+* The glyph view-layer as an accessible lingua franca across targets
+* Citation-stable URL via GitHub redirect from the legacy `rescript-evangeliser` slug

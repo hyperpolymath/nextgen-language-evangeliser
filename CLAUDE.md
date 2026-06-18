@@ -2,209 +2,108 @@
 
 ## Project Overview
 
-**Nextgen Languages Evangeliser** is a pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers next-generation type-safe languages through progressive code transformation — without shame.
+**Nextgen Languages Evangeliser** is **Duolingo / Rosetta Stone for programming languages** — a language-*comprehension and transfer* engine. It works one layer above text editing, on *syntactic and semantic intention*, and **classifies** cross-language correspondences so the effort spent learning one language **transfers** to the next. *Transfer learning across languages is the product.*
 
-**Flagship target:** AffineScript (affine/linear type system, borrow checking, quantity checking, WASM backend).
+Canonical design: `docs/theory/CORRESPONDENCE-MODEL.adoc` — this file mirrors it. The repo began as *ReScript Evangeliser*; ReScript is now a legacy host (being migrated) and a legacy target.
 
-**Supported targets:** AffineScript (flagship), ReScript (legacy), with more to follow (Rust, Gleam, Zig being the likely next additions).
+### What it is NOT
+- **Not an IDE** — that is **PanLL + eNSAID** (the *contact* between human, tool, task, environment). This engine *feeds* PanLL; it is not PanLL.
+- **Not a linter** — not scope-colouring or spotting a missing `;` / extra `)`.
+- **Not a universal translator** — no Curry–Howard-fidelity goal ("nice, not the point").
+- **Not a shame-the-JavaScript pattern matcher.**
 
-This project is the successor to *ReScript Evangeliser*. The ReScript pattern library is preserved as a legacy target; active pattern authorship now centres on affine/linear safety concerns teachable from idiomatic JavaScript.
+## The Model: Concept / Form / Transition
 
-## Project Purpose
+- **Concept** — the invariant / equivalence-class (the recurring *trope*).
+- **Form** — a representative of a Concept in one language (`let` in ReScript, `=` in Erlang, `def` in Python).
+- **Transition** — a directed Form(A)→Form(B) correspondence plus its *residue* (what is lost, added, or inverted).
 
-This repository serves as a resource hub for:
-- Educational materials about next-generation type-safe languages (AffineScript first)
-- Pattern catalogues showing equivalent transformations from JavaScript to target languages
-- Tools that detect amenable patterns in existing JS and encourage adoption
-- Community content that evangelises type-safe coding without shaming incumbent code
+Classification is a **graded `CorrespondenceKind`**, not a boolean — six grades of the Echo fibre, each with a pedagogy:
+**cognate** (transfer) · **false-friend** (warn) · **antonym** (remap) · **alien-realization** (bridge) · **novel / no-anchor** (teach de novo) · **vanished** (re-route). Classification runs *per stratum* (surface → structure → intention → trope → invariant).
+
+Carrier = **Dyadic relation + Echo loss-with-residue** (`proven-tests-and-benches` `Dyadic.idr` + `hyperpolymath/echo-types`); `invariant-path` is the governance front-end. "Knot theory" is an aspirational lens, **not** a literal computation.
+
+## Engine vs. Cartridge
+
+- **We build** the general engine + interface + classification vocabulary + residue model + a reference language pack.
+- **The community builds** per-language modules as **cartridges** (`standards/cartridges/`).
+
+The engine is language-agnostic; the nextgen-language collection is merely the substrate we dogfood.
+
+## Downstream
+
+Emits `octads` → VeriSimDB (`:8097`) + Groove signals → **PanLL** panels; view-layers conform to the estate **overlay-protocol**; ergonomics read `.machine_readable/ENSAID_CONFIG.a2ml`; accessibility meets the **Hyperpolymath Accessibility Standard** (Level A → AA).
 
 ## Technology Stack
 
-### Core Technologies
-- **AffineScript** — flagship target language (teaching subject)
-- **typed-wasm** — separate repo; AffineScript's downstream codegen layer (AffineScript → typed-wasm → WASM)
-- **ReScript** — current host application language (during Phase 1/2 of migration), legacy target
-- **Deno** — runtime & package management (replaces Node/npm/bun)
-- **Nickel** — configuration language
-- **Zig** — FFI bridge (canonical, per `0-AI-MANIFEST.a2ml`)
+- **ReScript** — current / legacy host (being ported; banned in *new* code per estate policy: `.res` → `.affine`)
+- **AffineScript** — future host + first-class target (Zig FFI + Idris2 ABI seams; OCaml 5.1+; emits typed-wasm IR → WebAssembly)
+- **Deno** — runtime & package management (not npm/bun)
+- **Zig** — FFI layer; **Idris2** — ABI / proofs
+- **Nickel** — configuration
 
 ### Language Policy (Hyperpolymath Standard)
 
-**ALLOWED:**
-- AffineScript (application code, once Phase 3 port completes)
-- ReScript (current application code; demoted to legacy target after Phase 3)
-- Deno (runtime & package management)
-- Zig (FFI, systems code)
-- Bash/POSIX Shell (scripts, automation)
-- JavaScript (only where ReScript/AffineScript cannot — minimal glue code)
-- Nickel (configuration)
+**ALLOWED:** AffineScript (future host), ReScript (legacy host/target), Deno, Zig (FFI), Idris2 (ABI/proofs), Bash/POSIX shell, JavaScript (glue only — see exemptions in `.claude/CLAUDE.md`), Nickel.
 
-**BANNED:**
-- TypeScript (use AffineScript or ReScript)
-- Node.js (use Deno)
-- npm/bun (use Deno)
-- Makefile (use Justfile)
-- V (use Zig, except inside V-ecosystem-specific projects)
-
-### Key Features to Evangelise
-
-Per target, the pitch differs. The engine is target-aware:
-
-- **AffineScript (flagship):** affine/linear types, use-at-most-once guarantees, borrow checking, quantity type theory, compile-time resource safety, WASM deployment.
-- **ReScript (legacy):** sound type inference, Option/Result, pattern matching, pipe operator, zero-cost JS interop.
+**BANNED:** TypeScript, Node.js, npm/bun, Makefile (use Justfile), V (outside the V ecosystem), Python, Go. **ReScript is banned in _new_ code** — migrate `.res` → `.affine` directly.
 
 ## Project Structure
 
 ```
 nextgen-languages-evangeliser/
-├── src/              # Application source (ReScript today, AffineScript post-Phase 3)
-│   ├── Types.res     # Core type model — multi-target pattern representation
-│   ├── Glyphs.res    # Makaton-inspired glyph system (target-agnostic)
-│   ├── Narrative.res # "You were close!" narrative generation (target-aware)
-│   ├── Patterns.res  # Pattern library (multi-target)
-│   ├── Scanner.res   # Regex pattern detection engine
-│   ├── Analyser.res  # Result aggregation and reporting
-│   ├── Output.res    # RAW/FOLDED/GLYPHED rendering (multi-target)
-│   └── Cli.res       # CLI entry point
+├── src/              # Host source (ReScript today; AffineScript target)
+│   ├── Types.res     # Core type model (→ Concept / Form / Transition)
+│   ├── Glyphs.res    # Makaton-inspired glyph view-layer
+│   ├── Narrative.res # Shame-free narrative (per CorrespondenceKind)
+│   ├── Patterns.res  # Correspondence catalogue (→ reference language pack)
+│   ├── Scanner.res   # Detection engine
+│   ├── Analyser.res  # Classification + aggregation
+│   ├── Output.res    # focus/glyph/blockly/raw/side-by-side view-layers
+│   └── Cli.res       # CLI entry point (offline fallback)
+├── gui/              # Browser multi-pane workspace (primary surface)
+├── docs/theory/CORRESPONDENCE-MODEL.adoc  # Canonical design spec
 ├── test/             # Test suites
-├── docs/             # Documentation
-├── rescript.json     # Host build config (current)
-├── deno.json         # Deno configuration
 ├── Justfile          # Task orchestration (NOT Makefile)
-├── Mustfile.epx      # Deployment contract
-└── config.ncl        # Nickel configuration
+└── deno.json         # Deno configuration
 ```
-
-## Development Guidelines
-
-### Code Style
-- Follow the host language's official style guide (ReScript today; AffineScript post-Phase 3)
-- Use meaningful names; prefer pattern matching over if/else
-- Leverage the type system to make invalid states unrepresentable
-- Write interface files (.resi) for public APIs
-- Add SPDX license headers to all source files
-
-### Best Practices
-1. **Type-First Design** — Design types before implementation
-2. **Immutability** — Prefer immutable data structures
-3. **Pure Functions** — Write pure functions when possible
-4. **Documentation** — Document complex type definitions and public APIs
-5. **Error Handling** — Use Result and Option types (not exceptions)
 
 ## Common Commands
 
 ```bash
-# Install dependencies
-just install
-
-# Build the project
-just build
-
-# Watch mode for development
-just watch
-
-# Clean build artifacts
-just clean
-
-# Run tests
-just test
-
-# Validate project structure and policy
-just validate
-
-# Format code
-just fmt
-
-# Full validation
-just validate-rsr
+just install      # Install dependencies (Deno)
+just build        # Build host sources
+just watch        # Watch mode
+just test         # Run tests
+just assail       # panic-attack static-analysis scan
+just validate-rsr # RSR compliance
+just fmt          # Format
 ```
 
-## Build System
+## Philosophy: no shame, transfer-first
 
-This project uses:
-- **Deno**: For build scripts and task running
-- **justfile**: For task orchestration (NOT Makefile)
-- **ReScript**: Current host compiler (bsb)
-- **AffineScript**: Planned host compiler post-Phase 3 (OCaml 5.1+, Dune 3.14+; emits typed-wasm IR, which compiles to WASM)
+We **never** shame developers. The voice stays **celebrate / minimise / better / safety / example**. The six kinds map to: transfer cognates, warn on false friends, remap antonyms, bridge the alien, teach the novel, re-route the vanished.
 
-## Dependencies
+## Re-point Status (was the ReScript → AffineScript "migration")
 
-### Runtime
-- Deno (latest stable)
-- ReScript 12.2+ (current host)
-- @rescript/core
-- AffineScript compiler (planned, Phase 3+)
-
-### Package Management
-- **Primary**: Guix (guix.scm)
-- **Fallback**: Nix (flake.nix)
-- **JS deps**: Deno (deno.json imports)
-
-## Evangelism Goals
-
-1. **Demonstrate Value** — Show concrete benefits of each supported target
-2. **Lower Barriers** — Make adoption as easy as possible
-3. **Share Success Stories** — Document real-world wins
-4. **Build Community** — Foster a welcoming environment
-5. **Create Resources** — Provide learning materials and tools
-
-## Philosophy: "Celebrate Good, Minimize Bad, Show Better"
-
-We **never** shame developers. Instead:
-
-1. **Celebrate** — Recognize what their JavaScript does well
-2. **Minimize** — Gently acknowledge minor limitations
-3. **Better** — Show how the target language enhances the pattern
-4. **Safety** — Explain type-level (and affine/linear) guarantees
-5. **Example** — Provide concrete, encouraging examples
-
-## Migration Status (ReScript → AffineScript)
-
-This repo is mid-migration from ReScript Evangeliser to Nextgen Languages Evangeliser. Phases:
-
-- **Phase 0** ✅ — Decide (option A content rewrite, multilang future, rename repo, toolchain verified)
-- **Phase 1** 🚧 — Rebrand + generalise engine for multi-target (host stays ReScript)
-- **Phase 2** — Pattern catalogue pivot: affine/linear-safety-focused AffineScript patterns
-- **Phase 3** — Host language port ReScript → AffineScript (gated on toolchain WASM maturity)
-- **Phase 4** — Policy perimeter flip (ts-blocker extended, affinescript linter added)
-- **Phase 5** — Zig/V policy text formalisation
-
-## Resources
-
-### AffineScript
-- Compiler: https://github.com/hyperpolymath/affinescript
-- Toolchain: OCaml 5.1+, Dune 3.14+
-- Downstream codegen: typed-wasm (separate repo) → WebAssembly
-
-### ReScript (legacy target)
-- [ReScript Documentation](https://rescript-lang.org/docs)
-- [ReScript Forum](https://forum.rescript-lang.org)
-- [ReScript GitHub](https://github.com/rescript-lang)
+- ✅ Correspondence-model spec merged (Concept/Form/Transition + six kinds + Dyadic/Echo carrier)
+- ✅ Standards / repo hygiene merged (6a2 manifests, panic-attack gate, eNSAID config)
+- 🚧 Identity re-point + abstraction-model pivot (classify, not translate)
+- → Browser multi-pane GUI (overlay view-layers)
+- → AffineScript host port (Zig FFI + Idris2 ABI)
+- → Cartridge contract + second language pack
+- → Proofs/benches + PanLL octad emission
 
 ## Notes for Claude
 
-When working on this project:
-- Prioritize type safety and correctness
-- Suggest idiomatic patterns for whichever target is being discussed
-- Treat AffineScript as the flagship target; ReScript as a well-supported legacy target
-- When adding patterns, lead with the AffineScript transformation and keep ReScript as secondary
-- Help maintain clear documentation
-- Encourage best practices in evangelism materials
-- **Use Deno, not npm/bun**
-- **Use Justfile, not Makefile**
-- **Use Zig for FFI, not V (except inside V-ecosystem projects)**
-- **Source host language: ReScript during Phases 1-2, AffineScript from Phase 3 onward**
-- Add SPDX license headers to new source files
-
-## Project Philosophy
-
-**Make next-generation languages approachable**: The goal is to help developers discover and adopt affine/linear type systems and other nextgen features by:
-- Showing practical examples from code they already write
-- Addressing common concerns
-- Demonstrating real benefits
-- Providing migration paths
-- Building confidence through education
+- Lead with the **correspondence model**; AffineScript is one first-class target/host, not the sole pitch.
+- **Classify, don't translate.** No universal-translator or Curry–Howard-fidelity claims.
+- **No shame.** Keep the celebrate / minimise / better / safety / example voice.
+- **Use Deno, not npm/bun. Use Justfile, not Makefile. Use Zig for FFI, Idris2 for ABI/proofs.**
+- **ReScript is banned in new code** → AffineScript (`.affine`).
+- Toolchain may be absent in this environment — **author now, verify in CI**; never claim a green build you did not run.
+- **Licence: MPL-2.0 (sole-owner repo). Add SPDX `MPL-2.0` to new files. NEVER relicense or bulk-sweep SPDX; licence-label drift is FLAG-ONLY to the owner.**
 
 ---
 
-*This document should be updated as the project evolves and new patterns emerge.*
+*Keep this in sync with `docs/theory/CORRESPONDENCE-MODEL.adoc` as the engine evolves.*

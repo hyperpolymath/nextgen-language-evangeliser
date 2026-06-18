@@ -6,44 +6,113 @@ image:https://img.shields.io/badge/License-PMPL--1.0--or--later-blue.svg[License
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
 image:[TPCF: Perimeter 3,link=docs/TPCF.md]
-image:[AffineScript First]
+image:[Learn — to love it!]
 image:https://img.shields.io/badge/Deno-Runtime-000000.svg[Deno Runtime]
 
-> *Celebrate good, minimize bad, show better* -- A pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers next-generation type-safe languages through progressive code transformation, without shame.
+> *Learn — to love it!* -- Duolingo / Rosetta Stone for programming languages. A language-comprehension and transfer engine that *classifies* cross-language correspondences so what you learned in one language carries to the next — without shame.
 
-NOTE: This project is the successor to *ReScript Evangeliser*. The ReScript catalogue is preserved as a legacy target while we pivot the flagship to *AffineScript*. See link:ROADMAP.adoc[ROADMAP.adoc] for migration phases.
+NOTE: The canonical design is link:docs/theory/CORRESPONDENCE-MODEL.adoc[docs/theory/CORRESPONDENCE-MODEL.adoc]. This README mirrors it. The repo began as *ReScript Evangeliser*; ReScript is now a legacy host (being migrated) and a legacy target. See link:ROADMAP.adoc[ROADMAP.adoc] for the re-point.
 
 == What is This?
 
-Nextgen Languages Evangeliser is a library and toolkit that helps JavaScript developers learn affine/linear-typed and other next-generation languages by:
+Nextgen Languages Evangeliser is *Duolingo / Rosetta Stone for programming languages* — a language-*comprehension and transfer* engine. It works *one layer above text editing*, on *syntactic and semantic intention*, so the effort you spent learning language A *transfers* when you move to B (JS → TypeScript, Ruby, Prolog, C, or exotic targets like QPL, Arrow, JTV).
 
-* *Detecting patterns* in existing JS code amenable to transformation
-* *Showing transformations* to equivalent code in each supported target
-* *Explaining with encouragement* using the "You were close!" philosophy
-* *Visualizing concepts* with Makaton-inspired glyphs
-* *Progressive disclosure* through 3 view layers (RAW -> FOLDED -> GLYPHED) and 3 output formats (plain, markdown, html)
+*Transfer learning across languages is the product.* The engine *computes and classifies* cross-language correspondences and surfaces what carries cleanly, what is a trap, and what has no analog at all.
 
-*We never shame developers.* Your JavaScript is good! Next-generation type systems just make some things even safer.
+*We never shame developers.* Your JavaScript is good — the engine tells you which of your existing intuitions transfer, and warns you before one bites.
 
-=== Supported targets
+=== What it is NOT
+
+* *Not "the next best IDE."* It does not compete on contrast, project widgets, pop-up notepads, shortcuts, or attention/memory/workflow ergonomics. That is *PanLL* (PanLL + eNSAID = the _contact_ between human, tool, task, and environment). This engine *feeds* PanLL; it is not PanLL.
+* *Not a linter.* It is not about colouring scopes or spotting a missing `;` / extra `)`. The differentiator is an engine that *computes and classifies* cross-language equivalence, not one that looks it up.
+* *Not a universal translator.* A verified any-language→any-language compiler with full Curry–Howard fidelity would be nice; it is *not the goal*.
+* *Not a shame-the-JavaScript pattern matcher.*
+
+== The Model: Concept / Form / Transition
+
+[cols="1,3"]
+|===
+| *Concept* | The invariant / equivalence-class — the recurring _trope_ ("bind a name to a value", "iterate a collection", "fail recoverably").
+| *Form* | A representative of a Concept _in one language_ (`let` in ReScript, `=` in Erlang, `def` in Python). A Concept has many Forms.
+| *Transition* | A directed correspondence Form(A) → Form(B): the Echo-refined map plus its *residue* — what is lost, added, or inverted in crossing.
+|===
+
+A *lesson* is a Concept shown through the learner's known Form, the target Form, and the Transition between — narrated without shame: "you already know this; here's the catch".
+
+=== The six CorrespondenceKinds
+
+Classification is not a boolean "relates"; it is a *graded* `CorrespondenceKind`, realised as grades of the Echo fibre. Each maps to a pedagogy:
+
+[cols="2,3,2"]
+|===
+| Kind | Signature | Pedagogy
+
+| *Cognate / true friend* | Intention + behaviour coincide; residue ≈ ∅. _e.g._ `def` → `define`. | *Transfer directly.*
+| *False friend / homonym* | Surface matches, semantics diverge. _e.g._ BASIC `=` (assignment) vs. Erlang `=` (single-assignment bind/unify). | *Flag the trap.*
+| *Antonym / inverted* | Related but opposite. _e.g._ 0- vs. 1-indexing; truthiness; stack-growth direction. | *Remap the intuition.*
+| *Alien realization* | Same intention, foreign mechanism, large residue. _e.g._ subtraction in JTV (reversible/add-only) is `add` run backwards. | *Bridge with effort.*
+| *Novel / no anchor* | Forward fibre empty. _e.g._ static types coming from assembly + JS; ownership/borrowing; Prolog `cut`. | *Teach de novo.*
+| *Vanished* | Backward fibre empty. _e.g._ `return` in ReScript; `null` in a null-free language. | *Un-learn / re-route.*
+|===
+
+Classification runs *per stratum* — surface → structure → semantic intention → abstraction/trope → cross-language invariant. A correspondence can hold at one stratum and break at another, and that divergence is itself the most valuable signal (it _is_ the false-friend signature).
+
+=== The formal carrier (honest)
+
+* *Carrier = Dyadic `Relation`* (`proven-tests-and-benches` `Dyadic.idr`): `{ relates; reflexive; symmetric; transitive }`. Equivalence = refl ∧ sym ∧ trans.
+* *Crossings are lossy-with-residue = Echo fibre* (`hyperpolymath/echo-types`, Agda): `Echo f y := Σ (x : A), f x ≡ y`. The residue is precisely what is lost or added going A→B.
+* *`invariant-path`* is the governance front-end: it anchors each equivalence _claim_ to two code locations plus a witness, human-in-the-loop.
+
+NOTE: "Knot theory" is an aspirational lens for intuition, not a literal computation. "Invariant" here means a _preserved quantity that certifies "same idea"_ — no knot-invariant is computed, and we do not claim Curry–Howard fidelity.
+
+== Engine vs. Cartridge
+
+[cols="1,3"]
+|===
+| *We build* | the general engine + the interface + the classification vocabulary (`CorrespondenceKind`) + the residue/fibre model + a reference language pack.
+| *The community builds* | the *per-language modules as cartridges* (estate `standards/cartridges/`) — which Forms instantiate which Concepts, and for each Transition the kind + residue + an optional witness.
+|===
+
+The engine is *language-agnostic*. The nextgen-language collection is merely the substrate we dogfood.
+
+== Interface: levels of objects, not chrome
+
+The "levels of objects" are rendered as *overlay view-layers* — switchable, non-destructive, each conforming to the estate *overlay-protocol* (additive, idempotent, Idris2-ABI proved):
+
+* *focus* — show only what's needed now
+* *glyph* — Makaton-style symbols (accessible, low cognitive load)
+* *blockly / flowchart* — structure as blocks
+* *raw code* — the text itself
+* *side-by-side* — multi-language diff with step-sync
+
+The primary surface is a *browser multi-pane workspace*; a CLI/TUI is the offline fallback. Accessibility is first-class: *Hyperpolymath Accessibility Standard, Level A minimum → AA* (keyboard-only, ≥4.5:1 contrast, colourblind-safe palettes, ARIA/screen-reader, reduced-motion, plain-language mode).
+
+== Downstream: feeding PanLL
+
+The engine *emits*; it does not own the IDE. Analyses become `octads` written to VeriSimDB (`:8097`) plus `Groove` signals; PanLL panels subscribe and re-render. Ergonomics are read from `.machine_readable/ENSAID_CONFIG.a2ml`. View-layers conform to the overlay-protocol.
+
+== Worked examples
 
 [cols="2,2,3"]
 |===
-|*Target* |*Status* |*Pitch*
+| Example | Kind | Note
 
-|*AffineScript* |Flagship |Affine/linear types, borrow checking, quantity type theory; emits typed-wasm (separate repo) -> WebAssembly
-|*ReScript* |Legacy (maintained) |Sound inference, Option/Result, pattern matching, JS interop
-|*Rust, Gleam, Zig, …* |Planned |Roadmap — see link:ROADMAP.adoc[ROADMAP.adoc]
+| `def` → `define` | cognate | "just a rename" — a hypothesis to verify, not assume
+| BASIC `=` vs. Erlang `=` | false friend / homonym | surface-corresponds ∧ semantics-diverge
+| 0- vs. 1-indexing | antonym | residue = the flip
+| JTV reversible/add-only (subtraction = reversed add) | alien realization | JTV is a security-focused, reversible, total, effect/info-flow/capability-typed language
+| static types (coming from assembly + JS) | novel / no anchor | nothing to transfer _from_
+| `return` in ReScript | vanished | a concept the learner relied on is gone
 |===
-
-For those on TypeScript or CoffeeScript: we want to help you reach type-safety guarantees the incumbent tooling cannot give you — without making you throw your existing code away. For the adventurous who want to explore AffineScript's affine/linear guarantees from scratch, this repo is aimed at you.
 
 == Quick Start
 
 === Prerequisites
 
 * https://deno.land[Deno] (latest stable)
-* https://rescript-lang.org[ReScript] 12.2+ (current host language; see link:ROADMAP.adoc[ROADMAP.adoc] for AffineScript port)
+* https://rescript-lang.org[ReScript] 12.2+ (current/legacy host; the host is being ported to AffineScript — see link:ROADMAP.adoc[ROADMAP.adoc])
+
+NOTE: AffineScript / Idris2 / Zig may be absent in some environments. Material is authored now and verified in CI — we do not claim local green builds we cannot run.
 
 === Installation
 
@@ -64,16 +133,16 @@ just build
 
 [source,bash]
 ----
-# Scan a JavaScript file for patterns
-deno run --allow-read bin/evangeliser.js scan <file.js>
+# Scan a source file (offline CLI fallback)
+deno run --allow-read bin/evangeliser.js scan <file>
 
-# List all available patterns (with their target languages)
+# List available correspondences / patterns
 deno run --allow-read bin/evangeliser.js patterns
 
 # Show the glyph legend
 deno run --allow-read bin/evangeliser.js legend
 
-# Display detection statistics
+# Display statistics
 deno run --allow-read bin/evangeliser.js stats
 ----
 
@@ -81,77 +150,31 @@ deno run --allow-read bin/evangeliser.js stats
 
 [source,bash]
 ----
-# Run tests
-just test
-
-# Watch mode for development
-just watch
-
-# Format code
-just fmt
-
-# Full CI simulation
-just ci
+just test      # Run tests
+just watch     # Watch mode
+just fmt       # Format code
+just ci        # Full CI simulation
 ----
 
-== Features
+== Targets
 
-=== Multi-target Pattern Catalogue
+The engine is language-agnostic; targets are the languages a learner moves *to*. AffineScript is a first-class teaching target and the future host, but the frame is no longer "evangelise AffineScript specifically" — it is "teach _any_ language by transfer, with AffineScript among the first-class targets."
 
-Each pattern carries example transformations for multiple target languages. Categories include:
+[cols="2,2,3"]
+|===
+|*Target* |*Status* |*Why interesting for transfer*
 
-* Null safety -> Option types (ReScript) / total functions (AffineScript)
-* Resource management -> affine ownership (AffineScript) / explicit disposal
-* Aliasing of mutable state -> borrow checking (AffineScript)
-* Async/await -> Promise types / effect systems
-* Try/catch -> Result types / typed error channels
-* Array operations -> pipe operator / iterator patterns
-* Conditionals -> pattern matching / total case analysis
-* OOP -> functional programming / records over classes
-* ...and more
-
-The AffineScript catalogue prioritises affine/linear-safety patterns: use-after-free analogs, double-cleanup, detached references, accidental aliasing of owned state, missing `using`/disposal, and similar concerns that the type system can make unrepresentable.
-
-=== Three View Layers
-
-1. *RAW*: Side-by-side JavaScript/target comparison with narrative
-2. *FOLDED*: Organized sections with collapsible regions
-3. *GLYPHED*: Symbol-annotated code showing semantic meaning
-
-=== Three Output Formats
-
-* *Plain text*: Terminal-friendly output
-* *Markdown*: For documentation and READMEs
-* *HTML*: For web integration and reports
-
-=== Makaton-Inspired Glyphs
-
-Visual symbols that transcend syntax across 21 glyph categories:
-
-* Shield (null safety)
-* Transform (data transformation)
-* Flow (pipe operator)
-* Branch (pattern matching)
-* Crystal (immutability)
-* Seal (affine ownership)
-* ...and more
-
-=== Scanner + Analyser Detection Engine
-
-Regex-based pattern matching engine that scans JavaScript source files and identifies patterns amenable to transformation. The Analyser aggregates Scanner results into categorised reports with narrative explanations per-target.
-
-=== CLI Interface
-
-Four commands: `scan`, `patterns`, `legend`, `stats`. Supports RAW/FOLDED/GLYPHED view layers, plain/markdown/html output formats, and `--target` selection.
+|*AffineScript* |First-class; future host |Affine/linear use-once, borrow checking, QTT — dense with _novel/no-anchor_ correspondences; emits typed-wasm → WebAssembly
+|*ReScript* |Legacy target + legacy host |Sound inference, Option/Result, pattern matching; source of the _vanished_ `return` example
+|*TypeScript, Ruby, Prolog, C, JTV, …* |Reference / planned |Cartridge-authored; JTV is the canonical _alien-realization_ + _novel_ worked example
+|===
 
 == Technology Stack
 
-=== Primary Technologies
-
-* *ReScript 12.2* (current host): All application logic (Types, Glyphs, Narrative, Patterns, Scanner, Analyser, Output, CLI)
-* *AffineScript* (planned host, Phase 3+): OCaml 5.1+ toolchain; emits typed-wasm IR (separate repo) -> WebAssembly
-* *Deno*: Runtime and package management
-* *Zig*: FFI layer (canonical per manifest)
+* *ReScript 12.2* — current/legacy host (being migrated; banned in _new_ code per estate policy: `.res` → `.affine`)
+* *AffineScript* — future host (Zig FFI + Idris2 ABI seams); OCaml 5.1+ toolchain; emits typed-wasm IR → WebAssembly
+* *Deno* — runtime and package management
+* *Zig* — FFI layer (canonical per manifest); *Idris2* — ABI / proofs
 
 === Language Policy
 
@@ -161,34 +184,33 @@ Per Hyperpolymath Standard:
 |===
 |*Allowed* |*Banned*
 
-|AffineScript, ReScript |TypeScript
+|AffineScript (future host), ReScript (legacy) |TypeScript
 |Deno |Node.js/npm/bun
 |justfile |Makefile
-|Zig (FFI) |V (outside V ecosystem)
+|Zig (FFI), Idris2 (ABI/proofs) |V (outside V ecosystem)
 |===
 
-See link:CLAUDE.md[CLAUDE.md] and link:.claude/CLAUDE.md[.claude/CLAUDE.md] for the full policy.
+ReScript is banned in _new_ code; existing `.res` migrates to `.affine`. See link:CLAUDE.md[CLAUDE.md] and link:.claude/CLAUDE.md[.claude/CLAUDE.md] for the full policy.
 
 == Project Structure
 
 [source]
 ----
 nextgen-languages-evangeliser/
-+-- src/                    # Host source (ReScript today, AffineScript post-Phase 3)
-|   +-- Types.res           # Core type model (multi-target)
-|   +-- Glyphs.res          # Makaton-inspired symbol system
-|   +-- Narrative.res       # Encouraging message generation (target-aware)
-|   +-- Patterns.res        # Multi-target transformation patterns
-|   +-- Scanner.res         # Pattern detection engine
-|   +-- Scanner.resi        # Scanner interface
-|   +-- Analyser.res        # Result aggregation and reporting
-|   +-- Analyser.resi       # Analyser interface
-|   +-- Output.res          # RAW/FOLDED/GLYPHED formatting (multi-target)
-|   +-- Cli.res             # CLI entry point (scan/patterns/legend/stats)
++-- src/                    # Host source (ReScript today; AffineScript target)
+|   +-- Types.res           # Core type model
+|   +-- Glyphs.res          # Makaton-inspired glyph view-layer
+|   +-- Narrative.res       # Shame-free narrative (per CorrespondenceKind)
+|   +-- Patterns.res        # Correspondence / pattern catalogue
+|   +-- Scanner.res(i)      # Detection engine + interface
+|   +-- Analyser.res(i)     # Classification + aggregation + interface
+|   +-- Output.res          # focus/glyph/blockly/raw/side-by-side view-layers
+|   +-- Cli.res             # CLI entry point (offline fallback)
++-- gui/                    # Browser multi-pane workspace (primary surface)
 +-- test/                   # Test suites
-+-- bin/
-|   +-- evangeliser.js      # CLI entry point
++-- bin/evangeliser.js      # Deno CLI shim
 +-- docs/                   # Documentation
+|   +-- theory/CORRESPONDENCE-MODEL.adoc  # Canonical design spec
 +-- rescript.json           # Host (ReScript) configuration
 +-- deno.json               # Deno configuration
 +-- Justfile                # Task orchestration
@@ -197,44 +219,28 @@ nextgen-languages-evangeliser/
 +-- CLAUDE.md               # AI context
 ----
 
-== Philosophy: "Celebrate Good, Minimize Bad, Show Better"
+== Philosophy: no shame, transfer-first
 
-We *never* shame developers. Instead:
+We *never* shame developers. The six kinds map to: transfer cognates, warn on false friends, remap antonyms, bridge the alien, teach the novel, re-route the vanished. The narrative voice stays *celebrate / minimise / better / safety / example*.
 
-1. *Celebrate*: Recognize what their JavaScript does well
-2. *Minimize*: Gently acknowledge minor limitations
-3. *Better*: Show how the target language enhances the pattern
-4. *Safety*: Explain type-level (and affine/linear) guarantees
-5. *Example*: Provide concrete, encouraging examples
-
-Example narrative (ReScript target):
+Example narrative (a _false friend_):
 
 ____
-*You were close!* You're already thinking about null and undefined - that's great defensive programming!
+*You already know this!* You've used `=` for assignment for years — that intuition is real.
 
-The only small thing is that it's easy to forget one of these checks somewhere...
+*Here's the catch:* in Erlang `=` doesn't assign, it binds-once and unifies. Re-`=` with a different value _fails_ a match rather than overwriting.
 
-*Even better:* ReScript's Option type makes null safety automatic - you literally can't forget a check!
-____
-
-Example narrative (AffineScript target):
-
-____
-*You were close!* You're already disposing of the resource in a `finally` block - that's careful code!
-
-The only small thing is that if another closure still holds a reference, the dispose runs but the alias lives on...
-
-*Even better:* AffineScript's affine types make the resource vanish from the type environment at disposal - no alias can survive, no double-free can compile.
+*Re-route:* read `X = 5` as "assert X equals 5 (binding it if unbound)", not "store 5 in X".
 ____
 
 == RSR Compliance
 
 This project follows the *Rhodium Standard Repository (RSR)* framework:
 
-* *Type Safety*: ReScript 12.2 host today; AffineScript (affine/linear types, borrow checking) post-Phase 3
-* *Offline First*: Zero network dependencies
-* *Complete Documentation*: See link:docs/[docs/]
-* *Security First*: See link:SECURITY.md[SECURITY.md]
+* *Type Safety*: ReScript 12.2 host today; AffineScript (affine/linear types, borrow checking) as the host target. Correspondence carrier is Idris2/Agda-grounded (Dyadic + Echo).
+* *Offline First*: CLI/TUI fallback; zero network dependency to scan
+* *Complete Documentation*: see link:docs/[docs/] and link:docs/theory/CORRESPONDENCE-MODEL.adoc[the design spec]
+* *Security First*: see link:SECURITY.md[SECURITY.md]
 * *Open Governance*: TPCF Perimeter 3 (Community Sandbox)
 * *Licensed*: MPL-2.0
 * *Build Reproducibility*: Deno + Justfile
@@ -243,13 +249,14 @@ See link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] for full details.
 
 == Documentation
 
-* link:CONTRIBUTING.md[CONTRIBUTING.md] - How to contribute
+* link:docs/theory/CORRESPONDENCE-MODEL.adoc[CORRESPONDENCE-MODEL.adoc] - Canonical design spec
+* link:CONTRIBUTING.md[CONTRIBUTING.md] - How to contribute (incl. cartridge authoring)
 * link:CODE_OF_CONDUCT.md[CODE_OF_CONDUCT.md] - Community guidelines
 * link:SECURITY.md[SECURITY.md] - Security policies
 * link:CHANGELOG.md[CHANGELOG.md] - Version history
 * link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] - RSR framework compliance
 * link:docs/TPCF.md[TPCF.md] - Contribution framework
-* link:ROADMAP.adoc[ROADMAP.adoc] - Migration phases & future targets
+* link:ROADMAP.adoc[ROADMAP.adoc] - Re-point sequence & milestones
 
 == Contributing
 
@@ -257,7 +264,7 @@ We welcome contributions! See link:CONTRIBUTING.md[CONTRIBUTING.md] for:
 
 * Code of Conduct
 * Development setup
-* Pattern authoring guide (multi-target)
+* Cartridge authoring guide (per-language correspondence modules)
 * Testing requirements
 * Pull request process
 
@@ -273,12 +280,13 @@ See link:LICENSE[LICENSE] for the full license text.
 
 == Roadmap
 
-* [x] Phase 0: Decide migration path (option A content rewrite, multilanguage future)
-* [-] Phase 1: Rebrand + generalise engine for multi-target (host stays ReScript)
-* [ ] Phase 2: Pattern catalogue pivot — affine/linear-safety-focused AffineScript patterns
-* [ ] Phase 3: Host language port (ReScript -> AffineScript), gated on toolchain WASM maturity
-* [ ] Phase 4: Policy perimeter flip (ts-blocker extended, affinescript linter added)
-* [ ] Phase 5: Zig/V policy formalisation; additional targets (Rust, Gleam)
+* [x] Correspondence-model spec merged (Concept/Form/Transition + six CorrespondenceKinds)
+* [x] Standards / repo hygiene merged
+* [-] Identity re-point + abstraction-model pivot (classify, not translate)
+* [ ] Browser multi-pane GUI (overlay view-layers)
+* [ ] AffineScript host port (Zig FFI + Idris2 ABI)
+* [ ] Cartridge contract + 2nd language pack
+* [ ] Proofs/benches + PanLL octad emission
 
 See link:ROADMAP.adoc[ROADMAP.adoc] for detailed milestones.
 
@@ -289,11 +297,11 @@ If you use this project in academic research, please cite:
 [source,bibtex]
 ----
 @software{nextgen_languages_evangeliser_2026,
-  title = {Nextgen Languages Evangeliser: Progressive Code Transformation for Affine/Linear-Typed Languages},
+  title = {Nextgen Languages Evangeliser: Cross-Language Correspondence Classification for Transfer Learning},
   author = {Jonathan D.A. Jewell},
   year = {2026},
   url = {https://github.com/hyperpolymath/nextgen-languages-evangeliser},
-  note = {Successor to rescript-evangeliser; RSR Bronze-compliant, TPCF Perimeter 3}
+  note = {Duolingo/Rosetta Stone for programming languages; successor to rescript-evangeliser; RSR Bronze-compliant, TPCF Perimeter 3}
 }
 ----
 
@@ -305,24 +313,22 @@ If you use this project in academic research, please cite:
 
 == Acknowledgments
 
-* *AffineScript Team*: For the flagship target — affine/linear types, borrow checker, QTT
-* *ReScript Team*: For seeding this evangeliser's original catalogue and philosophy
-* *Makaton*: Inspiration for the glyph system
-* *Deno Team*: For the excellent runtime
-* *Contributors*: See link:.well-known/humans.txt[humans.txt]
+* *Dyadic / Echo*: `proven-tests-and-benches` and `hyperpolymath/echo-types` for the formal carrier (relation + loss-with-residue)
+* *PanLL / eNSAID*: the downstream contact layer this engine feeds
+* *Makaton*: inspiration for the glyph view-layer
+* *Deno Team*: for the excellent runtime
+* *Contributors*: see link:.well-known/humans.txt[humans.txt]
 
 == Status
 
-* *Version*: 0.6.0-alpha (migrating from rescript-evangeliser 0.5.x)
+* *Version*: 0.6.0-alpha (re-pointed from rescript-evangeliser 0.5.x)
 * *RSR Level*: Bronze
-* *Targets*: 2 active (AffineScript flagship, ReScript legacy), more planned
-* *Tests*: 38 across 6 suites (being updated for multi-target)
-* *CI Workflows*: 16, all passing
-* *Build Status*: Passing
-* *Last Updated*: 2026-04-16
+* *Design*: correspondence-model spec merged; hygiene merged; abstraction-model pivot next
+* *Toolchain*: AffineScript/Idris2/Zig deferred — authored now, verified in CI
+* *Last Updated*: 2026-06-18
 
 ---
 
-Made with care for JavaScript developers curious about next-generation languages.
+Made with care for developers learning a new language.
 
-*Remember*: You were close!
+*Remember*: Learn — to love it!
