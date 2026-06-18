@@ -4,35 +4,43 @@
 # STATE.a2ml — Nextgen Languages Evangeliser project state
 [metadata]
 project = "nextgen-languages-evangeliser"
-version = "1.0.0"
-last-updated = "2026-01-10T13:50:33+00:00"
+version = "1.2.0"
+last-updated = "2026-06-18"
 status = "active"
-session = "converted from scheme — 2026-04-11"
 
 [project-context]
 name = "Nextgen Languages Evangeliser"
-purpose = """"""
-completion-percentage = 50
+purpose = "Duolingo/Rosetta-Stone for programming languages — a comprehension+transfer engine that classifies cross-language correspondences so learning transfers from a known language to a new one."
+completion-percentage = 58
 
 [position]
-phase = "Active Development"   # design | implementation | testing | maintenance | archived
-maturity = "experimental"  # experimental | alpha | beta | production | lts
+phase = "Re-point: correspondence engine + abstraction-model pivot"   # design | implementation | testing | maintenance | archived
+maturity = "alpha"   # experimental | alpha | beta | production | lts
 
 [route-to-mvp]
 milestones = [
-  # No milestones recorded
+  "M0 correspondence-model spec — complete",
+  "M1 standards/repo hygiene — complete",
+  "M2 identity re-point + abstraction-model pivot — in progress",
+  "M3 browser multi-pane GUI + overlay view-layers — pending",
+  "M4 AffineScript host port (Zig FFI + Idris2 ABI) — gated",
+  "M5 cartridge contract + 2nd language pack — pending",
+  "M6 proofs/benches + PanLL octad emission — pending",
 ]
 
 [blockers-and-issues]
 issues = [
-  # No blockers recorded
+  "AffineScript/Idris2/Zig/Deno toolchain absent in some environments — author now, verify in CI",
+  "JTV grammar-v2 worked example stubbed pending julia-the-viper repo access",
+  "Licence-label drift to flag to owner vs MPL-2.0 SPDX — FLAG-ONLY, manual",
 ]
 
 [critical-next-actions]
 actions = [
-  # No actions recorded
+  "Abstraction-model pivot: Concept/Form/Transition + CorrespondenceKind in src",
+  "Browser multi-pane GUI surface",
 ]
 
 [maintenance-status]
-last-run-utc = "2026-01-10T13:50:33+00:00T00:00:00Z"
-last-result = "unknown"  # unknown | pass | warn | fail
+last-run-utc = "2026-06-18T00:00:00Z"
+last-result = "pass"   # unknown | pass | warn | fail

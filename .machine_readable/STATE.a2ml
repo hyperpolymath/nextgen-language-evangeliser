@@ -2,41 +2,52 @@
 ;; STATE.a2ml — nextgen-languages-evangeliser project state
 ;; Migrated from root STATE.scm on 2026-04-12
 ;; Renamed from rescript-evangeliser on 2026-04-16
+;; Re-pointed to the correspondence (classify-not-translate) model on 2026-06-18
 
 (state
   (metadata
-    (version "1.1.0")
+    (version "1.2.0")
     (project "nextgen-languages-evangeliser")
     (predecessor "rescript-evangeliser")
-    (last-updated "2026-04-16"))
+    (last-updated "2026-06-18"))
+
+  (identity
+    (is "Duolingo/Rosetta-Stone for programming languages — a comprehension+transfer engine that classifies cross-language correspondences so learning transfers from a known language to a new one")
+    (is-not "an IDE (that is PanLL), a linter, a universal translator, or a shame-the-JS pattern matcher")
+    (model "Concept/Form/Transition + six CorrespondenceKinds (cognate/false-friend/antonym/alien-realization/novel/vanished) as graded Echo fibres")
+    (division "we build the engine + interface + vocabulary; the community authors per-language cartridges"))
 
   (current-position
-    (phase "Migration: Phase 1 — rebrand + engine generalisation")
-    (overall-completion 55)
+    (phase "Re-point: cross-language correspondence engine + abstraction-model pivot")
+    (overall-completion 58)
     (working-features
-      "ReScript target catalogue (52 patterns, 21 categories)"
-      "Scanner + Analyser detection engine"
-      "Narrative generation with 'You were close!' voice"
-      "Makaton-inspired glyph system"
+      "Correspondence-model design spec (docs/theory/CORRESPONDENCE-MODEL.adoc) — merged"
+      "Standards/machine-readable hygiene (6a2 manifests, panic-attack gate, eNSAID config) — merged"
+      "Scanner + Analyser detection engine (ReScript host)"
+      "Narrative generation (no-shame voice)"
+      "Makaton-inspired glyph view-layer"
       "CLI: scan / patterns / legend / stats"
       "RAW/FOLDED/GLYPHED view layers; plain/markdown/html outputs"))
 
   (route-to-mvp
     (milestones
-      (phase-0 (status "complete") (items "Decide pivot strategy" "Verify AffineScript toolchain"))
-      (phase-1 (status "in-progress") (items "Rebrand docs+metadata" "Generalise Types.res for multi-target"))
-      (phase-2 (status "pending") (items "Author AffineScript pattern catalogue (affine/linear safety)"))
-      (phase-3 (status "gated") (items "Host port ReScript -> AffineScript" "Gate: AffineScript->typed-wasm->WASM proof-of-life"))
-      (phase-4 (status "pending") (items "Policy perimeter flip" "ts-blocker + .res exception for legacy"))
-      (phase-5 (status "pending") (items "Additional targets: Rust, Gleam, Zig"))))
+      (m0 (status "complete")    (items "Correspondence-model spec: Concept/Form/Transition + six kinds + Dyadic/Echo carrier"))
+      (m1 (status "complete")    (items "Standards/repo hygiene: 6a2 manifests, panic-attack gate, eNSAID config"))
+      (m2 (status "in-progress") (items "Identity re-point" "Abstraction-model pivot: Concept/Form/Transition + CorrespondenceKind in src"))
+      (m3 (status "pending")     (items "Browser multi-pane GUI + overlay view-layers + HAS accessibility"))
+      (m4 (status "gated")       (items "AffineScript host port (.res -> .affine) + Zig FFI + Idris2 ABI seams"))
+      (m5 (status "pending")     (items "Cartridge contract + 2nd language pack"))
+      (m6 (status "pending")     (items "Idris2/Echo witnesses + benches + PanLL octad emission"))))
 
   (blockers-and-issues
-    "AffineScript WASM codegen backend parity incomplete (Phase 3 gate)"
-    "GitHub repo rename still needs manual action by maintainer")
+    "AffineScript/Idris2/Zig/Deno toolchain absent in some environments — author now, verify in CI"
+    "JTV grammar-v2 worked example stubbed pending julia-the-viper repo access"
+    "Licence-label drift to flag to owner (PMPL badge / 'Palimpsest License (MPL-2.0)' / ROADMAP 'MPL-2.0-or-later') vs MPL-2.0 SPDX — FLAG-ONLY, manual")
 
   (critical-next-actions
-    "Complete Phase 1a rebrand commit"
-    "Complete Phase 1b engine generalisation (Types.res -> multi-target)")
+    "Abstraction-model pivot: recast Types/Patterns/Narrative/Analyser to Concept/Form/Transition + CorrespondenceKind"
+    "Browser multi-pane GUI surface")
 
   (session-history
-    (2026-04-16 "Phase 0 decisions locked; Phase 1 started; branch claude/migrate-to-affinescript-zig-U0iYX")))
+    (2026-04-16 "Phase 0 decisions locked; Phase 1 started")
+    (2026-06-18 "Re-point: correspondence-model spec merged (#19); standards hygiene merged (#20); identity re-point")))

@@ -1,15 +1,25 @@
 ;; SPDX-License-Identifier: MPL-2.0
 ;; META.a2ml — nextgen-languages-evangeliser meta-information
 ;; Migrated from root META.scm on 2026-04-12
+;; Updated for the correspondence re-point on 2026-06-18
 
 (meta
-  (version "1.0.0")
+  (version "1.1.0")
   (project "nextgen-languages-evangeliser")
-  (architecture-decisions ())
+  (architecture-decisions
+    (adr-1 "Classify, don't translate — the engine names the kind of cross-language correspondence (CorrespondenceKind) and its residue; it is not a universal translator and claims no Curry-Howard fidelity")
+    (adr-2 "Formal carrier = Dyadic relation + Echo loss-with-residue (proven-tests-and-benches Dyadic.idr + hyperpolymath/echo-types); invariant-path is the governance front-end")
+    (adr-3 "Engine vs cartridge — we build the general engine, interface and vocabulary; per-language facts are authored as cartridges (standards/cartridges)")
+    (adr-4 "Host moves ReScript -> AffineScript with Zig FFI + Idris2 ABI seams; ReScript banned in new code per estate policy")
+    (adr-5 "The engine emits into PanLL (octads -> VeriSimDB -> panels); it is not itself the IDE")
+    (adr-6 "Knot-theory framing is an aspirational lens, not a literal computation — documented honestly"))
   (development-practices
     (code-style "standard")
-    (security "openssf-scorecard")
+    (security "openssf-scorecard + panic-attack static-analysis-gate")
     (versioning "semver")
     (documentation "asciidoc")
     (branching "trunk-based"))
-  (design-rationale ()))
+  (design-rationale
+    (no-shame "celebrate / minimise / better / safety / example — transfer-first pedagogy")
+    (levels-of-objects "classification runs per stratum: surface -> structure -> intention -> trope -> invariant")
+    (accessibility "Hyperpolymath Accessibility Standard, Level A -> AA")))

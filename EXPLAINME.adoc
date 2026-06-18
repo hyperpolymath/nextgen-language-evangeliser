@@ -2,48 +2,269 @@
 
 = Nextgen Languages Evangeliser — EXPLAINME
 
-== Celebrate good, minimize bad, show better
+== Learn — to love it!
 
-[quote, README.adoc]
+[quote, docs/theory/CORRESPONDENCE-MODEL.adoc]
 ____
-A pattern detection engine, CLI, and educational toolkit that teaches JavaScript developers next-generation type-safe languages through progressive code transformation, without shame.
+Duolingo / Rosetta Stone for programming languages — a language-comprehension and transfer engine that works one layer above text editing, on syntactic and semantic intention, so that the effort a person spent learning language A transfers when they move to B.
 ____
 
-The evangeliser detects patterns in existing JavaScript amenable to transformation, then shows equivalent code in one or more target languages — with encouragement rather than criticism.
-It uses progressive disclosure (RAW, FOLDED, GLYPHED views) and Makaton-inspired glyphs to make concepts visual.
-See link:README.adoc[] for the full pattern catalogue and quick start.
+This is the long-form "why". For the precise, canonical version, read
+link:docs/theory/CORRESPONDENCE-MODEL.adoc[docs/theory/CORRESPONDENCE-MODEL.adoc] —
+this document mirrors it and may not lead it.
 
-**Current state:** this repo is the successor to *ReScript Evangeliser* and is mid-migration.
-The ReScript catalogue (originally 52 patterns across 21 categories) is preserved as a legacy target.
-Active pattern authorship has pivoted to *AffineScript*, focusing on affine/linear-safety concerns — use-after-free analogs, double-cleanup, aliasing of owned state, missing disposal.
-See link:ROADMAP.adoc[] for migration phases.
+=== The one-sentence pitch
 
-**Caveat:** During Phases 1–2 the host language of this toolkit is still ReScript; Phase 3 ports it to AffineScript once the AffineScript → typed-wasm → WASM toolchain is stable enough to carry 2,400+ LOC of production code.
+You already learned to program. When you pick up your next language, most of what
+you know is still true — but some of it is a *trap*, and a little of it has *no analog
+at all*. This engine tells you which is which. *Transfer learning across languages is
+the product.*
+
+=== What it is
+
+A *language-comprehension and transfer* engine. It works *one layer above text
+editing*, on *syntactic and semantic intention* — not characters, not tokens-as-text.
+Given a Form you know in language A and a Form in language B, it *computes and
+classifies* the correspondence between them, and surfaces the *residue*: what is lost,
+added, or inverted in the crossing. That classification is the lesson.
+
+The substrate we dogfood is the nextgen-language collection (AffineScript and friends),
+but the engine is *language-agnostic*: JS → TypeScript, Ruby, Prolog, C, or exotic
+targets like QPL, Arrow, JTV.
+
+=== What it is *not* (stated plainly)
+
+* *Not "the next best IDE."* Contrast, project widgets, pop-up notepads, shortcuts,
+  attention/memory/workflow ergonomics — that is the job of *PanLL* (PanLL + eNSAID =
+  the _contact_ between human, tool, task, and environment). This engine *feeds* PanLL.
+  It is not PanLL.
+* *Not a linter.* It is not about proximal/distal scope-colouring or spotting a missing
+  `;` / extra `)`. A linter *looks up* rules; this engine *computes and classifies*
+  cross-language equivalence.
+* *Not a universal translator.* A verified any-language→any-language compiler with full
+  Curry–Howard fidelity would be nice — it is *not the goal*, and we will not attempt it
+  "to the dot".
+* *Not a shame-the-JavaScript pattern matcher.* The voice is celebrate / minimise /
+  better / safety / example, always.
+
+=== The model: Concept / Form / Transition
+
+* *Concept* — the invariant / equivalence-class, the recurring _trope_: "bind a name to
+  a value", "iterate a collection", "fail recoverably".
+* *Form* — a representative of a Concept _in one language_: `let` in ReScript, `=` in
+  Erlang, `def` in Python. One Concept, many Forms.
+* *Transition* — a directed correspondence Form(A) → Form(B): the Echo-refined map plus
+  its *residue*.
+
+A *lesson* presents a Concept through the learner's known Form, the target Form, and the
+Transition between them — narrated without shame: "you already know this; here's the
+catch".
+
+=== Levels of objects (strata)
+
+Classification runs *per stratum of meaning*, not on flat text:
+
+. *Surface* — tokens, lexemes (`=`, `def`, `match`).
+. *Structure* — AST shape, scoping, arity.
+. *Semantic intention* — what the construct _does_ (bind? mutate? branch?).
+. *Abstraction / trope* — the Concept it instantiates.
+. *Cross-language invariant* — the preserved quantity certifying "same idea".
+
+The interface lets a learner move *up and down* the strata and *across* view-modes. A
+correspondence can hold at one stratum and break at another — and *that divergence is the
+most valuable signal*. It is, literally, the false-friend detector.
+
+=== The false-friends pedagogy (where it earns its keep)
+
+The one judgement that matters is *"is this safe to transfer, or is it a trap?"* So the
+relation is not a boolean — it is a *graded* `CorrespondenceKind`, one of six, each with
+its own teaching move:
+
+[cols="2,3,2", options="header"]
+|===
+| Kind | What it means | Teaching move
+
+| *Cognate / true friend*
+| Intention + behaviour coincide; residue ≈ ∅. _e.g._ `def` → `define`. But "just a
+  rename" is a hypothesis to *verify*, never assume.
+| *Transfer directly.*
+
+| *False friend / homonym*
+| Surface matches, semantics diverge. _e.g._ BASIC `=` (destructive assignment) vs.
+  Erlang `=` (bind-once / unify). Detected as: surface-corresponds ∧ semantics-diverge.
+| *Flag the trap.*
+
+| *Antonym / inverted*
+| Related but behaves oppositely. _e.g._ 0- vs. 1-indexing; truthiness conventions;
+  stack-growth direction. Residue = the flip.
+| *Remap the intuition.*
+
+| *Alien realization*
+| Same intention, foreign mechanism, large residue. _e.g._ in JTV (reversible / add-only)
+  subtraction is `add` run backwards; divide via reversed repeated-add. Also: recursion-
+  only languages, CPS, monadic IO just to print.
+| *Bridge with effort; explain the machinery.*
+
+| *Novel / no anchor*
+| Forward fibre empty (`∄ x. f x ≡ y`) — the target has a concept with nothing to map
+  _from_. _e.g._ static types coming from assembly + JS; ownership/borrowing; affine/
+  linear use-once; Prolog `cut`; JTV totality and information-flow labels.
+| *Teach de novo — there is no transfer.*
+
+| *Vanished*
+| Backward fibre empty (`∄ y`) — a concept the learner relied on is _gone_. _e.g._
+  `return` in ReScript; `null` in a null-free language; mutable variables in a pure one.
+| *Un-learn / re-route.*
+|===
+
+The residue ranges from ∅ (true iso) through inverted/large to empty-in-either-direction
+(novel / vanished). This taxonomy *is* the Duolingo/Rosetta pedagogy.
+
+==== A walk through the false friend
+
+BASIC and Erlang both write `X = 5`. Surface: identical. Structure: both an
+infix `=` between a name and a literal. A naïve tool calls them cognate. They are not.
+
+* In BASIC, `=` *destructively assigns* — `X = 5` then `X = 6` is fine; `X` is now 6.
+* In Erlang, `=` *binds once and unifies* — `X = 5` binds `X`; a later `X = 6` is not an
+  overwrite, it is a *match that fails*.
+
+The engine sees `surface corresponds` ∧ `semantic diverges` across strata and emits
+*false friend*. The lesson does not say "you wrote it wrong". It says: "you already know
+`=`; here is the one thing that will bite you." That is the whole product in miniature.
+
+=== The formal carrier (and an honesty caveat)
+
+The model is grounded in the estate's own formalism, not a bespoke lookup table:
+
+* *Carrier = Dyadic `Relation`* (`proven-tests-and-benches` `Dyadic.idr`):
+  `{ relates; reflexive; symmetric; transitive }`. Equivalence = refl ∧ sym ∧ trans.
+* *Crossings are lossy-with-residue = Echo fibre* (`hyperpolymath/echo-types`, Agda):
+  `Echo f y := Σ (x : A), f x ≡ y`. The residue (a proof term) is exactly _what is lost
+  or added_ A→B. A retraction (one-way loss) is distinguished from an isomorphism (no
+  residue) by symmetry.
+* *Typed residue-lenses = the three Echo bridges* (`Bridge.idr`): `EchoChoreo`
+  (protocol/sequencing), `EchoEpistemic` (visibility/knowledge), `EchoTropical`
+  (cost, min-plus). Extensible.
+* *`invariant-path`* is the governance front-end: it anchors each equivalence _claim_ to
+  its two code locations plus a witness (proof/test), human-in-the-loop and editable.
+
+[IMPORTANT]
+====
+*"Knot theory" is an aspirational lens, not a computation.* The framing _types → carrier
+· tropes → recurring equivalence-figures · knot theory → certificate_ is load-bearing for
+intuition, but there is *no literal knot-invariant computation here*. We use *invariant*
+in the precise sense of a _preserved quantity that certifies "same idea"_, and we make no
+Curry–Howard-fidelity claim.
+====
+
+=== Engine vs. cartridge — the division of labour
+
+We cannot do this "to the dot", and we do not try. Responsibilities split cleanly:
+
+* *We build* — the general engine, the interface, the classification vocabulary
+  (`CorrespondenceKind`), the residue/fibre model, the Dyadic/Echo carrier, and a
+  *reference language pack*. The certifiable Idris2/Echo math is applied *where it pays*
+  (high-value or dangerous correspondences), not everywhere.
+* *The community builds* — the *per-language modules as cartridges*
+  (`standards/cartridges/`): the _facts_, i.e. which Forms instantiate which Concepts,
+  and for each Transition the kind + residue + an optional witness.
+
+A cartridge fact, sketched:
+
+[source]
+----
+(transition
+  (concept   "name-binding")
+  (from      (lang "basic")   (form "X = 5"))
+  (to        (lang "erlang")  (form "X = 5"))
+  (kind      false-friend)
+  (strata    (surface corresponds) (semantic diverges))
+  (residue   "BASIC rebinds destructively; Erlang binds once and unifies")
+  (witness   "proofs/erlang_single_assignment.idr"))   ; optional, where it pays
+----
+
+=== The interface: overlay view-layers
+
+The "levels of objects" are rendered as *overlay view-layers* — switchable and
+non-destructive, each conforming to the estate *overlay-protocol* (additive,
+non-modifying, idempotent, Idris2-ABI proved):
+
+* *focus* — show only what's needed now
+* *glyph* — Makaton-style symbols (accessible, low cognitive load)
+* *blockly / scratch* — flowchart of structure
+* *raw code* — the text itself
+* *side-by-side* — multi-language diff with step-sync
+
+The primary surface is a *browser multi-pane workspace*; the CLI/TUI is the offline
+fallback. Accessibility is a contract, not a coat of paint: *Hyperpolymath Accessibility
+Standard, Level A minimum → AA* (keyboard-only operation, ≥4.5:1 contrast, colourblind-
+safe palettes, ARIA/screen-reader, reduced-motion, plain-language mode, high-contrast
+glyph variants).
+
+=== Downstream: it emits, it does not own the IDE
+
+Analyses become `octads` written to VeriSimDB (`:8097`) plus `Groove` signals; PanLL
+panels subscribe and re-render. Relevant octad types: `inline-annotation` (per-construct
+claims), `ecosystem-link` (intra-program relationships), `proof-status` (where a
+Transition carries a witness). Ergonomics are read from
+`.machine_readable/ENSAID_CONFIG.a2ml`.
+
+=== Where the host language is going
+
+The host *today* is ReScript — now a *legacy host being migrated*, and a legacy
+*target*. Per estate policy ReScript is banned in *new* code (`.res` → `.affine`). The
+host is moving to *AffineScript*, with *Zig FFI + Idris2 ABI* seams. AffineScript stays a
+first-class teaching target and the future host — but the project's frame is no longer
+"evangelise AffineScript specifically". It is "teach *any* language by transfer, with
+AffineScript among the first-class targets".
+
+=== Toolchain honesty
+
+AffineScript / Idris2 / Zig / Deno may be absent in some environments. The design and the
+proofs are *authored now and verified in CI* — we do not claim local green builds we
+cannot run. The correspondence-model spec itself is verified by inspection against estate
+exemplars, with one worked example (JTV grammar v2) stubbed pending repository access.
+
+=== Status
+
+* Correspondence-model spec: *merged* (canonical design).
+* Standards / repo hygiene: *merged*.
+* Now: identity re-point + abstraction-model pivot (Concept/Form/Transition +
+  CorrespondenceKind in the engine).
+* Next: browser multi-pane GUI; AffineScript host port; cartridge contract + a second
+  language pack; proofs/benches + PanLL octad emission.
+
+See link:ROADMAP.adoc[ROADMAP.adoc] for the sequenced plan, and
+link:README.adoc[README.adoc] for the front-door summary.
 
 === Evidence
 
 [cols="2,3", options="header"]
 |===
-| Path | Proves
+| Path | Role
+
+| `docs/theory/CORRESPONDENCE-MODEL.adoc`
+| Canonical design spec — Concept/Form/Transition, six CorrespondenceKinds, strata, Dyadic+Echo carrier
 
 | `src/Patterns.res`
-| Multi-target pattern library — ReScript (legacy) and AffineScript (flagship) transformations, plus slots for future targets
+| Correspondence / pattern catalogue (target source for cartridge facts)
 
 | `src/Analyser.res` / `src/Analyser.resi`
-| Pattern analysis engine with public interface — takes JS, returns matches (target-aware)
+| Classification + aggregation engine with public interface (per-stratum, kind-aware)
 
 | `src/Narrative.res`
-| "You were close!" encouragement narratives, per target — the shame-free philosophy in code
+| Shame-free narratives keyed by CorrespondenceKind (transfer / flag / remap / bridge / teach / re-route)
 
 | `src/Glyphs.res`
-| Makaton-inspired glyph system — visual concept representation (target-agnostic)
+| Makaton-inspired glyph view-layer — accessible, low-cognitive-load symbol mode
 
 | `src/Scanner.res` / `src/Scanner.resi`
-| File/project scanner with public interface — batch analysis entry point
+| File/project scanner with public interface — offline analysis entry point
 
 | `src/Output.res`
-| Three output formats (plain, markdown, html) and three view layers (RAW, FOLDED, GLYPHED), per target
+| Overlay view-layers (focus / glyph / blockly / raw / side-by-side)
 
 | `src/Cli.res`
-| CLI entry point: `scan`, `patterns`, `legend`, `stats` with `--target` selection
+| CLI entry point (offline fallback): `scan`, `patterns`, `legend`, `stats`
 |===

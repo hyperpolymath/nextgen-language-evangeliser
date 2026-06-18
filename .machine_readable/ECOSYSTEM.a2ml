@@ -2,26 +2,33 @@
 ;; ECOSYSTEM.a2ml — nextgen-languages-evangeliser ecosystem position
 ;; Migrated from root ECOSYSTEM.scm on 2026-04-12
 ;; Renamed from rescript-evangeliser on 2026-04-16
+;; Updated for the correspondence re-point on 2026-06-18
 
 (ecosystem
-  (version "1.1")
+  (version "1.2")
   (name "nextgen-languages-evangeliser")
   (predecessor "rescript-evangeliser")
   (type "project")
-  (purpose "Nextgen typed-language evangelism — educational materials, examples, and tools for adopting AffineScript (flagship), ReScript (legacy), and future targets")
+  (purpose "Duolingo/Rosetta-Stone for programming languages — a comprehension+transfer engine that classifies cross-language correspondences so learning transfers from a known language to a new one")
 
   (position-in-ecosystem
     (role "component")
     (layer "application")
-    (description "Multi-target advocacy and resource hub for next-generation typed languages within the hyperpolymath estate"))
+    (description "Cross-language correspondence engine; classify-not-translate; emits into PanLL; extended by community language cartridges"))
 
   (related-projects
+    (downstream-ide "hyperpolymath/panll (+ eNSAID contact layer this engine feeds)")
+    (carrier-relation "hyperpolymath/proven-tests-and-benches (Dyadic.idr)")
+    (carrier-residue "hyperpolymath/echo-types (loss-with-residue, Agda)")
+    (cartridge-home "hyperpolymath/standards (cartridges, overlay-protocol, ensaid-config, accessibility)")
     (flagship-target "hyperpolymath/affinescript")
     (codegen-layer "hyperpolymath/typed-wasm")
     (legacy-target "rescript-lang/rescript"))
 
-  (what-this-is "Educational materials, worked examples, and advocacy tools for affine/linear-typed and other next-generation languages (flagship: AffineScript)")
+  (what-this-is "A language-comprehension and transfer engine: it classifies cross-language correspondences (cognate/false-friend/antonym/alien-realization/novel/vanished) and teaches the transfer without shame")
   (what-this-is-not
-    "A compiler"
-    "A type-checker"
-    "A language-server (see affinescript repo for LSP)"))
+    "An IDE (that is PanLL)"
+    "A linter"
+    "A universal translator (no Curry-Howard-fidelity goal)"
+    "A compiler or type-checker"
+    "A shame-the-JavaScript pattern matcher"))

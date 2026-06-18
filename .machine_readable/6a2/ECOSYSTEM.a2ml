@@ -3,18 +3,24 @@
 #
 # ECOSYSTEM.a2ml — Nextgen Languages Evangeliser ecosystem position
 [metadata]
-version = "1.0"
-last-updated = "2026-04-11"
+version = "1.2"
+last-updated = "2026-06-18"
 
 [project]
 name = "Nextgen Languages Evangeliser"
-purpose = "image:https://img.shields.io/badge/license-Palimpsest--MPL--1.0-purple.svg[Palim"
+purpose = "Duolingo/Rosetta-Stone for programming languages — a comprehension+transfer engine that classifies cross-language correspondences; emits into PanLL; extended by community language cartridges."
 role = "project"
 
 [position-in-ecosystem]
-category = ""
+category = "application"
+description = "Cross-language correspondence engine; classify-not-translate; feeds PanLL"
 
 [related-projects]
 projects = [
-  # No related projects recorded
+  "hyperpolymath/panll — downstream IDE / contact layer this engine feeds (+ eNSAID)",
+  "hyperpolymath/proven-tests-and-benches — Dyadic relation carrier",
+  "hyperpolymath/echo-types — loss-with-residue (Agda)",
+  "hyperpolymath/standards — cartridges, overlay-protocol, ensaid-config, accessibility",
+  "hyperpolymath/affinescript — first-class target + future host",
+  "hyperpolymath/typed-wasm — AffineScript codegen layer",
 ]

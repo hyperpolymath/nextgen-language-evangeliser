@@ -2,8 +2,15 @@
 
 ## Project: Nextgen Languages Evangeliser
 
-Flagship target: **AffineScript**. Legacy target: **ReScript**. More targets planned (Rust, Gleam, Zig).
-Current host application language: ReScript (migration to AffineScript planned in Phase 3).
+**Duolingo / Rosetta Stone for programming languages** — a language-*comprehension and transfer* engine that **classifies** cross-language correspondences (it does not translate, lint, or build IDEs) so learning transfers from a known language to a new one. Canonical design: `docs/theory/CORRESPONDENCE-MODEL.adoc`.
+
+- **Not** an IDE (that is **PanLL + eNSAID**; this engine *feeds* PanLL), **not** a linter, **not** a universal translator (no Curry–Howard-fidelity goal), **not** a shame-the-JS pattern matcher.
+- **Model:** Concept / Form / Transition; six `CorrespondenceKind`s (cognate / false-friend / antonym / alien-realization / novel / vanished) as graded Echo fibres; classification runs per stratum. Carrier = Dyadic relation + Echo loss-with-residue (`proven-tests-and-benches` + `echo-types`).
+- **Division of labour:** we build the engine + interface + vocabulary; the community authors per-language **cartridges** (`standards/cartridges/`).
+
+Host: **ReScript today** (legacy host, being migrated; banned in *new* code per estate policy → AffineScript `.affine`). **AffineScript** is the future host and a first-class target (Zig FFI + Idris2 ABI seams).
+
+When working here: classify-don't-translate; keep the no-shame voice; lead with the correspondence model (AffineScript is one first-class target/host, not the sole pitch); author-now / verify-in-CI when the toolchain is absent; **MPL-2.0 SPDX on new files, never relicense or sweep SPDX (licence-label drift is FLAG-ONLY to the owner)**.
 
 ## Language Policy (Hyperpolymath Standard)
 
