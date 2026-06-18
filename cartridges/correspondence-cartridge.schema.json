@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://hyperpolymath.dev/nextgen-languages-evangeliser/cartridges/correspondence-cartridge.schema.json",
+  "title": "Correspondence Cartridge",
+  "description": "SPDX-License-Identifier: MPL-2.0. A per-language correspondence pack for the Nextgen Languages Evangeliser engine. A cartridge declares the FACTS — which Forms instantiate which Concepts, and for each Transition its kind + residue + per-stratum verdicts — that the engine classifies. The vocabulary (kinds, strata, residue shapes) mirrors the Idris2 ABI at src/interface/Abi/Correspondence.idr. We build the engine + this contract; the community authors cartridges.",
+  "type": "object",
+  "required": ["spdx", "name", "version", "transitions"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string", "description": "Optional pointer to this schema (for editor / CI validation)." },
+    "spdx": {
+      "type": "string",
+      "description": "SPDX licence of THIS cartridge (the cartridge author's own choice; not dictated by the engine)."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Cartridge slug, e.g. 'js-to-erlang' or 'worked-examples'."
+    },
+    "version": { "type": "string", "description": "SemVer." },
+    "description": { "type": "string" },
+    "languages": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Language slugs this cartridge relates, e.g. ['javascript', 'erlang', 'jtv']."
+    },
+    "transitions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/transition" }
+    }
+  },
+  "$defs": {
+    "form": {
+      "type": "object",
+      "required": ["language", "surface"],
+      "additionalProperties": false,
+      "properties": {
+        "language": { "type": "string", "description": "Language slug, e.g. 'erlang'." },
+        "surface": { "type": "string", "description": "The token / snippet, e.g. 'X = 5'." }
+      }
+    },
+    "stratumVerdict": {
+      "type": "object",
+      "required": ["stratum", "holds"],
+      "additionalProperties": false,
+      "properties": {
+        "stratum": {
+          "enum": ["surface", "structure", "intention", "trope", "invariant"],
+          "description": "Mirrors Abi.Correspondence.Stratum."
+        },
+        "holds": { "type": "boolean", "description": "Does the correspondence hold at this stratum?" }
+      }
+    },
+    "residue": {
+      "type": "object",
+      "required": ["shape"],
+      "additionalProperties": false,
+      "properties": {
+        "shape": {
+          "enum": ["none", "inverted", "lossy", "absent-source", "absent-target"],
+          "description": "The Echo-fibre grade; mirrors Abi.Carrier.Residue. 'none' = true iso; 'absent-source' = novel; 'absent-target' = vanished."
+        },
+        "note": { "type": "string", "description": "What is lost, added, or inverted." }
+      }
+    },
+    "narrative": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Shame-free narrative. The voice stays celebrate / minimise / better / safety / example.",
+      "properties": {
+        "celebrate": { "type": "string" },
+        "minimise": { "type": "string" },
+        "better": { "type": "string" },
+        "safety": { "type": "string" },
+        "example": { "type": "string" }
+      }
+    },
+    "transition": {
+      "type": "object",
+      "required": ["concept", "from", "to", "kind", "residue"],
+      "additionalProperties": false,
+      "properties": {
+        "concept": { "type": "string", "description": "The Concept (invariant / trope), e.g. 'name-binding'." },
+        "from": { "$ref": "#/$defs/form" },
+        "to": { "$ref": "#/$defs/form" },
+        "kind": {
+          "enum": ["cognate", "false-friend", "antonym", "alien-realization", "novel", "vanished"],
+          "description": "The CorrespondenceKind; mirrors Abi.Correspondence.CorrespondenceKind."
+        },
+        "residue": { "$ref": "#/$defs/residue" },
+        "strata": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/stratumVerdict" },
+          "description": "Per-stratum verdicts. The false-friend signature is surface:true AND intention:false."
+        },
+        "narrative": { "$ref": "#/$defs/narrative" },
+        "witness": {
+          "type": "string",
+          "description": "Optional path to a proof/test anchoring this claim (the invariant-path governance front-end) — used where the certifiable math pays."
+        }
+      }
+    }
+  }
+}

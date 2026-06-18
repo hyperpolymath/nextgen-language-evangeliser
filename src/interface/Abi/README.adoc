@@ -34,8 +34,7 @@ The shapes are re-expressed here as fresh MPL-2.0 source rather than depended on
 
 == Status
 
-Authored ahead of the toolchain: Idris2 is not present in every environment, so
-this is verified by `idris2 --typecheck abi.ipkg` in a tooled session / CI, not
-yet in the authoring environment. The Zig FFI side of the seam
+*Typechecks clean* under Idris2 0.8.0 (`idris2 --typecheck abi.ipkg`; `%default
+total`, no escape hatches — verified 2026-06-18). The Zig FFI side of the seam
 (`src/interface/ffi/`) and the AffineScript host binding that consumes this ABI
 follow as later slices of the abstraction-model pivot.

@@ -1,0 +1,117 @@
+// SPDX-License-Identifier: MPL-2.0
+// Correspondence — the AffineScript host binding to the cross-language
+// correspondence model.
+//
+// This mirrors the Idris2 ABI (src/interface/Abi/, which owns the proofs) and
+// binds the Zig FFI symbols (src/interface/ffi/, prefix `nle_`, which owns the
+// C boundary). Idris2 + Zig + this host module all describe ONE model.
+//
+// AUTHORED AHEAD OF THE TOOLCHAIN: the AffineScript compiler is not yet
+// released, so this module is NOT YET COMPILED. The syntax follows the estate's
+// .affine conventions (cf. the 7-tentacles agents); the exact C-FFI `extern`
+// annotation and `if`-expression form are confirmed against the AffineScript
+// FFI spec when the host toolchain ships. The model types + marshalling are the
+// load-bearing part.
+
+module Correspondence;
+
+// The six graded kinds (mirrors Abi.Correspondence.CorrespondenceKind and the
+// Zig `CorrespondenceKind` enum(c_int), discriminants 0..5).
+pub type CorrespondenceKind =
+  | Cognate
+  | FalseFriend
+  | Antonym
+  | AlienRealization
+  | Novel
+  | Vanished
+
+// The pedagogy prescribed by each kind (mirrors Abi.Correspondence.Pedagogy).
+pub type Pedagogy =
+  | Transfer
+  | Warn
+  | Remap
+  | Bridge
+  | TeachDeNovo
+  | ReRoute
+
+// Strata of meaning ("levels of objects").
+pub type Stratum =
+  | Surface
+  | Structure
+  | Intention
+  | Trope
+  | Invariant
+
+// A representative of a Concept in one language.
+pub type Form = {
+  language: String,
+  surface: String,
+}
+
+// A per-stratum verdict.
+pub type StratumVerdict = {
+  stratum: Stratum,
+  holds: Bool,
+}
+
+// A directed correspondence Form(from) -> Form(to): the classified crossing,
+// its residue note, the per-stratum verdicts, and an optional witness path.
+pub type Transition = {
+  concept: String,
+  from: Form,
+  to: Form,
+  kind: CorrespondenceKind,
+  residue: String,
+  strata: [StratumVerdict],
+  witness: Option<String>,
+}
+
+// ---------------------------------------------------------------------------
+// FFI bindings to the Zig C-ABI seam (src/interface/ffi/, symbols nle_*).
+// Integers crossing the boundary are the enum discriminants declared in
+// src/interface/ffi/src/main.zig (CorrespondenceKind / Pedagogy as enum(c_int)).
+// ---------------------------------------------------------------------------
+
+extern fn ffi_pedagogy_of(kind: Int) -> Int = "ffi" "nle_pedagogy_of";
+extern fn ffi_residue_is_iso(kind: Int) -> Int = "ffi" "nle_residue_is_iso";
+extern fn ffi_is_false_friend(surface: Int, intention: Int) -> Int = "ffi" "nle_is_false_friend";
+
+// Marshalling between the AffineScript sum types and the C discriminants.
+pub fn kind_to_int(k: CorrespondenceKind) -> Int {
+  match k {
+    Cognate          => 0,
+    FalseFriend      => 1,
+    Antonym          => 2,
+    AlienRealization => 3,
+    Novel            => 4,
+    Vanished         => 5,
+  }
+}
+
+pub fn int_to_pedagogy(n: Int) -> Pedagogy {
+  match n {
+    0 => Transfer,
+    1 => Warn,
+    2 => Remap,
+    3 => Bridge,
+    4 => TeachDeNovo,
+    _ => ReRoute,
+  }
+}
+
+// The pedagogy for a kind, via the verified FFI seam.
+pub fn pedagogy_of(k: CorrespondenceKind) -> Pedagogy {
+  int_to_pedagogy(ffi_pedagogy_of(kind_to_int(k)))
+}
+
+// Is the crossing a true isomorphism (residue None)? Only Cognate.
+pub fn is_iso(k: CorrespondenceKind) -> Bool {
+  ffi_residue_is_iso(kind_to_int(k)) == 1
+}
+
+// The false-friend signature: corresponds at Surface AND diverges at Intention.
+pub fn is_false_friend(surface_holds: Bool, intention_holds: Bool) -> Bool {
+  let s = if surface_holds { 1 } else { 0 };
+  let i = if intention_holds { 1 } else { 0 };
+  ffi_is_false_friend(s, i) == 1
+}

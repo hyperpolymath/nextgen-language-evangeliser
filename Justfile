@@ -76,6 +76,11 @@ validate:
     @echo "🔍 Validating project..."
     deno task validate
 
+# Validate cartridges against the correspondence schema (Deno + ajv)
+validate-cartridges:
+    @echo "🧩 Validating cartridges..."
+    @deno run -A --no-lock scripts/validate-cartridges.js
+
 # Validate RSR compliance
 validate-rsr:
     @echo "🔍 Validating RSR Bronze-level compliance..."

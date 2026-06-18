@@ -1,0 +1,23 @@
+// SPDX-License-Identifier: MPL-2.0
+= Host binding — the correspondence model in AffineScript
+
+The host-language side of the seam. `src/interface/Abi/` (Idris2) owns the
+proofs, `src/interface/ffi/` (Zig) owns the C boundary, and this module is the
+**AffineScript host binding** that consumes them: it mirrors the model types and
+binds the Zig `nle_*` symbols via `extern fn`, so the host engine works in terms
+of `CorrespondenceKind` / `Pedagogy` / `Transition` directly.
+
+== Status — compiler-gated
+
+The AffineScript compiler is **not yet released**, so `Correspondence.affine` is
+**authored but not compiled**. Its syntax follows the estate's `.affine`
+conventions (cf. the 7-tentacles agents); the precise C-FFI `extern` annotation
+is confirmed against the AffineScript FFI spec when the host toolchain ships.
+Until then the proofs live on the verified Idris2 side and the runnable logic on
+the verified-in-CI Zig side; this module is the typed surface they converge on.
+
+== See also
+
+* `src/interface/Abi/` — Idris2 ABI (typechecks clean under Idris2 0.7/0.8).
+* `src/interface/ffi/` — Zig FFI (C-ABI mirror; `zig test`).
+* `docs/theory/CORRESPONDENCE-MODEL.adoc` — the design.

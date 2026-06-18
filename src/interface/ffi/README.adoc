@@ -1,0 +1,30 @@
+// SPDX-License-Identifier: MPL-2.0
+= FFI seam — the correspondence model over C-ABI (Zig)
+
+The C-ABI mirror of the Idris2 ABI in `../Abi/` (`Abi.Carrier` +
+`Abi.Correspondence`). Per the estate pattern, *Idris2 owns the ABI/proofs* and
+*Zig owns the FFI/C boundary*; the two describe the same model and must agree.
+
+== Surface
+
+* `CorrespondenceKind` / `Pedagogy` / `Stratum` — C enums matching the Idris2 types.
+* `nle_pedagogy_of(kind) -> Pedagogy` — the total pedagogy map.
+* `nle_residue_is_iso(kind) -> u32` — true only for `cognate` (residue `None`).
+* `nle_kind_name(kind)` — stable lowercase names.
+* `nle_is_false_friend(surface, intention) -> u32` — the false-friend signature
+  (corresponds at `Surface` AND diverges at `Intention`).
+* `nle_version()`.
+
+== Build / test
+
+Authored ahead of the toolchain (Zig may be absent in this environment). Run:
+
+[source,sh]
+----
+zig test src/main.zig
+zig test test/integration_test.zig
+----
+
+== Licence
+
+Original *MPL-2.0*. No AGPL / echo-types linkage — see `../Abi/README.adoc`.
