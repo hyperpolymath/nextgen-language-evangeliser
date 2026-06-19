@@ -1,6 +1,15 @@
 # SPDX-License-Identifier: MPL-2.0-or-later
 name: Security Policy
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+# Estate guardrail: scope push to default branches (PR fires once, not
+# push+PR) and cancel superseded runs. Safe — read-only PR check.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
