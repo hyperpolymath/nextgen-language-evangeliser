@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: CC-BY-SA-4.0
 = FFI seam — the correspondence model over C-ABI (Zig)
 
 The C-ABI mirror of the Idris2 ABI in `../Abi/` (`Abi.Carrier` +

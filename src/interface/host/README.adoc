@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: CC-BY-SA-4.0
 = Host binding — the correspondence model in AffineScript
 
 The host-language side of the seam. `src/interface/Abi/` (Idris2) owns the
