@@ -1,6 +1,6 @@
 # justfile for Nextgen Languages Evangeliser
 # https://github.com/casey/just
-# SPDX-License-Identifier: MIT OR Palimpsest-0.8
+# SPDX-License-Identifier: MPL-2.0 OR Palimpsest-0.8
 #
 # Per Hyperpolymath policy:
 # - Use Deno, not npm/bun
