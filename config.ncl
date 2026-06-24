@@ -1,5 +1,5 @@
 # config.ncl - Nickel configuration for Nextgen Languages Evangeliser
-# SPDX-License-Identifier: MIT OR Palimpsest-0.8
+# SPDX-License-Identifier: MPL-2.0 OR Palimpsest-0.8
 #
 # Type-safe configuration using Nickel
 # Renamed from rescript-evangeliser on 2026-04-16
