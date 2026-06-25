@@ -17,14 +17,14 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       
       - name: Check file permissions
         run: |
           find . -type f -perm /111 -name "*.sh" | head -10 || true
       
       - name: Check for secrets
-        uses: trufflesecurity/trufflehog@5f47aad1c2df34f7c6230784ce9a5a659922f479 # main pinned 2026-05-04
+        uses: trufflesecurity/trufflehog@39a1435e800f8a78b61188844272a22b3ec1722d # main pinned 2026-05-04
         with:
           path: ./
           base: ${{ github.event.pull_request.base.sha || github.event.before }}
@@ -47,7 +47,7 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - name: Check documentation
         run: |
           MISSING=""
