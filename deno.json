@@ -20,7 +20,7 @@
     "semiColons": false,
     "singleQuote": false,
     "proseWrap": "preserve",
-    "include": ["bin/", "gui/", "scripts/", "src/cartridges.js", "test/run_all.js", "deno.json"]
+    "include": ["bin/", "src/cartridges.js", "test/run_all.js", "deno.json"]
   },
   "lint": {
     "rules": {
