@@ -18,28 +18,26 @@ package_managers:
 targets:
   build:
     consumes:
-      - src/*.res
-      - rescript.json
-    produces:
-      - src/*.res.js
+      - cartridges/**/*.cartridge.json
+      - cartridges/correspondence-cartridge.schema.json
+    produces: []
     command: deno task build
 
   clean:
     consumes: []
     produces: []
-    command: deno task clean
+    command: just clean
 
   validate:
     consumes:
-      - src/*.res
-      - scripts/*.ts
+      - cartridges/**/*.cartridge.json
     produces: []
     command: deno task validate
 
   test:
     consumes:
-      - src/*.res
-      - src/*.res.js
+      - cartridges/**/*.cartridge.json
+      - test/run_all.js
     produces: []
     command: deno task test
 
@@ -53,9 +51,13 @@ invariants:
     description: "TypeScript files forbidden in src/"
     check: "! find src -name '*.ts' -o -name '*.tsx' | grep -q ."
 
-  rescript_exists:
-    description: "ReScript sources must exist"
-    check: "find src -name '*.res' | grep -q ."
+  cartridges_exist:
+    description: "Correspondence cartridges must exist"
+    check: "find cartridges -name '*.cartridge.json' | grep -q ."
+
+  no_rescript_host:
+    description: "No ReScript host source (host removed; ReScript is a legacy target only)"
+    check: "! find src -name '*.res' -o -name '*.resi' | grep -q ."
 
   deno_config:
     description: "Deno configuration must exist"

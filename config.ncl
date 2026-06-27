@@ -23,8 +23,8 @@
   # Language policy (what we write the toolkit in)
   languages = {
     allowed = [
-      "AffineScript",  # planned host (Phase 3+)
-      "ReScript",      # current host
+      "AffineScript",  # future host (Phase 3+)
+      "ReScript",      # legacy target language only (host removed)
       "Deno",
       "Rust",
       "Zig",           # canonical FFI
@@ -43,7 +43,7 @@
       "V",             # use Zig, except inside V-ecosystem projects
     ],
 
-    primary = "ReScript",        # current host language
+    primary = "Deno",            # interim host surface (ReScript host removed)
     primary_planned = "AffineScript",  # post-Phase 3
     runtime = "Deno",
 
@@ -63,7 +63,7 @@
 
     tasks = {
       build = "deno task build",
-      clean = "deno task clean",
+      clean = "just clean",
       validate = "deno task validate",
       test = "deno task test",
       fmt = "deno task fmt",
@@ -90,13 +90,5 @@
       "build",
       "test",
     ],
-  },
-
-  # ReScript configuration (current host)
-  rescript = {
-    version = "12",
-    module_format = "es6",
-    suffix = ".res.js",
-    uncurried = true,
   },
 }

@@ -5,7 +5,7 @@
 # Per Hyperpolymath policy:
 # - Use Deno, not npm/bun
 # - Use justfile, not Makefile
-# - Use ReScript, not TypeScript
+# - Use AffineScript, not TypeScript (ReScript host removed 2026-06; AffineScript host pending)
 
 # List all available recipes
 import? "contractile.just"
@@ -15,20 +15,22 @@ default:
 
 # === BUILD ===
 
-# Build ReScript sources
+# "Build" = validate the cartridge data the workspace + CLI consume.
+# There is no compile step: the host is AffineScript (compiler pending) and the
+# runtime surface is Deno + cartridge data (the ReScript host was removed).
 build:
-    @echo "🔷 Building ReScript..."
+    @echo "🧩 Validating cartridges (no compile step — Deno-only host)..."
     deno task build
 
-# Build in watch mode
+# Serve the workspace with live reload on change
 watch:
-    @echo "👀 Watching for changes..."
-    npx rescript build -w
+    @echo "👀 Watching — workspace reloads on change..."
+    deno run --allow-read --allow-net --watch gui/server.js
 
-# Clean build artifacts
+# Clean caches / build leftovers
 clean:
     @echo "🧹 Cleaning..."
-    deno task clean
+    @rm -rf lib .deno 2>/dev/null || true
 
 # Deep clean (including dependencies)
 clean-all: clean
@@ -40,17 +42,16 @@ rebuild: clean-all setup build
 
 # === DEVELOPMENT ===
 
-# Install dependencies
+# Install / warm dependency cache (Deno — no npm runtime deps)
 install:
-    @echo "📦 Installing dependencies..."
-    deno cache scripts/*.ts
-    deno install
+    @echo "📦 Warming dependency cache..."
+    @deno cache scripts/validate-cartridges.js gui/server.js bin/evangeliser.js test/run_all.js
 
 # First-time setup
 setup: install
     @echo "🎉 Development environment ready!"
-    @echo "Run 'just build' to compile ReScript"
-    @echo "Run 'just watch' for development"
+    @echo "Run 'just gui'  to launch the correspondence workspace"
+    @echo "Run 'just test' to run the cartridge invariant tests"
 
 # Format code
 fmt:
@@ -100,7 +101,7 @@ validate-rsr:
 validate-structure:
     @echo "📁 Checking project structure..."
     @test -d src || (echo "❌ Missing src/" && exit 1)
-    @test -f rescript.json || (echo "❌ Missing rescript.json" && exit 1)
+    @test -d cartridges || (echo "❌ Missing cartridges/" && exit 1)
     @test -f deno.json || (echo "❌ Missing deno.json" && exit 1)
     @echo "✅ Project structure valid"
 
@@ -134,7 +135,7 @@ validate-policy:
     @echo "📋 Checking language policy..."
     @test ! -f Makefile || (echo "❌ Makefile detected - use justfile" && exit 1)
     @test ! -f makefile || (echo "❌ makefile detected - use justfile" && exit 1)
-    @! find src -name "*.ts" -o -name "*.tsx" 2>/dev/null | grep -q . || (echo "❌ TypeScript in src/ - use ReScript" && exit 1)
+    @! find src -name "*.ts" -o -name "*.tsx" 2>/dev/null | grep -q . || (echo "❌ TypeScript in src/ - use AffineScript" && exit 1)
     @echo "✅ Language policy enforced"
 
 # === CI/CD ===
@@ -157,14 +158,18 @@ ci: clean setup build lint test validate-rsr
 stats:
     @echo "📊 Project Statistics"
     @echo "===================="
-    @echo "ReScript files:"
-    @find src -name "*.res" 2>/dev/null | wc -l || echo "0"
-    @echo "Lines of ReScript:"
-    @find src -name "*.res" -exec cat {} \; 2>/dev/null | wc -l || echo "0"
-    @echo "Deno scripts:"
-    @find scripts -name "*.ts" 2>/dev/null | wc -l || echo "0"
+    @echo "Cartridges:"
+    @find cartridges -name "*.cartridge.json" 2>/dev/null | wc -l || echo "0"
+    @echo "AffineScript host files (.affine):"
+    @find . -name "*.affine" -not -path './.git/*' 2>/dev/null | wc -l || echo "0"
+    @echo "Idris2 ABI files (.idr):"
+    @find . -name "*.idr" -not -path './.git/*' 2>/dev/null | wc -l || echo "0"
+    @echo "Zig FFI files (.zig):"
+    @find . -name "*.zig" -not -path './.git/*' 2>/dev/null | wc -l || echo "0"
+    @echo "Deno/JS glue:"
+    @find bin gui scripts test -name "*.js" 2>/dev/null | wc -l || echo "0"
     @echo "Documentation files:"
-    @find docs -name "*.md" -o -name "*.adoc" 2>/dev/null | wc -l || echo "0"
+    @find docs -name "*.adoc" -o -name "*.md" 2>/dev/null | wc -l || echo "0"
 
 # === GIT HOOKS ===
 

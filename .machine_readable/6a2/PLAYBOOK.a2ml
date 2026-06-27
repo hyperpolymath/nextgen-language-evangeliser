@@ -8,9 +8,9 @@ last-updated = "2026-06-18"
 project = "nextgen-languages-evangeliser"
 
 [deployment]
-# Host: ReScript today (compiles to JS, run under Deno); AffineScript after the
-# Phase-3 host port. Surfaces: Deno CLI (bin/evangeliser.js) and the browser
-# GUI (gui/server.js + gui/app.js).
+# Host: ReScript host removed — interim surface is Deno + cartridge data;
+# AffineScript after the host port. Surfaces: Deno CLI (bin/evangeliser.js,
+# reads cartridges) and the browser GUI (gui/server.js + gui/app.js).
 # method = "ci-triggered"
 # target = "library + cli + browser-gui"
 

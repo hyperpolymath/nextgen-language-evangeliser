@@ -4,18 +4,20 @@
 
 ## Purpose
 
-Multi-target advocacy tool that helps teams migrate from JavaScript/TypeScript to next-generation type-safe languages. Flagship target: AffineScript. Legacy target: ReScript. Analyses codebases, generates migration reports, produces evangelism content, and tracks conversion progress. Runs on Deno.
+Cross-language *comprehension and transfer* engine — Duolingo / Rosetta Stone for programming languages. It *classifies* correspondences between a known language and a target so learning transfers (it does not translate, lint, or build IDEs). Flagship / future host: AffineScript. Legacy target: ReScript (host removed). Runs on Deno; the browser multi-pane workspace is the primary surface.
 
 ## Module Map
 
 ```
 nextgen-languages-evangeliser/
 ├── bin/
-│   └── evangeliser.js    # Main entry point (Deno CLI)
-├── src/                  # Host source (ReScript today; AffineScript post-Phase 3)
+│   └── evangeliser.js    # Offline CLI (Deno; reads cartridges)
+├── src/interface/        # Engine spine: Idris2 ABI + Zig FFI + AffineScript host binding
+├── cartridges/           # Correspondence facts (schema + reference pack)
+├── gui/                  # Browser multi-pane workspace (primary surface)
 ├── config.ncl            # Nickel configuration
 ├── docs/                 # Usage and output documentation
-├── Justfile / Justfile   # Task runner recipes
+├── Justfile              # Task runner recipes
 └── deno.json             # Deno module config
 ```
 

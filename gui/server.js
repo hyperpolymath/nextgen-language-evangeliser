@@ -9,6 +9,8 @@
 //   deno run --allow-read --allow-net gui/server.js [--port N] [--host H] [--open]
 //   (add --allow-env to honour EVANGELISER_GUI_PORT; --allow-run for --open)
 
+import { loadCartridges as loadAll } from "../src/cartridges.js";
+
 const root = new URL("../", import.meta.url);
 
 function argValue(name, fallback) {
@@ -26,36 +28,12 @@ function envPort() {
 
 async function loadCartridges() {
   const dir = new URL("cartridges/", root);
-  const out = [];
-  async function walk(d) {
-    let entries;
-    try {
-      entries = Deno.readDir(d);
-    } catch {
-      return;
-    }
-    for await (const e of entries) {
-      const child = new URL(e.name + (e.isDirectory ? "/" : ""), d);
-      if (e.isDirectory) {
-        await walk(child);
-        continue;
-      }
-      if (!e.name.endsWith(".cartridge.json")) continue;
-      try {
-        const c = JSON.parse(await Deno.readTextFile(child));
-        out.push({
-          cartridge: c.name ?? e.name,
-          description: c.description ?? "",
-          languages: c.languages ?? [],
-          transitions: Array.isArray(c.transitions) ? c.transitions : [],
-        });
-      } catch (err) {
-        console.error(`skip ${e.name}: ${err.message}`);
-      }
-    }
-  }
-  await walk(dir);
-  return out;
+  return (await loadAll(dir)).map((c) => ({
+    cartridge: c.name ?? "(unnamed)",
+    description: c.description ?? "",
+    languages: c.languages ?? [],
+    transitions: Array.isArray(c.transitions) ? c.transitions : [],
+  }));
 }
 
 const contentTypes = {

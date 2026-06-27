@@ -37,15 +37,6 @@ erl_crash.dump
 *.jl.mem
 /Manifest.toml
 
-# ReScript
-/lib/bs/
-/lib/
-/.bsb.lock
-*.res.js
-*.bs.js
-.merlin
-!/test/run_all.js
-
 # Deno
 deno.lock
 .deno/

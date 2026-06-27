@@ -41,12 +41,6 @@ indent_size = 3
 [*.hs]
 indent_size = 2
 
-[*.res]
-indent_size = 2
-
-[*.resi]
-indent_size = 2
-
 [*.ncl]
 indent_size = 2
 

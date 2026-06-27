@@ -8,7 +8,7 @@
 - **Model:** Concept / Form / Transition; six `CorrespondenceKind`s (cognate / false-friend / antonym / alien-realization / novel / vanished) as graded Echo fibres; classification runs per stratum. Carrier = Dyadic relation + Echo loss-with-residue (`proven-tests-and-benches` + `echo-types`).
 - **Division of labour:** we build the engine + interface + vocabulary; the community authors per-language **cartridges** (`standards/cartridges/`).
 
-Host: **ReScript today** (legacy host, being migrated; banned in *new* code per estate policy → AffineScript `.affine`). **AffineScript** is the future host and a first-class target (Zig FFI + Idris2 ABI seams).
+Host: **ReScript host removed** (2026-06) — ReScript remains only as a legacy *target* language in correspondence content (cartridges/examples), never host code. The current runtime surface is **Deno + cartridge data**; **AffineScript** is the future host and a first-class target (Zig FFI + Idris2 ABI seams).
 
 When working here: classify-don't-translate; keep the no-shame voice; lead with the correspondence model (AffineScript is one first-class target/host, not the sole pitch); author-now / verify-in-CI when the toolchain is absent; **MPL-2.0 SPDX on new files, never relicense or sweep SPDX (licence-label drift is FLAG-ONLY to the owner)**.
 
@@ -19,7 +19,7 @@ When working here: classify-don't-translate; keep the no-shame voice; lead with 
 | Language/Tool | Use Case | Notes |
 |---------------|----------|-------|
 | **AffineScript** | Flagship target language; future host | Affine/linear types, borrow checker, QTT, WASM backend |
-| **ReScript** | Current host application code; legacy target | Compiles to JS, type-safe |
+| **ReScript** | Legacy *target* language only (host removed) | Appears in cartridges/examples; not host code |
 | **Deno** | Runtime & package management | Replaces Node/npm/bun |
 | **Rust** | Performance-critical, systems, WASM | Preferred for CLI tools |
 | **Zig** | FFI, C-ABI bridges, systems | Canonical FFI layer (per `0-AI-MANIFEST.a2ml`) |
@@ -28,7 +28,7 @@ When working here: classify-don't-translate; keep the no-shame voice; lead with 
 | **Gleam** | Backend services | Runs on BEAM or compiles to JS |
 | **Elixir** | BEAM supervision and bot-role orchestration metadata | Support role only; not the host language or flagship target |
 | **Bash/POSIX Shell** | Scripts, automation | Keep minimal |
-| **JavaScript** | Only where ReScript/AffineScript cannot | MCP protocol glue, Deno APIs |
+| **JavaScript** | Only where AffineScript cannot (Deno glue) | Workspace server, CLI, cartridge tooling |
 | **Nickel** | Configuration language | For complex configs |
 | **Guile Scheme** | State/meta files | STATE.scm, META.scm, ECOSYSTEM.scm |
 | **Julia** | Batch scripts, data processing | Per RSR |
@@ -39,13 +39,13 @@ When working here: classify-don't-translate; keep the no-shame voice; lead with 
 
 | Banned | Replacement |
 |--------|-------------|
-| TypeScript | AffineScript (preferred) or ReScript |
+| TypeScript | AffineScript |
 | Node.js | Deno |
 | npm | Deno |
 | Bun | Deno |
 | pnpm/yarn | Deno |
 | Go | Rust or Zig |
-| Python | Julia/Rust/ReScript/AffineScript |
+| Python | Julia/Rust/AffineScript |
 | Java/Kotlin | Rust/Tauri/Dioxus |
 | Swift | Tauri/Dioxus |
 | React Native | Tauri/Dioxus |
@@ -56,40 +56,43 @@ When working here: classify-don't-translate; keep the no-shame voice; lead with 
 
 **No exceptions for Kotlin/Swift** - use Rust-first approach:
 
-1. **Tauri 2.0+** - Web UI (ReScript/AffineScript) + Rust backend, MIT/Apache-2.0
+1. **Tauri 2.0+** - Web UI (AffineScript) + Rust backend, MIT/Apache-2.0
 2. **Dioxus** - Pure Rust native UI, MIT/Apache-2.0
 
 Both are FOSS with independent governance (no Big Tech).
 
 ### Enforcement Rules
 
-1. **No new TypeScript files** - Convert existing TS to AffineScript or ReScript
+1. **No new TypeScript files** - Convert existing TS to AffineScript
 2. **No package.json for runtime deps** - Use deno.json imports
 3. **No node_modules in production** - Deno caches deps automatically
 4. **No Go code** - Use Rust or Zig instead
-5. **No Python anywhere** - Use Julia for data/batch, Rust for systems, ReScript/AffineScript for apps
+5. **No Python anywhere** - Use Julia for data/batch, Rust for systems, AffineScript for apps
 6. **No Kotlin/Swift for mobile** - Use Tauri 2.0+ or Dioxus
 7. **No V outside the V ecosystem** - Use Zig
 
 ### JavaScript Exemptions
 
-JavaScript is allowed only when it is generated ReScript output, Deno/browser runtime glue, or a launcher bridge that cannot currently be written in AffineScript without losing operability.
+JavaScript is allowed only when it is Deno/browser runtime glue or a launcher bridge that cannot currently be written in AffineScript without losing operability. (The ReScript host has been removed, so there is no longer any generated-ReScript-output JS.)
 
 | Path | Files | Rationale | Unblock condition |
 |------|-------|-----------|-------------------|
-| `bin/evangeliser.js` | 1 | Deno CLI shim importing compiled ReScript output | Replace when AffineScript host CLI is runnable directly |
-| `gui/server.js` | 1 | Local Deno HTTP bridge for the AffineScript GUI contract and compiled ReScript analyser | Replace when AffineScript-to-Deno/webview bridge is available |
+| `bin/evangeliser.js` | 1 | Deno CLI reading correspondence cartridges (offline fallback) | Replace when AffineScript host CLI is runnable directly |
+| `gui/server.js` | 1 | Local Deno HTTP bridge serving the workspace + cartridge API | Replace when AffineScript-to-Deno/webview bridge is available |
 | `gui/app.js` | 1 | Browser-side event/render bridge for the GUI shell | Replace when AffineScript DOM/TEA bridge can drive this UI directly |
+| `src/cartridges.js` | 1 | Shared Deno cartridge loader (CLI, GUI server, validator, tests) | Replace when AffineScript can host the loader |
+| `scripts/validate-cartridges.js` | 1 | Deno cartridge-schema validator (ajv) | Replace when AffineScript can host the validator |
+| `test/run_all.js` | 1 | Deno cartridge invariant tests | Replace when AffineScript test runner is runnable directly |
 
 ### TypeScript Exemptions
 
 | Path | Files | Rationale | Unblock condition |
 |------|-------|-----------|-------------------|
-| `node_modules/` | generated | Deno-managed npm compatibility cache for ReScript tooling | Do not commit; local cache only |
+| _(none)_ | — | No TypeScript in the repo. The former `node_modules/` ReScript-tooling cache is obsolete now the ReScript host is removed. | — |
 
 ### BEAM / Elixir Roles
 
-Elixir is a support-role language for BEAM supervision of automation and fleet orchestration. It is not a target language in this repo and must not displace the ReScript host or AffineScript flagship path.
+Elixir is a support-role language for BEAM supervision of automation and fleet orchestration. It is not a target language in this repo and must not displace the AffineScript host path.
 
 | Role | Owner | Purpose | Boundary |
 |------|-------|---------|----------|

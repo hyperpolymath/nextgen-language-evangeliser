@@ -5,18 +5,13 @@
   "license": "MPL-2.0",
   "exports": "./bin/evangeliser.js",
   "tasks": {
-    "build": "./scripts/rescript-build.sh",
-    "build:watch": "deno run -A npm:rescript build -w",
-    "clean": "deno run -A npm:rescript clean",
+    "build": "deno run -A --no-lock scripts/validate-cartridges.js",
+    "validate": "deno run -A --no-lock scripts/validate-cartridges.js",
+    "gui": "deno run --allow-read --allow-net gui/server.js",
     "lint": "deno lint",
     "fmt": "deno fmt",
-    "test": "deno run --allow-read --allow-env test/run_all.js",
+    "test": "deno run --allow-read test/run_all.js",
     "pre-commit": "deno task lint && deno task fmt --check"
-  },
-  "imports": {
-    "rescript": "npm:rescript@^12.0.0",
-    "@rescript/core": "npm:@rescript/core@^1.6.1",
-    "@rescript/runtime/": "npm:/@rescript/runtime@12.2.0/"
   },
   "fmt": {
     "useTabs": false,
@@ -25,12 +20,11 @@
     "semiColons": false,
     "singleQuote": false,
     "proseWrap": "preserve",
-    "include": ["bin/", "gui/", "test/run_all.js", "deno.json"]
+    "include": ["bin/", "src/cartridges.js", "test/run_all.js", "deno.json"]
   },
   "lint": {
     "rules": {
       "tags": ["recommended"]
     }
-  },
-  "nodeModulesDir": "auto"
+  }
 }
