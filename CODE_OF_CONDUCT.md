@@ -114,7 +114,7 @@ This Code of Conduct applies within all community spaces, and also applies when 
 
 If you experience or witness unacceptable behavior, or have any other concerns, please report it by contacting the project maintainers at:
 
-- **Email**: See [MAINTAINERS.md](MAINTAINERS.md) for contact information
+- **Email**: See [MAINTAINERS.adoc](MAINTAINERS.adoc) for contact information
 - **Anonymous Form**: [Coming soon]
 
 All reports will be handled with **discretion and confidentiality**.
@@ -220,7 +220,7 @@ This Code of Conduct is a **living document** and may be updated based on commun
 
 For questions about this Code of Conduct:
 
-- **Maintainers**: See [MAINTAINERS.md](MAINTAINERS.md)
+- **Maintainers**: See [MAINTAINERS.adoc](MAINTAINERS.adoc)
 - **GitHub Discussions**: [Community forum](https://github.com/Hyperpolymath/nextgen-languages-evangeliser/discussions)
 
 ---

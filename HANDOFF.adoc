@@ -49,9 +49,11 @@ deno run --allow-read bin/evangeliser.js --kind false-friend   # offline CLI
   (JTV is the canonical alien-realization / novel exemplar).
 . Begin the *AffineScript host application* against the Idris2 ABI / Zig FFI
   seams (needs the AffineScript compiler).
-. Optional cleanup: reframe the old-model contributor prose
-  (`CONTRIBUTING.md`, `MAINTAINERS.md`, `docs/TPCF.md`, the duplicate
-  `CHANGELOG.md`) — still carries "JS→ReScript transformation" language.
+. Owner-only follow-ups (flagged, not done — out of agent scope): the
+  `CONTRIBUTING.md` / `CHANGELOG.md` `.md`-vs-`.adoc` format choice (GitHub-required
+  files), and the licence-label drift (`config.ncl` `MIT OR Palimpsest`, the README
+  "Palimpsest License (MPL-2.0)" label, `LICENSE-MIT.txt` / `LICENSE-PALIMPSEST.txt`
+  vs the `MPL-2.0` classification). Both are owner-domain — flag, never sweep.
 
 == Guardrails (non-negotiable)
 

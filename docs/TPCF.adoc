@@ -1,0 +1,88 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Tri-Perimeter Contribution Framework (TPCF)
+:toc: macro
+
+*Nextgen Languages Evangeliser operates as TPCF Perimeter 3 — a community
+sandbox with maximum openness.* The engine is language-agnostic; the substantive
+contribution is *authoring cartridges* (per-language correspondence facts), not
+editing a "transformation" tool.
+
+toc::[]
+
+== The three perimeters
+
+[cols="1,3",options="header"]
+|===
+| Perimeter | Trust / governance
+
+| *P1 — Core* | Maintainer-only: CI/CD, release automation, security policy, the
+  Idris2 ABI / Zig FFI seam, the cartridge *contract* (schema) itself.
+| *P2 — Stable* | Reviewed: the engine + interface code, the browser workspace,
+  the AffineScript host application.
+| *P3 — Community Sandbox* | Fully open: *cartridge* authoring (correspondence
+  facts), reference-pack additions, documentation, examples, translations.
+|===
+
+== What lives where
+
+* *Cartridges (P3)* — anyone may add or extend a per-language cartridge under the
+  cartridge schema. Correspondence facts are data, not code: a Concept, two
+  Forms, the Transition's `CorrespondenceKind`, its residue, the per-stratum
+  verdicts, and an optional witness. Validated by
+  `scripts/validate-cartridges.js` and the invariant tests.
+* *Documentation (P3)* — typo fixes merge fast; new guides get light review.
+* *Engine / interface (P2)* — `src/interface/**`, `gui/**`, the CLI: maintainer
+  review; architectural changes discussed in an issue first.
+* *Infrastructure / contract (P1)* — workflows, release, security, and the
+  cartridge schema + ABI seam.
+
+== Authoring a cartridge (the main P3 path)
+
+. Read `docs/theory/CORRESPONDENCE-MODEL.adoc` (Concept / Form / Transition; the
+  six CorrespondenceKinds; the strata).
+. Add or extend a `*.cartridge.json` under `cartridges/` following
+  `cartridges/correspondence-cartridge.schema.json`.
+. For each Transition, classify the *kind* (cognate / false-friend / antonym /
+  alien-realization / novel / vanished), record the *residue*, and write the
+  *no-shame* narrative (celebrate / minimise / better / safety / example).
+. Validate: `just validate-cartridges` and `just test`.
+. Open a pull request.
+
+A worked exemplar is `cartridges/reference/worked-examples.cartridge.json` (one
+correspondence per kind).
+
+== Decision making
+
+* *Cartridge / doc additions (P3):* automated checks + light community review;
+  fast merge. Maintainer veto only for harmful or incorrect content.
+* *Feature additions (P2):* open an issue/RFC, gather feedback, rough consensus,
+  implement, review, merge.
+* *Breaking changes / contract changes (P1/P2):* RFC with migration notes,
+  discussion, maintainer consensus, documented in the changelog.
+* *Security fixes (P1):* lead maintainer; private fix → disclosure → release.
+
+== Community standards
+
+All contribution follows the project's *no-shame* ethic — celebrate existing
+knowledge, never shame a developer, give constructive feedback with examples.
+See link:../CODE_OF_CONDUCT.md[CODE_OF_CONDUCT.md].
+
+[example]
+====
+*Good review:* "Nice cartridge! The false-friend call on Erlang `=` is spot on.
+Could we add the per-stratum verdict for `structure` too, so the workspace shows
+where it diverges? Here's the shape: …"
+
+*Not this:* "This is wrong, read the spec."
+====
+
+== Forking
+
+You are welcome to fork and adapt the engine or author your own cartridge packs —
+the engine is language-agnostic and the cartridge contract is portable. See the
+repository `LICENSE` for terms.
+
+== Contact
+
+* GitHub Issues / Discussions for questions and proposals.
+* Maintainers: see link:../MAINTAINERS.adoc[MAINTAINERS.adoc].

@@ -1,0 +1,84 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= RSR Compliance — Nextgen Languages Evangeliser
+:toc: macro
+
+Compliance summary against the *Rhodium Standard Repository (RSR)* framework,
+Bronze level. This mirrors the current architecture: a cross-language
+*correspondence engine* (classify, don't translate) whose runtime surface is
+*Deno + cartridge data*, with an Idris2 ABI + Zig FFI + AffineScript host-binding
+spine. (The pre-2026 TypeScript VS Code extension this report once described has
+been removed; so has the ReScript host.)
+
+toc::[]
+
+== 1. Type safety
+
+* The correspondence carrier is specified in the *Idris2 ABI*
+  (`src/interface/Abi/`) and *typechecks* under Idris2 (`idris2 --typecheck
+  abi.ipkg`, CI `idris2-abi.yml`) — no `believe_me` / `assert_total`.
+* *AffineScript* (affine/linear types, borrow checking, QTT) is the future host
+  and a first-class teaching target.
+* Cartridge facts are schema-validated against a JSON-Schema (draft 2020-12).
+
+== 2. Memory safety
+
+* No application code performs manual memory management; the runtime surface is
+  Deno (sandboxed, GC). The FFI seam is *Zig* (`src/interface/ffi/`), and the
+  estate default for correctness-critical native work is Rust/SPARK.
+
+== 3. Offline-first architecture
+
+* Zero network dependency to use the tool: the CLI (`bin/evangeliser.js`) and the
+  workspace server (`gui/server.js`) read local cartridge data only.
+* Works air-gapped; no CDN or runtime fetch.
+
+== 4. Complete documentation
+
+* `README.adoc`, `EXPLAINME.adoc`, `ROADMAP.adoc`, `CONTRIBUTING.md`,
+  `CODE_OF_CONDUCT.md`, `SECURITY.md`, `MAINTAINERS.adoc`, `CHANGELOG`,
+  `CLAUDE.md`, and the canonical design spec
+  `docs/theory/CORRESPONDENCE-MODEL.adoc`.
+
+== 5. Security-first design
+
+* `panic-attack` static-analysis gate (`just assail`); CodeQL; SHA-pinned GitHub
+  Actions; RFC 9116 `.well-known/security.txt`; no hardcoded secrets; HTTPS-only.
+
+== 6. Open governance
+
+* TPCF *Perimeter 3* (Community Sandbox). See link:TPCF.adoc[TPCF.adoc].
+
+== 7. Licensing
+
+* Licensed under the project licence — see the repository `LICENSE`. Licence
+  identifiers and any SPDX headers are owner-managed; this report does not assert
+  a specific scheme.
+
+== 8. Test coverage
+
+* Cartridge *invariant* tests (`test/run_all.js`, Deno) — every correspondence
+  is classified by one of the six CorrespondenceKinds, the false-friend signature
+  holds (surface ✓ ∧ intention ✗), residue direction is correct for novel /
+  vanished, and the reference pack demonstrates all six kinds.
+* Cartridge *schema* validation (`scripts/validate-cartridges.js`, ajv).
+* Idris2 ABI typecheck (CI).
+
+== 9. Build reproducibility
+
+* No compile step for the runtime surface (Deno + data). Task orchestration via
+  *Justfile*; reproducible environments via *Guix* (primary) / *Nix* (fallback).
+
+== 10. `.well-known/`
+
+* `security.txt` (RFC 9116), `ai.txt`, `humans.txt`.
+
+== 11. No vendor lock-in
+
+* Open formats (JSON cartridges, AsciiDoc docs); language-agnostic engine; the
+  cartridge contract is portable and community-authored.
+
+== Notes
+
+* This document is descriptive, not a scorecard. Where a category is partially
+  realised (e.g. the AffineScript host application is authored at the seam but
+  not yet built), `ROADMAP.adoc` tracks the remaining work honestly.
