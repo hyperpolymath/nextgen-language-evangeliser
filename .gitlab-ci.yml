@@ -106,8 +106,8 @@ rsr-compliance:
       test -f ../CHANGELOG.md || (echo "Missing CHANGELOG.md" && exit 1)
 
       # Licenses
-      test -f ../LICENSE-MIT.txt || (echo "Missing LICENSE-MIT.txt" && exit 1)
-      test -f ../LICENSE-PALIMPSEST.txt || (echo "Missing LICENSE-PALIMPSEST.txt" && exit 1)
+      test -f ../LICENSES/MPL-2.0.txt || (echo "Missing LICENSES/MPL-2.0.txt" && exit 1)
+      test -f ../LICENSES/CC-BY-SA-4.0.txt || (echo "Missing LICENSES/CC-BY-SA-4.0.txt" && exit 1)
 
       # .well-known/
       test -f ../.well-known/security.txt || (echo "Missing security.txt" && exit 1)

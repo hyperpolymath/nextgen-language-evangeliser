@@ -42,8 +42,7 @@
 
   (blockers-and-issues
     "AffineScript/Idris2/Zig/Deno toolchain absent in some environments — author now, verify in CI"
-    "JTV grammar-v2 worked example stubbed pending julia-the-viper repo access"
-    "Licence-label drift to flag to owner (PMPL badge / 'Palimpsest License (MPL-2.0)' / ROADMAP 'MPL-2.0-or-later') vs MPL-2.0 SPDX — FLAG-ONLY, manual")
+    "JTV grammar-v2 worked example stubbed pending julia-the-viper repo access")
 
   (critical-next-actions
     "Port the legacy pattern catalogue into cartridge facts (Concept/Form/Transition + CorrespondenceKind)"

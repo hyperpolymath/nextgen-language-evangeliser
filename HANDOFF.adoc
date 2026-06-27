@@ -49,11 +49,10 @@ deno run --allow-read bin/evangeliser.js --kind false-friend   # offline CLI
   (JTV is the canonical alien-realization / novel exemplar).
 . Begin the *AffineScript host application* against the Idris2 ABI / Zig FFI
   seams (needs the AffineScript compiler).
-. Owner-only follow-ups (flagged, not done — out of agent scope): the
-  `CONTRIBUTING.md` / `CHANGELOG.md` `.md`-vs-`.adoc` format choice (GitHub-required
-  files), and the licence-label drift (`config.ncl` `MIT OR Palimpsest`, the README
-  "Palimpsest License (MPL-2.0)" label, `LICENSE-MIT.txt` / `LICENSE-PALIMPSEST.txt`
-  vs the `MPL-2.0` classification). Both are owner-domain — flag, never sweep.
+. Owner-only follow-up (flagged, not done): the `CONTRIBUTING.md` / `CHANGELOG.md`
+  `.md`-vs-`.adoc` format choice (these GitHub-required files have clean `.adoc`
+  twins; pick one per file). The licence-label drift is *resolved* per owner
+  direction — see the Licensing note below.
 
 == Guardrails (non-negotiable)
 
@@ -65,11 +64,11 @@ deno run --allow-read bin/evangeliser.js --kind false-friend   # offline CLI
 * *Licence files and SPDX headers are owner-only.* Never relicense or
   bulk-sweep SPDX; licence-label drift is FLAG-ONLY to the owner.
 
-== Known open item (owner decision)
+== Licensing (resolved 2026-06)
 
-The `governance / Licence consistency` check fails because `LICENSE` has no
-`SPDX-License-Identifier:` header. This is *pre-existing* and *owner-domain* —
-left untouched on purpose. It is entangled with label drift (the `LICENSE` body
-is the Palimpsest text; `config.ncl` says `MIT OR Palimpsest-0.8`; the README
-says "Palimpsest License (MPL-2.0)"; the manifests say `MPL-2.0`). Resolve only
-with an explicit owner decision on the exact identifier.
+Per owner direction: *code is MPL-2.0, documentation is CC-BY-SA-4.0.* The root
+`LICENSE` is the MPL-2.0 text (so GitHub labels the repo MPL-2.0); `LICENSES/`
+holds verbatim `MPL-2.0.txt` + `CC-BY-SA-4.0.txt`. The old MIT + Palimpsest
+dual-licence artifacts (`LICENSE-MIT.txt`, `LICENSE-PALIMPSEST.txt`) have been
+removed. SPDX headers and licence files remain *owner-only* — never relicense or
+bulk-sweep.

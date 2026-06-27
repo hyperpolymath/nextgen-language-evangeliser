@@ -1,7 +1,7 @@
 = Nextgen Languages Evangeliser
 
 image:https://img.shields.io/badge/RSR-Bronze-CD7F32[RSR Bronze,link=docs/RSR_COMPLIANCE.adoc]
-image:https://img.shields.io/badge/License-MPL--2.0-blue.svg[License: MPL-2.0,link="https://github.com/hyperpolymath/palimpsest-license"]
+image:https://img.shields.io/badge/License-MPL--2.0-blue.svg[License: MPL-2.0,link="https://www.mozilla.org/en-US/MPL/2.0/"]
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
@@ -270,7 +270,7 @@ This is a *TPCF Perimeter 3* project - all contributions are welcome!
 
 // SPDX-License-Identifier: CC-BY-SA-4.0
 
-This project is licensed under the *Palimpsest License (MPL-2.0)*.
+This project's code is licensed under the *Mozilla Public License 2.0 (MPL-2.0)*; its documentation under *CC-BY-SA-4.0*. Full licence texts are in link:LICENSES/[LICENSES/], and the repository `LICENSE` is the MPL-2.0 text.
 
 See link:LICENSE[LICENSE] for the full license text.
 

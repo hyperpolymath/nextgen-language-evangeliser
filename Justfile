@@ -1,6 +1,6 @@
 # justfile for Nextgen Languages Evangeliser
 # https://github.com/casey/just
-# SPDX-License-Identifier: MPL-2.0 OR Palimpsest-0.8
+# SPDX-License-Identifier: MPL-2.0
 #
 # Per Hyperpolymath policy:
 # - Use Deno, not npm/bun
@@ -126,9 +126,10 @@ validate-security:
 # Validate licenses
 validate-licenses:
     @echo "⚖️ Checking licenses..."
-    @test -f LICENSE-MIT.txt || (echo "❌ Missing LICENSE-MIT.txt" && exit 1)
-    @test -f LICENSE-PALIMPSEST.txt || (echo "❌ Missing LICENSE-PALIMPSEST.txt" && exit 1)
-    @echo "✅ Dual licenses present"
+    @test -f LICENSE || (echo "❌ Missing LICENSE (MPL-2.0)" && exit 1)
+    @test -f LICENSES/MPL-2.0.txt || (echo "❌ Missing LICENSES/MPL-2.0.txt" && exit 1)
+    @test -f LICENSES/CC-BY-SA-4.0.txt || (echo "❌ Missing LICENSES/CC-BY-SA-4.0.txt" && exit 1)
+    @echo "✅ Licenses present (MPL-2.0 code · CC-BY-SA-4.0 docs)"
 
 # Validate language policy (no Makefile, no new TS)
 validate-policy:

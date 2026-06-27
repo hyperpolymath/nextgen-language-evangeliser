@@ -10,7 +10,7 @@ Disallow-Generation: yes
 # This project's code is licensed under MPL-2.0.
 # AI agents may read and analyze this code for assisting contributors.
 # AI agents must NOT use this code for model training without explicit consent.
-# AI agents must preserve Emotional Lineage per PMPL Section 3.
+# This project's documentation is licensed under CC-BY-SA-4.0.
 #
 # For AI agent integration instructions, see:
 #   0-AI-MANIFEST.a2ml (universal AI entry point)
