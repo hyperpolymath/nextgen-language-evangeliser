@@ -8,6 +8,8 @@
 //   deno run --allow-read test/run_all.js
 //   deno task test  /  just test
 
+import { loadCartridges, verdict } from "../src/cartridges.js"
+
 const KINDS = [
   "cognate",
   "false-friend",
@@ -28,34 +30,6 @@ function check(label, cond) {
     failed++
     console.error(`  ✗ ${label}`)
   }
-}
-
-async function loadCartridges(dirUrl) {
-  const out = []
-  async function walk(d) {
-    let entries
-    try {
-      entries = Deno.readDir(d)
-    } catch {
-      return
-    }
-    for await (const e of entries) {
-      const child = new URL(e.name + (e.isDirectory ? "/" : ""), d)
-      if (e.isDirectory) {
-        await walk(child)
-        continue
-      }
-      if (!e.name.endsWith(".cartridge.json")) continue
-      out.push(JSON.parse(await Deno.readTextFile(child)))
-    }
-  }
-  await walk(dirUrl)
-  return out
-}
-
-function verdict(strata, name) {
-  const v = (strata ?? []).find((s) => s.stratum === name)
-  return v ? v.holds : null
 }
 
 const root = new URL("../cartridges/", import.meta.url)

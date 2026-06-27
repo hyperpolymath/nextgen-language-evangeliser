@@ -13,6 +13,8 @@
 // The browser workspace ('just gui') is the primary surface; this CLI is the
 // offline-first fallback.
 
+import { loadCartridges, verdict } from "../src/cartridges.js"
+
 const KINDS = {
   "cognate": { glyph: "🤝", pedagogy: "transfer directly" },
   "false-friend": { glyph: "🎭", pedagogy: "flag the trap" },
@@ -54,42 +56,6 @@ function parseArgs(argv) {
   return opts
 }
 
-async function loadCartridges(dirUrl) {
-  const out = []
-  async function walk(d) {
-    let entries
-    try {
-      entries = Deno.readDir(d)
-    } catch {
-      return
-    }
-    for await (const e of entries) {
-      const child = new URL(e.name + (e.isDirectory ? "/" : ""), d)
-      if (e.isDirectory) {
-        await walk(child)
-        continue
-      }
-      if (!e.name.endsWith(".cartridge.json")) continue
-      try {
-        const c = JSON.parse(await Deno.readTextFile(child))
-        out.push({
-          cartridge: c.name ?? e.name,
-          transitions: Array.isArray(c.transitions) ? c.transitions : [],
-        })
-      } catch (err) {
-        console.error(`skip ${e.name}: ${err.message}`)
-      }
-    }
-  }
-  await walk(dirUrl)
-  return out
-}
-
-function verdict(strata, name) {
-  const v = (strata ?? []).find((s) => s.stratum === name)
-  return v ? v.holds : null
-}
-
 function render(t) {
   const k = KINDS[t.kind] ?? { glyph: "?", pedagogy: "" }
   const residue = t.residue?.shape ? ` · residue: ${t.residue.shape}` : ""
@@ -119,7 +85,7 @@ async function main() {
 
   const cartridges = await loadCartridges(root)
   let items = cartridges.flatMap((c) =>
-    c.transitions.map((t) => ({ ...t, cartridge: c.cartridge }))
+    (c.transitions ?? []).map((t) => ({ ...t, cartridge: c.name }))
   )
 
   if (opts.kind) items = items.filter((t) => t.kind === opts.kind)

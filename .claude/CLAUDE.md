@@ -80,6 +80,7 @@ JavaScript is allowed only when it is Deno/browser runtime glue or a launcher br
 | `bin/evangeliser.js` | 1 | Deno CLI reading correspondence cartridges (offline fallback) | Replace when AffineScript host CLI is runnable directly |
 | `gui/server.js` | 1 | Local Deno HTTP bridge serving the workspace + cartridge API | Replace when AffineScript-to-Deno/webview bridge is available |
 | `gui/app.js` | 1 | Browser-side event/render bridge for the GUI shell | Replace when AffineScript DOM/TEA bridge can drive this UI directly |
+| `src/cartridges.js` | 1 | Shared Deno cartridge loader (CLI, GUI server, validator, tests) | Replace when AffineScript can host the loader |
 | `scripts/validate-cartridges.js` | 1 | Deno cartridge-schema validator (ajv) | Replace when AffineScript can host the validator |
 | `test/run_all.js` | 1 | Deno cartridge invariant tests | Replace when AffineScript test runner is runnable directly |
 
