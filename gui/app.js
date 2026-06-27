@@ -1,284 +1,258 @@
 // SPDX-License-Identifier: MPL-2.0
+// Correspondence multi-pane workspace — browser logic.
+//
+// Loads cartridge facts from /api/cartridges and presents them as a 3-pane
+// correspondence explorer (index · forms · classification) with five overlay
+// view-layers (side-by-side / focus / glyph / blocks / raw). Classify, don't
+// translate: each correspondence carries its CorrespondenceKind, residue,
+// per-stratum verdicts, and a no-shame narrative.
 
-const sampleSource = `async function loadUser(id) {
-  try {
-    const response = await fetch(\`/api/users/\${id}\`);
-    const user = await response.json();
-    const name = user ? user.name : "Guest";
-    return user?.settings?.theme || name;
-  } catch (error) {
-    console.error(error);
-    return null;
+const KIND = {
+  "cognate":           { glyph: "🤝", label: "Cognate",           pedagogy: "Transfer directly",   cls: "k-cognate",  blurb: "Same idea — your intuition carries over." },
+  "false-friend":      { glyph: "🎭", label: "False friend",      pedagogy: "Flag the trap",       cls: "k-false",    blurb: "Looks familiar; behaves differently." },
+  "antonym":           { glyph: "🔄", label: "Antonym",           pedagogy: "Remap the intuition", cls: "k-antonym",  blurb: "Related but inverted — flip your expectation." },
+  "alien-realization": { glyph: "🛸", label: "Alien realization", pedagogy: "Bridge with effort",  cls: "k-alien",    blurb: "Same goal, unfamiliar machinery." },
+  "novel":             { glyph: "✨", label: "Novel",             pedagogy: "Teach de novo",       cls: "k-novel",    blurb: "No prior anchor — learn it fresh." },
+  "vanished":          { glyph: "👻", label: "Vanished",          pedagogy: "Un-learn / re-route", cls: "k-vanished", blurb: "A habit to drop — it's gone here." },
+};
+const RESIDUE = {
+  "none":          { glyph: "∅",  label: "none (true isomorphism)" },
+  "inverted":      { glyph: "🔃", label: "inverted" },
+  "lossy":         { glyph: "〜", label: "lossy" },
+  "absent-source": { glyph: "⌀→", label: "absent source (novel)" },
+  "absent-target": { glyph: "→⌀", label: "absent target (vanished)" },
+};
+const STRATA = ["surface", "structure", "intention", "trope", "invariant"];
+const NARR = [
+  ["celebrate", "Celebrate"], ["minimise", "Minimise"], ["better", "Better"],
+  ["safety", "Safety"], ["example", "Example"],
+];
+
+const state = { items: [], view: "side-by-side", kind: "all", query: "", selected: 0 };
+
+const $ = (id) => document.getElementById(id);
+
+function node(tag, opts = {}, kids = []) {
+  const el = document.createElement(tag);
+  for (const [k, v] of Object.entries(opts)) {
+    if (v == null) continue;
+    if (k === "class") el.className = v;
+    else if (k === "text") el.textContent = v;
+    else if (k === "html") el.innerHTML = v;
+    else el.setAttribute(k, v);
   }
-}`
-
-const state = {
-  activeTab: "findings",
-  analysis: null,
-  patterns: [],
-  legend: "",
+  for (const kid of [].concat(kids)) if (kid != null) el.append(kid);
+  return el;
 }
 
-const source = document.querySelector("#source")
-const target = document.querySelector("#target")
-const view = document.querySelector("#view")
-const difficulty = document.querySelector("#difficulty")
-const analyseButton = document.querySelector("#analyse")
-const sampleButton = document.querySelector("#sample")
-const clearButton = document.querySelector("#clear")
-const statusPill = document.querySelector("#status")
-const tabPanel = document.querySelector("#tabPanel")
-
-source.value = sampleSource
-
-function setStatus(text, kind = "") {
-  statusPill.textContent = text
-  statusPill.className = `pill ${kind}`.trim()
+function kindBadge(kind) {
+  const k = KIND[kind] ?? { glyph: "?", label: kind, cls: "" };
+  return node("span", { class: `badge ${k.cls}` }, [`${k.glyph} ${k.label}`]);
 }
 
-function node(tag, options = {}, children = []) {
-  const element = document.createElement(tag)
-  for (const [key, value] of Object.entries(options)) {
-    if (key === "className") {
-      element.className = value
-    } else if (key === "text") {
-      element.textContent = value
-    } else if (key.startsWith("on")) {
-      element.addEventListener(key.slice(2).toLowerCase(), value)
-    } else {
-      element.setAttribute(key, value)
-    }
-  }
-  for (const child of children) {
-    element.append(child)
-  }
-  return element
+function verdictAt(strata, name) {
+  const v = (strata ?? []).find((s) => s.stratum === name);
+  return v ? v.holds : null;
+}
+// Mirrors Abi.Correspondence.isFalseFriendShape: surface holds AND intention diverges.
+function isFalseFriendShape(strata) {
+  return verdictAt(strata, "surface") === true && verdictAt(strata, "intention") === false;
 }
 
-function codeBlock(label, text) {
-  return node("div", { className: "code-block" }, [
-    node("label", { text: label }),
-    node("pre", {}, [node("code", { text })]),
-  ])
+function filtered() {
+  const q = state.query.trim().toLowerCase();
+  return state.items.filter((it) => {
+    if (state.kind !== "all" && it.kind !== state.kind) return false;
+    if (!q) return true;
+    return [it.concept, it.from?.language, it.to?.language, it.from?.surface, it.to?.surface]
+      .filter(Boolean).some((s) => String(s).toLowerCase().includes(q));
+  });
 }
 
-function updateStats() {
-  const analysis = state.analysis
-  document.querySelector("#statMatches").textContent = analysis?.matchCount ??
-    0
-  document.querySelector("#statUnique").textContent = analysis?.uniquePatternCount ?? 0
-  document.querySelector("#statCoverage").textContent = analysis
-    ? `${analysis.coveragePercentage}%`
-    : "0%"
-  document.querySelector("#statDifficulty").textContent = analysis?.difficulty ?? "-"
+function renderIndex() {
+  const list = $("index");
+  const items = filtered();
+  $("indexCount").textContent = `${items.length} of ${state.items.length}`;
+  list.replaceChildren();
+  if (items.length === 0) {
+    list.append(node("li", { class: "empty", role: "presentation", text: "No correspondences match." }));
+    renderDetail(null);
+    return;
+  }
+  if (state.selected >= items.length) state.selected = 0;
+  items.forEach((it, i) => {
+    const li = node("li", {
+      role: "option", id: `corr-${i}`, tabindex: "-1",
+      "aria-selected": String(i === state.selected),
+    }, [
+      node("div", { class: "concept", text: it.concept }),
+      node("div", { class: "pair", text: `${it.from?.language ?? "?"} → ${it.to?.language ?? "?"}` }),
+      kindBadge(it.kind),
+    ]);
+    li.addEventListener("click", () => { state.selected = i; syncSelection(); });
+    list.append(li);
+  });
+  renderDetail(items[state.selected]);
+  list.setAttribute("aria-activedescendant", `corr-${state.selected}`);
 }
 
-function renderFindings() {
-  if (!state.analysis) {
-    return node("div", { className: "empty", text: "No analysis yet." })
+function syncSelection() {
+  const items = filtered();
+  document.querySelectorAll("#index li[role=option]").forEach((li, i) => {
+    li.setAttribute("aria-selected", String(i === state.selected));
+  });
+  $("index").setAttribute("aria-activedescendant", `corr-${state.selected}`);
+  const el = $(`corr-${state.selected}`);
+  if (el) el.scrollIntoView({ block: "nearest" });
+  renderDetail(items[state.selected]);
+}
+
+// ---- view-layers ------------------------------------------------------------
+
+function formCard(form) {
+  return node("div", { class: "form-card" }, [
+    node("div", { class: "form-lang", text: form?.language ?? "?" }),
+    node("pre", { class: "surface" }, [node("code", { text: form?.surface ?? "" })]),
+  ]);
+}
+
+function renderForms(it) {
+  const host = $("paneForms");
+  host.replaceChildren();
+  if (!it) { host.append(node("div", { class: "empty", text: "Select a correspondence." })); return; }
+  host.append(node("h2", { class: "concept-head", text: it.concept }));
+  const k = KIND[it.kind] ?? {};
+
+  if (state.view === "raw") {
+    host.append(node("pre", { class: "surface" }, [node("code", {
+      text: `${it.from?.language}:  ${it.from?.surface}\n${it.to?.language}:  ${it.to?.surface}`,
+    })]));
+    return;
   }
-
-  const children = [
-    node("p", { className: "summary", text: state.analysis.summary }),
-  ]
-
-  if (state.analysis.matches.length === 0) {
-    children.push(
-      node("div", { className: "empty", text: "No patterns detected." }),
-    )
-    return node("div", {}, children)
+  if (state.view === "focus") {
+    host.append(node("div", { class: "focus-form" }, [
+      node("p", { class: "pane-hint", text: `from your ${it.from?.language}: ${it.from?.surface}` }),
+      formCard(it.to),
+    ]));
+    return;
   }
-
-  for (const match of state.analysis.matches) {
-    const meta = [
-      node("span", { className: "pill good", text: `${match.confidence}%` }),
-      node("span", { className: "pill", text: match.difficulty }),
-      node("span", { className: "pill", text: match.category }),
-    ]
-    if (match.fallback) {
-      meta.push(
-        node("span", {
-          className: "pill warn",
-          text: `fallback ${match.target}`,
-        }),
-      )
-    } else {
-      meta.push(node("span", { className: "pill", text: match.target }))
-    }
-
-    children.push(
-      node("article", { className: "finding" }, [
-        node("div", { className: "finding-header" }, [
-          node("div", {}, [
-            node("div", { className: "glyphs", text: match.glyphs.join(" ") }),
-            node("strong", { text: match.name }),
-          ]),
-          node("div", { className: "meta" }, meta),
-        ]),
-        node("div", { className: "finding-grid" }, [
-          codeBlock("JavaScript", match.jsExample),
-          codeBlock(match.target, match.targetCode),
-          node("div", { className: "narrative" }, [
-            node("label", { text: "Narrative" }),
-            node("div", { className: "narrative-list" }, [
-              node("p", { text: match.narrative.celebrate }),
-              node("p", { text: match.narrative.better }),
-              node("p", { text: match.narrative.safety }),
-              node("p", { text: match.narrative.example }),
-            ]),
-          ]),
-        ]),
+  if (state.view === "glyph") {
+    host.append(node("div", { class: "glyph-view" }, [
+      node("div", { class: "big", text: k.glyph ?? "?" }),
+      node("div", { text: k.label ?? it.kind }),
+      node("div", { class: "row" }, [
+        node("div", {}, [node("div", { class: "form-lang", text: it.from?.language }), node("code", { text: it.from?.surface })]),
+        node("div", { class: "cross", text: "→" }),
+        node("div", {}, [node("div", { class: "form-lang", text: it.to?.language }), node("code", { text: it.to?.surface })]),
       ]),
-    )
+    ]));
+    return;
   }
-
-  return node("div", {}, children)
-}
-
-function renderPatterns() {
-  if (state.patterns.length === 0) {
-    return node("div", {
-      className: "empty",
-      text: "Pattern catalogue unavailable.",
-    })
+  if (state.view === "blockly") {
+    host.append(node("div", { class: "blockly" }, [
+      node("div", { class: "block" }, [node("div", { class: "blang", text: it.from?.language }), node("code", { text: it.from?.surface })]),
+      node("div", { class: "connector", text: `▼ ${k.glyph ?? ""} ${k.label ?? it.kind}` }),
+      node("div", { class: "block" }, [node("div", { class: "blang", text: it.to?.language }), node("code", { text: it.to?.surface })]),
+    ]));
+    return;
   }
-
-  return node(
-    "div",
-    { className: "catalogue" },
-    state.patterns.map((pattern) =>
-      node("article", { className: "pattern" }, [
-        node("div", { className: "pattern-header" }, [
-          node("div", {}, [
-            node("div", {
-              className: "glyphs",
-              text: pattern.glyphs.join(" "),
-            }),
-            node("strong", { text: pattern.name }),
-          ]),
-          node("span", { className: "pill", text: `${pattern.confidence}%` }),
-        ]),
-        node("div", { className: "pattern-body" }, [
-          node("p", { text: pattern.celebrate }),
-          node("div", { className: "meta" }, [
-            node("span", { className: "pill", text: pattern.category }),
-            node("span", { className: "pill", text: pattern.difficulty }),
-            node("span", {
-              className: "pill",
-              text: pattern.targets.join(", "),
-            }),
-          ]),
-        ]),
-      ])
-    ),
-  )
+  // side-by-side (default)
+  host.append(node("div", { class: "sxs" }, [
+    formCard(it.from),
+    node("div", { class: "cross" }, [document.createTextNode(k.glyph ?? "→"), node("small", { text: "becomes" })]),
+    formCard(it.to),
+  ]));
 }
 
-function renderLegend() {
-  return node("pre", { className: "legend-output" }, [
-    node("code", { text: state.legend || "Legend unavailable." }),
-  ])
-}
+function renderClassify(it) {
+  const host = $("paneClassify");
+  host.replaceChildren();
+  if (!it) { host.append(node("div", { class: "empty", text: "—" })); return; }
+  const k = KIND[it.kind] ?? { glyph: "?", label: it.kind, pedagogy: "", blurb: "", cls: "" };
 
-function renderExport() {
-  const text = state.analysis?.rendered?.markdown || ""
-  return node("pre", { className: "export-output" }, [
-    node("code", { text: text || "No output yet." }),
-  ])
-}
+  host.append(node("div", { class: "kind-hero" }, [
+    node("div", { class: `glyph ${k.cls}`, text: k.glyph }),
+    node("div", {}, [
+      kindBadge(it.kind),
+      node("div", { class: "pedagogy", text: k.pedagogy }),
+      node("div", { class: "blurb", text: k.blurb }),
+    ]),
+  ]));
 
-function renderTab() {
-  document.querySelectorAll(".tab").forEach((tab) => {
-    tab.setAttribute(
-      "aria-selected",
-      String(tab.dataset.tab === state.activeTab),
-    )
-  })
+  const res = RESIDUE[it.residue?.shape] ?? { glyph: "?", label: it.residue?.shape ?? "—" };
+  host.append(node("div", { class: "section" }, [
+    node("h3", { text: "Residue" }),
+    node("div", { class: "residue" }, [
+      node("span", { class: "glyph", text: res.glyph }),
+      node("span", { class: "shape", text: res.label }),
+    ]),
+    it.residue?.note ? node("div", { class: "residue-note", text: it.residue.note }) : null,
+  ]));
 
-  tabPanel.replaceChildren(
-    state.activeTab === "findings"
-      ? renderFindings()
-      : state.activeTab === "patterns"
-      ? renderPatterns()
-      : state.activeTab === "legend"
-      ? renderLegend()
-      : renderExport(),
-  )
-}
+  const strataRow = node("div", { class: "strata" }, STRATA.map((s) => {
+    const v = verdictAt(it.strata, s);
+    const cls = v === true ? "holds" : v === false ? "diverges" : "";
+    const mark = v === true ? "✓" : v === false ? "✗" : "—";
+    return node("span", { class: `stratum ${cls}`, text: `${s} ${mark}` });
+  }));
+  const strataSection = node("div", { class: "section" }, [node("h3", { text: "Strata (levels of objects)" }), strataRow]);
+  if (isFalseFriendShape(it.strata)) {
+    strataSection.append(node("div", { class: "ff-flag", text: "⚠ False-friend signature: corresponds at the surface, diverges at intention." }));
+  }
+  host.append(strataSection);
 
-async function analyse() {
-  analyseButton.disabled = true
-  setStatus("Analysing")
-  try {
-    const response = await fetch("/api/analyse", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        code: source.value,
-        target: target.value,
-        view: view.value,
-        difficulty: difficulty.value,
-        format: "markdown",
-      }),
-    })
-    const body = await response.json()
-    if (!response.ok) {
-      throw new Error(body.error || "Analysis failed")
+  if (it.narrative) {
+    const blocks = NARR.filter(([key]) => it.narrative[key])
+      .map(([key, label]) => node("div", { class: "n" }, [node("b", { text: label }), document.createTextNode(it.narrative[key])]));
+    if (blocks.length) {
+      host.append(node("div", { class: "section" }, [node("h3", { text: "Narrative (no shame)" }), node("div", { class: "narrative" }, blocks)]));
     }
-    state.analysis = body
-    state.activeTab = "findings"
-    updateStats()
-    renderTab()
-    setStatus("Complete", "good")
-  } catch (error) {
-    setStatus("Failed", "warn")
-    tabPanel.replaceChildren(
-      node("div", { className: "empty", text: error.message }),
-    )
-  } finally {
-    analyseButton.disabled = false
+  }
+  if (it.witness) {
+    host.append(node("div", { class: "section" }, [node("h3", { text: "Witness" }), node("code", { text: it.witness })]));
   }
 }
 
-async function loadCatalogue() {
-  const [patternsResponse, legendResponse] = await Promise.all([
-    fetch("/api/patterns"),
-    fetch("/api/legend"),
-  ])
-  if (patternsResponse.ok) {
-    const body = await patternsResponse.json()
-    state.patterns = body.patterns
-  }
-  if (legendResponse.ok) {
-    const body = await legendResponse.json()
-    state.legend = body.legend
+function renderDetail(it) { renderForms(it); renderClassify(it); }
+
+// ---- events -----------------------------------------------------------------
+
+function onKeyNav(e) {
+  const items = filtered();
+  if (!items.length) return;
+  if (e.key === "ArrowDown" || e.key === "ArrowUp") {
+    e.preventDefault();
+    const d = e.key === "ArrowDown" ? 1 : -1;
+    state.selected = (state.selected + d + items.length) % items.length;
+    syncSelection();
+  } else if (e.key === "Home") { e.preventDefault(); state.selected = 0; syncSelection(); }
+  else if (e.key === "End") { e.preventDefault(); state.selected = items.length - 1; syncSelection(); }
+}
+
+async function init() {
+  $("filterKind").addEventListener("change", (e) => { state.kind = e.target.value; state.selected = 0; renderIndex(); });
+  $("search").addEventListener("input", (e) => { state.query = e.target.value; state.selected = 0; renderIndex(); });
+  $("index").addEventListener("keydown", onKeyNav);
+  document.querySelectorAll("input[name=view]").forEach((r) =>
+    r.addEventListener("change", (e) => {
+      state.view = e.target.value; $("viewHint").textContent = e.target.value;
+      renderForms(filtered()[state.selected]);
+    }));
+
+  try {
+    const res = await fetch("/api/cartridges");
+    const body = await res.json();
+    if (!res.ok) throw new Error(body.error || "load failed");
+    state.items = (body.cartridges || []).flatMap((c) =>
+      (c.transitions || []).map((t) => ({ ...t, cartridge: c.cartridge })));
+    $("status").textContent = state.items.length
+      ? `${state.items.length} correspondences across ${body.cartridges.length} cartridge(s)`
+      : "No cartridges found.";
+    renderIndex();
+  } catch (err) {
+    $("status").textContent = `Error: ${err.message}`;
+    $("index").append(node("li", { class: "empty", text: err.message }));
   }
 }
 
-analyseButton.addEventListener("click", analyse)
-sampleButton.addEventListener("click", () => {
-  source.value = sampleSource
-  analyse()
-})
-clearButton.addEventListener("click", () => {
-  source.value = ""
-  state.analysis = null
-  updateStats()
-  renderTab()
-  setStatus("Idle")
-})
-
-for (const control of [target, view, difficulty]) {
-  control.addEventListener("change", analyse)
-}
-
-document.querySelectorAll(".tab").forEach((tab) => {
-  tab.addEventListener("click", () => {
-    state.activeTab = tab.dataset.tab
-    renderTab()
-  })
-})
-
-await loadCatalogue()
-renderTab()
-analyse()
+init();

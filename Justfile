@@ -62,6 +62,11 @@ lint:
     @echo "🔍 Linting..."
     deno task lint
 
+# Serve the browser correspondence workspace (multi-pane, cartridge-driven)
+gui:
+    @echo "🖥️  Correspondence workspace → http://127.0.0.1:8765"
+    @deno run --allow-read --allow-net gui/server.js
+
 # === TESTING ===
 
 # Run all tests

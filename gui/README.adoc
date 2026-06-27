@@ -1,0 +1,44 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Correspondence workspace (browser, multi-pane)
+
+The project's primary surface: a cartridge-driven, multi-pane correspondence
+explorer. It reads the validated correspondence facts
+(`cartridges/**/*.cartridge.json`) and presents them across three panes —
+
+* *Index* — the correspondences (concept · from→to · kind badge), filterable by
+  kind and free-text;
+* *Forms* — the two `Form`s, rendered through the active overlay view-layer;
+* *Classification* — the `CorrespondenceKind` + its pedagogy, the residue, the
+  per-stratum verdicts (with the *false-friend signature* called out), and the
+  no-shame narrative.
+
+== Run
+
+[source,sh]
+----
+just gui
+# or, directly:
+deno run --allow-read --allow-net gui/server.js   # http://127.0.0.1:8765
+----
+
+`--port N` chooses a port; `--open` (with `--allow-run`) launches a browser.
+
+== View-layers (the "levels of objects")
+
+* *side-by-side* — the two Forms with the kind between them (default)
+* *focus* — only the target Form, minimal chrome
+* *glyph* — Makaton-style, symbol-forward, low text
+* *blocks* — flowchart-style blocks
+* *raw* — the bare surfaces
+
+== Notes
+
+No ReScript/AffineScript/Zig at runtime — the workspace is *Deno-only* and
+presents authored correspondence facts (the "Duolingo / Rosetta Stone" lessons).
+Accessibility targets the Hyperpolymath Accessibility Standard: keyboard
+navigation (arrow keys in the index), ARIA roles, >= 4.5:1 contrast,
+`prefers-reduced-motion`, and light/dark via `prefers-color-scheme`.
+
+The Deno server + cartridge API are verified locally (`deno lint`; live endpoint
+probe). The browser rendering is lint-clean and reviewed; a headless-DOM test is
+a follow-up.
