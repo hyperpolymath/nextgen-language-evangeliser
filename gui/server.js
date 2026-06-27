@@ -74,38 +74,45 @@ async function handler(req) {
   }
 }
 
-const requestedPort = Number(argValue("--port", envPort() ?? "8765"));
-const hostname = argValue("--host", "127.0.0.1");
-let server;
-let port = requestedPort;
-for (let attempt = 0; attempt < 20; attempt += 1) {
-  try {
-    port = requestedPort + attempt;
-    server = Deno.serve({ hostname, port, onListen: () => {} }, handler);
-    break;
-  } catch (err) {
-    if (String(err.message ?? err).includes("Address already in use")) continue;
-    throw err;
-  }
-}
-if (!server) {
-  throw new Error(`No free port from ${requestedPort} to ${requestedPort + 19}`);
-}
+// Exported for in-process testing (test/gui_smoke_test.js). The listener below
+// starts only when this file is run directly, not when imported.
+export { handler, loadCartridges };
 
-const addr = `http://${hostname}:${port}/`;
-console.log(`Correspondence workspace: ${addr}`);
-
-if (Deno.args.includes("--open")) {
-  setTimeout(() => {
-    for (const cmd of [["sensible-browser", addr], ["gio", "open", addr], ["xdg-open", addr]]) {
-      try {
-        new Deno.Command(cmd[0], { args: cmd.slice(1), stdout: "null", stderr: "null" }).spawn();
-        return;
-      } catch {
-        // try the next opener
-      }
+// --- server startup (only when run directly) --------------------------------
+if (import.meta.main) {
+  const requestedPort = Number(argValue("--port", envPort() ?? "8765"));
+  const hostname = argValue("--host", "127.0.0.1");
+  let server;
+  let port = requestedPort;
+  for (let attempt = 0; attempt < 20; attempt += 1) {
+    try {
+      port = requestedPort + attempt;
+      server = Deno.serve({ hostname, port, onListen: () => {} }, handler);
+      break;
+    } catch (err) {
+      if (String(err.message ?? err).includes("Address already in use")) continue;
+      throw err;
     }
-  }, 250);
-}
+  }
+  if (!server) {
+    throw new Error(`No free port from ${requestedPort} to ${requestedPort + 19}`);
+  }
 
-await server.finished;
+  const addr = `http://${hostname}:${port}/`;
+  console.log(`Correspondence workspace: ${addr}`);
+
+  if (Deno.args.includes("--open")) {
+    setTimeout(() => {
+      for (const cmd of [["sensible-browser", addr], ["gio", "open", addr], ["xdg-open", addr]]) {
+        try {
+          new Deno.Command(cmd[0], { args: cmd.slice(1), stdout: "null", stderr: "null" }).spawn();
+          return;
+        } catch {
+          // try the next opener
+        }
+      }
+    }, 250);
+  }
+
+  await server.finished;
+}

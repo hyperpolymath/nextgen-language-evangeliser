@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+= TOPOLOGY — nextgen-languages-evangeliser
+
+== Purpose
+
+Cross-language *comprehension and transfer* engine — Duolingo / Rosetta Stone for
+programming languages. It *classifies* correspondences between a known language and
+a target so learning transfers (it does not translate, lint, or build IDEs).
+Flagship / future host: AffineScript. Legacy target: ReScript (host removed). Runs
+on Deno; the browser multi-pane workspace is the primary surface.
+
+== Module map
+
+[source]
+----
+nextgen-languages-evangeliser/
+├── bin/evangeliser.js     # Offline CLI (Deno; reads cartridges)
+├── src/
+│   ├── cartridges.js      # Shared cartridge loader (Deno glue)
+│   └── interface/         # Engine spine: Idris2 ABI + Zig FFI + AffineScript host binding
+├── cartridges/            # Correspondence facts: schema + reference pack
+├── gui/                   # Browser multi-pane workspace (primary surface)
+├── scripts/               # Deno utilities (cartridge validator, GUI launcher)
+├── test/                  # Cartridge invariant tests + GUI smoke test
+├── config.ncl             # Nickel configuration
+├── docs/                  # Documentation (AsciiDoc)
+├── Justfile               # Task runner recipes
+└── deno.json              # Deno module config
+----
+
+== Data flow
+
+[source]
+----
+cartridges/**/*.cartridge.json          (authored correspondence facts)
+        │
+        ▼
+  shared loader (src/cartridges.js)
+        │
+        ├─► gui/server.js ──► browser workspace   (index · forms · classification)
+        ├─► bin/evangeliser.js ──► CLI            (--kind / --find / --json)
+        └─► test + scripts ──► invariants + schema validation
+        │
+        ▼
+  (downstream, planned) octads ──► VeriSimDB ──► PanLL panels
+----
+
+The classification vocabulary (six CorrespondenceKinds, strata, residue shapes) is
+specified in the Idris2 ABI (`src/interface/Abi/`) and mirrored by the cartridge
+schema. The engine *classifies* correspondences; it does not transform source.

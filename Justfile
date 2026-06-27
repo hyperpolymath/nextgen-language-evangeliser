@@ -70,10 +70,15 @@ gui:
 
 # === TESTING ===
 
-# Run all tests
+# Run all tests (cartridge invariants + GUI smoke test)
 test:
     @echo "🧪 Running tests..."
     deno task test
+
+# Run just the GUI smoke test (server handler: shell, bundle, cartridge API)
+test-gui:
+    @echo "🖥️  GUI smoke test..."
+    @deno task test:gui
 
 # === VALIDATION ===
 

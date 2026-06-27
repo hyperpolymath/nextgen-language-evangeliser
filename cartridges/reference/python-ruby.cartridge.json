@@ -1,0 +1,122 @@
+{
+  "$schema": "../correspondence-cartridge.schema.json",
+  "spdx": "MPL-2.0",
+  "name": "python-ruby",
+  "version": "0.1.0",
+  "description": "Second reference cartridge: Python -> Ruby. Dogfoods the cartridge contract on a fresh language pair to show the engine is language-agnostic. Covers cognate / false-friend / alien-realization / novel / vanished from a Python learner's standpoint.",
+  "languages": ["python", "ruby"],
+  "transitions": [
+    {
+      "concept": "function-definition",
+      "from": { "language": "python", "surface": "def greet(name):\n    ..." },
+      "to": { "language": "ruby", "surface": "def greet(name)\n  ...\nend" },
+      "kind": "cognate",
+      "residue": {
+        "shape": "none",
+        "note": "Same keyword (`def`) and intent; Ruby closes the body with `end` where Python uses indentation."
+      },
+      "strata": [
+        { "stratum": "surface", "holds": true },
+        { "stratum": "intention", "holds": true }
+      ],
+      "narrative": {
+        "celebrate": "You already define functions with `def` — that word is the same in Ruby.",
+        "better": "Your `def` intuition transfers directly.",
+        "example": "def greet(name): ...   <->   def greet(name) ... end"
+      }
+    },
+    {
+      "concept": "string-interpolation",
+      "from": { "language": "python", "surface": "f\"Hi {name}\"" },
+      "to": { "language": "ruby", "surface": "\"Hi #{name}\"" },
+      "kind": "cognate",
+      "residue": {
+        "shape": "none",
+        "note": "Same intent (interpolate a value into a string); Ruby uses `#{}` and needs no `f` prefix."
+      },
+      "strata": [
+        { "stratum": "surface", "holds": true },
+        { "stratum": "intention", "holds": true }
+      ],
+      "narrative": {
+        "celebrate": "f-strings are second nature to you — interpolation carries straight over.",
+        "better": "Drop the `f` and write `#{}` instead of `{}`.",
+        "example": "f\"Hi {name}\"   <->   \"Hi #{name}\""
+      }
+    },
+    {
+      "concept": "empty-collection-truthiness",
+      "from": { "language": "python", "surface": "if items:  # empty list is falsy" },
+      "to": { "language": "ruby", "surface": "if items   # empty array is TRUTHY" },
+      "kind": "false-friend",
+      "residue": {
+        "shape": "lossy",
+        "note": "In Ruby only `nil` and `false` are falsy; `[]`, `\"\"`, and `0` are all truthy. The Python habit of testing a collection for emptiness via truthiness silently breaks."
+      },
+      "strata": [
+        { "stratum": "surface", "holds": true },
+        { "stratum": "intention", "holds": false }
+      ],
+      "narrative": {
+        "celebrate": "You've leaned on truthiness to check for empty/zero for years — that's a real, useful instinct.",
+        "safety": "In Ruby that instinct misfires: `if items` is true even when empty. Test emptiness explicitly.",
+        "example": "Python: if items:  ->  Ruby: if items.any?   (or: unless items.empty?)"
+      }
+    },
+    {
+      "concept": "map-over-collection",
+      "from": { "language": "python", "surface": "[f(x) for x in xs]" },
+      "to": { "language": "ruby", "surface": "xs.map { |x| f(x) }" },
+      "kind": "alien-realization",
+      "residue": {
+        "shape": "lossy",
+        "note": "Same intention (transform each element) realised through different machinery: a comprehension expression vs a method taking a block."
+      },
+      "strata": [
+        { "stratum": "intention", "holds": true },
+        { "stratum": "structure", "holds": false }
+      ],
+      "narrative": {
+        "celebrate": "You think in comprehensions — that mapping intent is exactly right.",
+        "better": "Ruby spells it as a block passed to `map`; once it clicks, blocks are everywhere.",
+        "example": "[f(x) for x in xs]   ->   xs.map { |x| f(x) }"
+      }
+    },
+    {
+      "concept": "symbol",
+      "from": { "language": "python", "surface": "(no analog)" },
+      "to": { "language": "ruby", "surface": ":status" },
+      "kind": "novel",
+      "residue": {
+        "shape": "absent-source",
+        "note": "Python has no symbol type. The nearest habits — interned strings, enum members, dict keys — are not the same thing; learn the symbol fresh."
+      },
+      "strata": [
+        { "stratum": "intention", "holds": false }
+      ],
+      "narrative": {
+        "celebrate": "Coming from Python you have great instincts for dict keys and enums.",
+        "safety": "A Ruby symbol (`:status`) is its own immutable, interned identifier — not a string. Learn it as a new thing rather than mapping it onto strings.",
+        "example": "{ status: :active }   # :active is a symbol, not \"active\""
+      }
+    },
+    {
+      "concept": "explicit-self-parameter",
+      "from": { "language": "python", "surface": "def m(self):\n    ..." },
+      "to": { "language": "ruby", "surface": "def m\n  ...\nend" },
+      "kind": "vanished",
+      "residue": {
+        "shape": "absent-target",
+        "note": "Ruby has no explicit `self` parameter; the receiver is implicit. The Python habit of writing `self` first in every method has nowhere to go — re-route it."
+      },
+      "strata": [
+        { "stratum": "intention", "holds": false }
+      ],
+      "narrative": {
+        "celebrate": "Writing `self` first is muscle memory from Python — totally reasonable.",
+        "safety": "In Ruby that parameter vanishes: methods take only their real arguments, and `self` is implicit (use it bare when you need the receiver).",
+        "example": "Python: def m(self): ...   ->   Ruby: def m ... end"
+      }
+    }
+  ]
+}
