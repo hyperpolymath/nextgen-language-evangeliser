@@ -9,6 +9,6 @@ From: United Kingdom
 /* SITE */
 Last update: 2026-03-28
 Standards: RSR (Rhodium Standard Repository)
-License: MPL-2.0 (Palimpsest MPL)
+License: MPL-2.0 (code) / CC-BY-SA-4.0 (docs)
 Components: Idris2 ABI, Zig FFI
 Tools: just, Podman, Guix

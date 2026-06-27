@@ -1,5 +1,5 @@
 # config.ncl - Nickel configuration for Nextgen Languages Evangeliser
-# SPDX-License-Identifier: MPL-2.0 OR Palimpsest-0.8
+# SPDX-License-Identifier: MPL-2.0
 #
 # Type-safe configuration using Nickel
 # Renamed from rescript-evangeliser on 2026-04-16
@@ -10,7 +10,7 @@
     predecessor = "rescript-evangeliser",
     version = "0.6.0-alpha",
     description = "Learn next-generation type-safe languages (flagship: AffineScript) through progressive code transformation",
-    license = "MIT OR Palimpsest-0.8",
+    license = "MPL-2.0",
   },
 
   # Target languages (what we teach)

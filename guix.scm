@@ -14,5 +14,4 @@
   (synopsis "nextgen-languages-evangeliser")
   (description "nextgen-languages-evangeliser — part of the hyperpolymath ecosystem.")
   (home-page "https://github.com/hyperpolymath/nextgen-languages-evangeliser")
-  (license ((@@ (guix licenses) license) "MPL-2.0"
-             "https://github.com/hyperpolymath/palimpsest-license")))
+  (license mpl2.0))
