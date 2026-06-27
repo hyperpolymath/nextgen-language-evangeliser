@@ -34,7 +34,7 @@ toc::[]
 
 == 4. Complete documentation
 
-* `README.adoc`, `EXPLAINME.adoc`, `ROADMAP.adoc`, `CONTRIBUTING.md`,
+* `README.adoc`, `EXPLAINME.adoc`, `ROADMAP.adoc`, `CONTRIBUTING.adoc`,
   `CODE_OF_CONDUCT.md`, `SECURITY.md`, `MAINTAINERS.adoc`, `CHANGELOG`,
   `CLAUDE.md`, and the canonical design spec
   `docs/theory/CORRESPONDENCE-MODEL.adoc`.

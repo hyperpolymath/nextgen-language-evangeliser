@@ -49,10 +49,9 @@ deno run --allow-read bin/evangeliser.js --kind false-friend   # offline CLI
   (JTV is the canonical alien-realization / novel exemplar).
 . Begin the *AffineScript host application* against the Idris2 ABI / Zig FFI
   seams (needs the AffineScript compiler).
-. Owner-only follow-up (flagged, not done): the `CONTRIBUTING.md` / `CHANGELOG.md`
-  `.md`-vs-`.adoc` format choice (these GitHub-required files have clean `.adoc`
-  twins; pick one per file). The licence-label drift is *resolved* per owner
-  direction — see the Licensing note below.
+. Docs are AsciiDoc: `CONTRIBUTING` and `CHANGELOG` are now `.adoc` (the `.md`
+  duplicates were retired per owner direction). The licence-label drift is also
+  *resolved* — see the Licensing note below.
 
 == Guardrails (non-negotiable)
 

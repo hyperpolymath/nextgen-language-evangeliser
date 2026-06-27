@@ -1,20 +1,132 @@
 // SPDX-License-Identifier: CC-BY-SA-4.0
-= Contributing Guide
+= Contributing to Nextgen Languages Evangeliser
+:toc: macro
 
-== Getting Started
+Thank you for your interest in contributing! 🎉
 
-1. Fork the repository
-2. Create a feature branch from `main`
-3. Sign off commits (`git commit -s`)
-4. Submit a pull request
+This project is *Duolingo / Rosetta Stone for programming languages* — a
+language-_comprehension and transfer_ engine that *classifies* cross-language
+correspondences so learning transfers from a language you know to one you don't.
+It is *not* an IDE, a linter, a universal translator, or a "fix your JavaScript"
+tool. Canonical design: link:docs/theory/CORRESPONDENCE-MODEL.adoc[docs/theory/CORRESPONDENCE-MODEL.adoc].
 
-== Commit Guidelines
+We follow the *Compassionate Code Contribution Pledge (CCCP)* and the
+*Tri-Perimeter Contribution Framework (TPCF) — Perimeter 3* (see
+link:docs/TPCF.adoc[docs/TPCF.adoc]).
 
-* Conventional commits: `type(scope): description`
-* Sign all commits (DCO required)
-* Atomic, focused commits
+toc::[]
 
-== License
+== Philosophy: no shame, transfer-first
 
-Contributions licensed under project license.
+Our contribution process mirrors our teaching voice — *celebrate / minimise /
+better / safety / example*:
 
+. *Celebrate* every contribution, however small.
+. *Minimise* — guide gently, never shame.
+. *Better* — improve collaboratively.
+. *Safety* — keep the data valid and the invariants honest.
+. *Example* — show, don't lecture.
+
+== The main way to contribute: author a cartridge
+
+The engine is language-agnostic. The community authors *cartridges* — per-language
+packs of correspondence _facts_ (data, not code). This is the highest-value,
+lowest-barrier contribution.
+
+A cartridge entry is a *Transition*: a Concept shown through a Form in language A
+and a Form in language B, classified by its *CorrespondenceKind* and its *residue*
+(what is lost, added, or inverted on the crossing):
+
+* *cognate* — transfer directly
+* *false-friend* — flag the trap (surface matches, intention diverges)
+* *antonym* — remap the intuition (related but inverted)
+* *alien-realization* — bridge with effort (same goal, foreign machinery)
+* *novel* — teach de novo (no prior anchor)
+* *vanished* — un-learn / re-route (the habit is gone here)
+
+=== Steps
+
+. Read link:docs/theory/CORRESPONDENCE-MODEL.adoc[docs/theory/CORRESPONDENCE-MODEL.adoc].
+. Add or extend a `*.cartridge.json` under `cartridges/`, following
+  `cartridges/correspondence-cartridge.schema.json`.
+. Classify each Transition's kind + residue + per-stratum verdicts, and write the
+  no-shame narrative.
+. Validate: `just validate-cartridges` and `just test`.
+. Open a pull request.
+
+The worked exemplar is
+link:cartridges/reference/worked-examples.cartridge.json[cartridges/reference/worked-examples.cartridge.json]
+— one correspondence per kind.
+
+== Development setup
+
+The runtime surface is *Deno + cartridge data* — no compile step, no Node, no npm.
+
+=== Prerequisites
+
+* https://deno.land[Deno] (latest stable) — the only required tool
+* https://github.com/casey/just[just] — task runner
+* Git
+* _Optional, for the engine spine:_ Idris2 (ABI typecheck), Zig (FFI). The
+  AffineScript host is the future host; its compiler is not yet released.
+
+=== Common tasks
+
+[source,bash]
+----
+just gui                 # browser multi-pane correspondence workspace (primary surface)
+just test                # cartridge invariant tests
+just validate-cartridges # schema-validate the cartridges
+just build               # validate cartridge data (no compile step)
+deno run --allow-read bin/evangeliser.js --help   # offline CLI
+----
+
+== Contribution areas
+
+* *Cartridges* (most welcome) — correspondence facts for any language pair.
+* *Engine / interface* (`src/interface/**`, `gui/**`, `bin/`) — reviewed
+  contributions; discuss architectural changes in an issue first.
+* *Engine spine* — the Idris2 ABI (`src/interface/Abi/`), Zig FFI mirror
+  (`src/interface/ffi/`), AffineScript host binding (`src/interface/host/`).
+* *Documentation* — guides, examples, translations.
+* *Accessibility* — the workspace targets the Hyperpolymath Accessibility Standard
+  (Level A → AA): keyboard-only, ≥4.5:1 contrast, ARIA, reduced-motion,
+  plain-language and glyph layers.
+
+== Language policy
+
+Per the Hyperpolymath Standard: *Deno* (not npm/bun), *Justfile* (not Makefile),
+*Zig* for FFI, *Idris2* for ABI/proofs, *AffineScript* as the future host.
+*TypeScript, Node.js, Python, Go are banned.* ReScript is a legacy _target_
+language only (the ReScript host was removed) — never reintroduce `.res` host code.
+See link:CLAUDE.md[CLAUDE.md] and link:.claude/CLAUDE.md[.claude/CLAUDE.md] for the
+full policy and JavaScript-glue exemptions.
+
+== Commits & pull requests
+
+* *Conventional Commits*: `type(scope): description` (`feat`, `fix`, `docs`,
+  `refactor`, `test`, `chore`, …).
+* *Sign off* every commit (DCO): `git commit -s`.
+* Keep commits atomic and focused; describe the change clearly in the PR.
+* CI runs the cartridge tests, schema validation, the `panic-attack` gate, and the
+  governance/policy checks.
+
+== Security
+
+Never commit secrets. Report vulnerabilities privately — see
+link:SECURITY.md[SECURITY.md].
+
+== Code of Conduct
+
+This project follows the *Compassionate Code Contribution Pledge* — see
+link:CODE_OF_CONDUCT.md[CODE_OF_CONDUCT.md]. In short: never shame developers,
+celebrate existing knowledge, assume good intent, foster psychological safety.
+
+== Licence
+
+By contributing, you agree that your contributions are licensed under the project
+licence — see link:LICENSE[LICENSE]. Code is *MPL-2.0*; documentation is
+*CC-BY-SA-4.0*. You retain copyright of your contributions.
+
+[.text-center]
+*Thank you for contributing!* Remember the motto: _Learn — to love it!_ 💙

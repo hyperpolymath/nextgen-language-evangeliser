@@ -99,11 +99,11 @@ rsr-compliance:
 
       # Documentation
       test -f ../README.adoc || (echo "Missing README.adoc" && exit 1)
-      test -f ../CONTRIBUTING.md || (echo "Missing CONTRIBUTING.md" && exit 1)
+      test -f ../CONTRIBUTING.adoc || (echo "Missing CONTRIBUTING.adoc" && exit 1)
       test -f ../CODE_OF_CONDUCT.md || (echo "Missing CODE_OF_CONDUCT.md" && exit 1)
       test -f ../SECURITY.md || (echo "Missing SECURITY.md" && exit 1)
       test -f ../MAINTAINERS.adoc || (echo "Missing MAINTAINERS.adoc" && exit 1)
-      test -f ../CHANGELOG.md || (echo "Missing CHANGELOG.md" && exit 1)
+      test -f ../CHANGELOG.adoc || (echo "Missing CHANGELOG.adoc" && exit 1)
 
       # Licenses
       test -f ../LICENSES/MPL-2.0.txt || (echo "Missing LICENSES/MPL-2.0.txt" && exit 1)
