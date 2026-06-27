@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://hyperpolymath.dev/nextgen-languages-evangeliser/cartridges/correspondence-cartridge.schema.json",
   "title": "Correspondence Cartridge",
-  "description": "SPDX-License-Identifier: MPL-2.0. A per-language correspondence pack for the Nextgen Languages Evangeliser engine. A cartridge declares the FACTS — which Forms instantiate which Concepts, and for each Transition its kind + residue + per-stratum verdicts — that the engine classifies. The vocabulary (kinds, strata, residue shapes) mirrors the Idris2 ABI at src/interface/Abi/Correspondence.idr. We build the engine + this contract; the community authors cartridges.",
+  "description": "SPDX-License-Identifier: MPL-2.0 A per-language correspondence pack for the Nextgen Languages Evangeliser engine. A cartridge declares the FACTS — which Forms instantiate which Concepts, and for each Transition its kind + residue + per-stratum verdicts — that the engine classifies. The vocabulary (kinds, strata, residue shapes) mirrors the Idris2 ABI at src/interface/Abi/Correspondence.idr. We build the engine + this contract; the community authors cartridges.",
   "type": "object",
   "required": ["spdx", "name", "version", "transitions"],
   "additionalProperties": false,

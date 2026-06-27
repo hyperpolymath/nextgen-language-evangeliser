@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MPL-2.0
+// SPDX-License-Identifier: CC-BY-SA-4.0
 = Cartridges — per-language correspondence packs
 
 *We build the engine + this contract; the community authors cartridges.* A
