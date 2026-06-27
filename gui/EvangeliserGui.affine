@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MPL-2.0
 // AffineScript TEA GUI model for Nextgen Languages Evangeliser.
 //
-// The browser shell in this directory drives the current Deno/ReScript
-// analyser. This file is the AffineScript interface contract for the GUI:
-// model, messages, update, view, and subscriptions.
+// The browser shell in this directory is a Deno + cartridge workspace (the
+// ReScript host has been removed). This file is the AffineScript interface
+// contract for the GUI: model, messages, update, view, and subscriptions.
 
 enum TargetLang {
   TargetAffineScript,

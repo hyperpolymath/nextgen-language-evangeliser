@@ -11,7 +11,7 @@ image:https://img.shields.io/badge/Deno-Runtime-000000.svg[Deno Runtime]
 
 > *Learn — to love it!* -- Duolingo / Rosetta Stone for programming languages. A language-comprehension and transfer engine that *classifies* cross-language correspondences so what you learned in one language carries to the next — without shame.
 
-NOTE: The canonical design is link:docs/theory/CORRESPONDENCE-MODEL.adoc[docs/theory/CORRESPONDENCE-MODEL.adoc]. This README mirrors it. The repo began as *ReScript Evangeliser*; ReScript is now a legacy host (being migrated) and a legacy target. See link:ROADMAP.adoc[ROADMAP.adoc] for the re-point.
+NOTE: The canonical design is link:docs/theory/CORRESPONDENCE-MODEL.adoc[docs/theory/CORRESPONDENCE-MODEL.adoc]. This README mirrors it. The repo began as *ReScript Evangeliser*; the ReScript host has now been *removed* — ReScript remains only as a legacy _target_ language in the correspondence catalogue. The current runtime surface is Deno + cartridge data; AffineScript is the future host. See link:ROADMAP.adoc[ROADMAP.adoc] for the re-point.
 
 == What is This?
 
@@ -109,10 +109,9 @@ The engine *emits*; it does not own the IDE. Analyses become `octads` written to
 
 === Prerequisites
 
-* https://deno.land[Deno] (latest stable)
-* https://rescript-lang.org[ReScript] 12.2+ (current/legacy host; the host is being ported to AffineScript — see link:ROADMAP.adoc[ROADMAP.adoc])
+* https://deno.land[Deno] (latest stable) — the only runtime dependency
 
-NOTE: AffineScript / Idris2 / Zig may be absent in some environments. Material is authored now and verified in CI — we do not claim local green builds we cannot run.
+NOTE: The ReScript host has been removed; the runtime surface is Deno + cartridge data. AffineScript / Idris2 / Zig (future host + ABI/FFI seams) may be absent in some environments — that material is authored now and verified in CI; we do not claim local green builds we cannot run.
 
 === Installation
 
@@ -122,28 +121,30 @@ NOTE: AffineScript / Idris2 / Zig may be absent in some environments. Material i
 git clone https://github.com/hyperpolymath/nextgen-languages-evangeliser.git
 cd nextgen-languages-evangeliser
 
-# Install dependencies
+# Warm the dependency cache
 just install
 
-# Build host sources
+# Validate the cartridge data (no compile step — Deno-only)
 just build
 ----
 
 === Usage
 
+The browser workspace (`just gui`) is the primary surface; the CLI is the offline-first fallback. Both read the same validated correspondence cartridges.
+
 [source,bash]
 ----
-# Scan a source file (offline CLI fallback)
-deno run --allow-read bin/evangeliser.js scan <file>
+# Launch the multi-pane correspondence workspace (browser)
+just gui
 
-# List available correspondences / patterns
-deno run --allow-read bin/evangeliser.js patterns
+# Offline CLI: list every classified correspondence
+deno run --allow-read bin/evangeliser.js
 
-# Show the glyph legend
-deno run --allow-read bin/evangeliser.js legend
+# Only false friends (the traps)
+deno run --allow-read bin/evangeliser.js --kind false-friend
 
-# Display statistics
-deno run --allow-read bin/evangeliser.js stats
+# Filter by concept or language; machine-readable output
+deno run --allow-read bin/evangeliser.js --find erlang --json
 ----
 
 === Development
@@ -165,16 +166,16 @@ The engine is language-agnostic; targets are the languages a learner moves *to*.
 |*Target* |*Status* |*Why interesting for transfer*
 
 |*AffineScript* |First-class; future host |Affine/linear use-once, borrow checking, QTT — dense with _novel/no-anchor_ correspondences; emits typed-wasm → WebAssembly
-|*ReScript* |Legacy target + legacy host |Sound inference, Option/Result, pattern matching; source of the _vanished_ `return` example
+|*ReScript* |Legacy target (host removed) |Sound inference, Option/Result, pattern matching; source of the _vanished_ `return` example
 |*TypeScript, Ruby, Prolog, C, JTV, …* |Reference / planned |Cartridge-authored; JTV is the canonical _alien-realization_ + _novel_ worked example
 |===
 
 == Technology Stack
 
-* *ReScript 12.2* — current/legacy host (being migrated; banned in _new_ code per estate policy: `.res` → `.affine`)
+* *Deno* — runtime, tooling, and the current host surface (workspace server + CLI + cartridge data)
 * *AffineScript* — future host (Zig FFI + Idris2 ABI seams); OCaml 5.1+ toolchain; emits typed-wasm IR → WebAssembly
-* *Deno* — runtime and package management
 * *Zig* — FFI layer (canonical per manifest); *Idris2* — ABI / proofs
+* *ReScript* — _removed_ as host; retained only as a legacy _target_ language in the catalogue
 
 === Language Policy
 
@@ -184,37 +185,32 @@ Per Hyperpolymath Standard:
 |===
 |*Allowed* |*Banned*
 
-|AffineScript (future host), ReScript (legacy) |TypeScript
+|AffineScript (future host), Deno (current host surface) |TypeScript
 |Deno |Node.js/npm/bun
 |justfile |Makefile
 |Zig (FFI), Idris2 (ABI/proofs) |V (outside V ecosystem)
 |===
 
-ReScript is banned in _new_ code; existing `.res` migrates to `.affine`. See link:CLAUDE.md[CLAUDE.md] and link:.claude/CLAUDE.md[.claude/CLAUDE.md] for the full policy.
+The ReScript host has been removed (no `.res` host code remains); ReScript persists only as a legacy _target_ language in the correspondence catalogue. AffineScript is the future host. See link:CLAUDE.md[CLAUDE.md] and link:.claude/CLAUDE.md[.claude/CLAUDE.md] for the full policy.
 
 == Project Structure
 
 [source]
 ----
 nextgen-languages-evangeliser/
-+-- src/                    # Host source (ReScript today; AffineScript target)
-|   +-- Types.res           # Core type model
-|   +-- Glyphs.res          # Makaton-inspired glyph view-layer
-|   +-- Narrative.res       # Shame-free narrative (per CorrespondenceKind)
-|   +-- Patterns.res        # Correspondence / pattern catalogue
-|   +-- Scanner.res(i)      # Detection engine + interface
-|   +-- Analyser.res(i)     # Classification + aggregation + interface
-|   +-- Output.res          # focus/glyph/blockly/raw/side-by-side view-layers
-|   +-- Cli.res             # CLI entry point (offline fallback)
-+-- gui/                    # Browser multi-pane workspace (primary surface)
-+-- test/                   # Test suites
-+-- bin/evangeliser.js      # Deno CLI shim
-+-- docs/                   # Documentation
-|   +-- theory/CORRESPONDENCE-MODEL.adoc  # Canonical design spec
-+-- rescript.json           # Host (ReScript) configuration
++-- src/interface/          # Engine spine (no host application code yet)
+|   +-- Abi/                # Idris2 ABI: Carrier.idr, Correspondence.idr (typechecked)
+|   +-- ffi/                # Zig C-ABI mirror (build.zig + src/ + test/)
+|   +-- host/               # AffineScript host binding (Correspondence.affine; compiler pending)
++-- cartridges/             # Correspondence facts (the "lessons"): schema + reference pack
++-- gui/                    # Browser multi-pane workspace (primary surface; Deno + static)
++-- bin/evangeliser.js      # Offline CLI (Deno; reads cartridges)
++-- test/run_all.js         # Cartridge invariant tests (Deno)
++-- scripts/                # Deno utilities (cartridge validator, GUI launcher)
++-- docs/theory/CORRESPONDENCE-MODEL.adoc  # Canonical design spec
++-- abi.ipkg                # Idris2 package (typecheck the ABI)
 +-- deno.json               # Deno configuration
 +-- Justfile                # Task orchestration
-+-- Mustfile.epx            # Deployment contract
 +-- config.ncl              # Nickel configuration
 +-- CLAUDE.md               # AI context
 ----
@@ -237,7 +233,7 @@ ____
 
 This project follows the *Rhodium Standard Repository (RSR)* framework:
 
-* *Type Safety*: ReScript 12.2 host today; AffineScript (affine/linear types, borrow checking) as the host target. Correspondence carrier is Idris2/Agda-grounded (Dyadic + Echo).
+* *Type Safety*: AffineScript (affine/linear types, borrow checking) is the future host; the correspondence carrier is Idris2/Agda-grounded (Dyadic + Echo), with the ABI typechecked under Idris2.
 * *Offline First*: CLI/TUI fallback; zero network dependency to scan
 * *Complete Documentation*: see link:docs/[docs/] and link:docs/theory/CORRESPONDENCE-MODEL.adoc[the design spec]
 * *Security First*: see link:SECURITY.md[SECURITY.md]
@@ -283,7 +279,8 @@ See link:LICENSE[LICENSE] for the full license text.
 * [x] Correspondence-model spec merged (Concept/Form/Transition + six CorrespondenceKinds)
 * [x] Standards / repo hygiene merged
 * [-] Identity re-point + abstraction-model pivot (classify, not translate)
-* [ ] Browser multi-pane GUI (overlay view-layers)
+* [x] Browser multi-pane GUI (overlay view-layers)
+* [x] ReScript host removed (Deno + cartridges; AffineScript host pending)
 * [ ] AffineScript host port (Zig FFI + Idris2 ABI)
 * [ ] Cartridge contract + 2nd language pack
 * [ ] Proofs/benches + PanLL octad emission

@@ -11,7 +11,7 @@ scope = "nextgen-languages-evangeliser"
 [elixir]
 status = "support-role"
 purpose = "BEAM/OTP supervision model for automation roles"
-boundary = "Elixir may coordinate bot work; repository implementation remains ReScript now and AffineScript after the host migration gate."
+boundary = "Elixir may coordinate bot work; the ReScript host has been removed — repository implementation is Deno + cartridges now, and AffineScript after the host migration gate."
 
 [[roles]]
 name = "hypatia"

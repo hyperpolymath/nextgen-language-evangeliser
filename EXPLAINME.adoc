@@ -212,10 +212,13 @@ Transition carries a witness). Ergonomics are read from
 
 === Where the host language is going
 
-The host *today* is ReScript — now a *legacy host being migrated*, and a legacy
-*target*. Per estate policy ReScript is banned in *new* code (`.res` → `.affine`). The
-host is moving to *AffineScript*, with *Zig FFI + Idris2 ABI* seams. AffineScript stays a
-first-class teaching target and the future host — but the project's frame is no longer
+The ReScript host has been *removed*: there is no `.res` host source left. ReScript
+remains only as a legacy *target* language in the correspondence catalogue (it is the
+source of the _vanished_ `return` example). The runtime surface today is *Deno + cartridge
+data* — the workspace server, the offline CLI, and the validated cartridges. The host is
+moving to *AffineScript*, with *Zig FFI + Idris2 ABI* seams (the ABI typechecks under
+Idris2 today; the AffineScript host application is still to be written). AffineScript stays
+a first-class teaching target and the future host — but the project's frame is no longer
 "evangelise AffineScript specifically". It is "teach *any* language by transfer, with
 AffineScript among the first-class targets".
 
@@ -230,10 +233,13 @@ exemplars, with one worked example (JTV grammar v2) stubbed pending repository a
 
 * Correspondence-model spec: *merged* (canonical design).
 * Standards / repo hygiene: *merged*.
+* Idris2 ABI spine + Zig FFI mirror + AffineScript host binding: *authored* (ABI typechecks).
+* Browser multi-pane GUI: *merged*.
+* Legacy ReScript host: *removed* — runtime surface is Deno + cartridges.
 * Now: identity re-point + abstraction-model pivot (Concept/Form/Transition +
   CorrespondenceKind in the engine).
-* Next: browser multi-pane GUI; AffineScript host port; cartridge contract + a second
-  language pack; proofs/benches + PanLL octad emission.
+* Next: AffineScript host application; cartridge contract + a second language pack;
+  proofs/benches + PanLL octad emission.
 
 See link:ROADMAP.adoc[ROADMAP.adoc] for the sequenced plan, and
 link:README.adoc[README.adoc] for the front-door summary.
@@ -247,24 +253,27 @@ link:README.adoc[README.adoc] for the front-door summary.
 | `docs/theory/CORRESPONDENCE-MODEL.adoc`
 | Canonical design spec — Concept/Form/Transition, six CorrespondenceKinds, strata, Dyadic+Echo carrier
 
-| `src/Patterns.res`
-| Correspondence / pattern catalogue (target source for cartridge facts)
+| `cartridges/correspondence-cartridge.schema.json`
+| Cartridge contract — the JSON-Schema for correspondence facts (Concept/Form/Transition + kind + residue + strata)
 
-| `src/Analyser.res` / `src/Analyser.resi`
-| Classification + aggregation engine with public interface (per-stratum, kind-aware)
+| `cartridges/reference/worked-examples.cartridge.json`
+| Reference pack — one correspondence per CorrespondenceKind (the catalogue the GUI + CLI present)
 
-| `src/Narrative.res`
-| Shame-free narratives keyed by CorrespondenceKind (transfer / flag / remap / bridge / teach / re-route)
+| `src/interface/Abi/Carrier.idr`, `src/interface/Abi/Correspondence.idr`
+| Idris2 ABI — Relation/Residue/CorrespondenceKind/Stratum + `isFalseFriendShape` (typechecks under Idris2)
 
-| `src/Glyphs.res`
-| Makaton-inspired glyph view-layer — accessible, low-cognitive-load symbol mode
+| `src/interface/ffi/` (`build.zig`, `src/main.zig`, `test/`)
+| Zig C-ABI mirror of the ABI (`nle_pedagogy_of`, `nle_residue_is_iso`, `nle_is_false_friend`, …)
 
-| `src/Scanner.res` / `src/Scanner.resi`
-| File/project scanner with public interface — offline analysis entry point
+| `src/interface/host/Correspondence.affine`
+| AffineScript host binding (compiler-gated; the future host application attaches here)
 
-| `src/Output.res`
-| Overlay view-layers (focus / glyph / blockly / raw / side-by-side)
+| `gui/server.js`, `gui/app.html`, `gui/app.js`
+| Browser multi-pane workspace (primary surface): index · forms · classification, five overlay view-layers
 
-| `src/Cli.res`
-| CLI entry point (offline fallback): `scan`, `patterns`, `legend`, `stats`
+| `bin/evangeliser.js`
+| Offline CLI (Deno; reads cartridges): `--kind`, `--find`, `--json`
+
+| `test/run_all.js`
+| Cartridge invariant tests (Deno) — mirrors `Abi.Correspondence` (false-friend signature, residue direction)
 |===

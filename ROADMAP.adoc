@@ -25,29 +25,29 @@ design), link:CLAUDE.md[CLAUDE.md], and link:README.adoc[README.adoc] for overvi
 === M1 — Standards / repo hygiene ✅
 * [x] Repo renamed `rescript-evangeliser` → `nextgen-languages-evangeliser`
 * [x] Estate machine-readable artefacts + SPDX present
-* [x] Language-policy perimeter aligned (Deno, Justfile, Zig FFI; TS/Python/Go/V banned; ReScript legacy)
+* [x] Language-policy perimeter aligned (Deno, Justfile, Zig FFI; TS/Python/Go/V banned; ReScript host removed — legacy target only)
 
 === M2 — Identity re-point + abstraction-model pivot →
 * [-] Re-point identity documentation to the corrected purpose (this pass)
-* [ ] Implement Concept / Form / Transition in `src/Types.res` (engine model, not pattern-list)
-* [ ] Implement `CorrespondenceKind` + per-stratum classification in Analyser
-* [ ] Thread kind-aware, shame-free narratives through `src/Narrative.res`
-* [ ] Reframe `src/Patterns.res` as a *reference language pack* (Forms + Transitions, not "JS→AffineScript patterns")
-* [ ] Update tests for the classify-not-translate model
+* [x] Concept / Form / Transition + `CorrespondenceKind` + per-stratum classification realised in the Idris2 ABI (`src/interface/Abi/`) and the cartridge schema
+* [x] Kind-aware, shame-free narratives carried as cartridge fields (celebrate / minimise / better / safety / example)
+* [ ] Port the legacy pattern catalogue into cartridge facts (Forms + Transitions, not "JS→AffineScript patterns")
+* [x] Cartridge invariant tests for the classify-not-translate model (`test/run_all.js`)
 
-=== M3 — Browser multi-pane GUI →
-* [ ] Browser multi-pane workspace as the primary surface
-* [ ] Overlay view-layers: focus / glyph / blockly-flowchart / raw-code / side-by-side
-* [ ] View-layers conform to the estate overlay-protocol (additive, idempotent)
-* [ ] Accessibility: Hyperpolymath Accessibility Standard Level A → AA (keyboard-only, ≥4.5:1 contrast, ARIA, reduced-motion, plain-language mode)
-* [ ] CLI/TUI retained as the offline fallback
+=== M3 — Browser multi-pane GUI ✅
+* [x] Browser multi-pane workspace as the primary surface
+* [x] Overlay view-layers: focus / glyph / blockly-flowchart / raw-code / side-by-side
+* [x] View-layers conform to the estate overlay-protocol (additive, idempotent)
+* [x] Accessibility: Hyperpolymath Accessibility Standard Level A → AA (keyboard-only, ≥4.5:1 contrast, ARIA, reduced-motion, plain-language mode)
+* [x] CLI retained as the offline fallback (`bin/evangeliser.js`, reads cartridges)
 
-=== M4 — AffineScript host port (Zig FFI + Idris2 ABI) →
-* [ ] End-to-end "hello world → typed-wasm → WASM" proof-of-life
-* [ ] Port `src/` ReScript → AffineScript (`.res` → `.affine`), module-by-module
-* [ ] Zig FFI seam + Idris2 ABI seam for the certifiable carrier
-* [ ] Port `test/` in lockstep
-* [ ] Note: ReScript banned in _new_ code; AffineScript remains a first-class teaching target and the future host
+=== M4 — AffineScript host application (Zig FFI + Idris2 ABI) →
+* [x] Idris2 ABI seam for the certifiable carrier (`src/interface/Abi/` — typechecks)
+* [x] Zig FFI seam mirroring the ABI (`src/interface/ffi/`)
+* [x] AffineScript host binding authored (`src/interface/host/Correspondence.affine`)
+* [x] Legacy ReScript host removed (no `.res` to port — the host is built fresh on the seams)
+* [ ] End-to-end "hello world → typed-wasm → WASM" proof-of-life (gated on the AffineScript compiler)
+* [ ] Note: ReScript is a legacy _target_ only; AffineScript remains a first-class teaching target and the future host
 
 === M5 — Cartridge contract + 2nd language pack →
 * [ ] Specify the cartridge fact format (concept / from / to / kind / strata / residue / witness)

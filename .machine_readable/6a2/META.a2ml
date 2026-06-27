@@ -15,7 +15,7 @@ decisions = [
   "ADR-1 Classify, don't translate — name the CorrespondenceKind + residue; no universal translator, no Curry-Howard-fidelity goal",
   "ADR-2 Carrier = Dyadic relation + Echo loss-with-residue (proven-tests-and-benches + echo-types); invariant-path is the governance front-end",
   "ADR-3 Engine vs cartridge — we build the engine/interface/vocabulary; per-language facts are cartridges (standards/cartridges)",
-  "ADR-4 Host ReScript -> AffineScript (Zig FFI + Idris2 ABI seams); ReScript banned in new code",
+  "ADR-4 Host ReScript -> AffineScript (Zig FFI + Idris2 ABI seams); ReScript host removed (Deno + cartridges interim), retained only as a legacy target language",
   "ADR-5 Emit into PanLL (octads -> VeriSimDB -> panels); not itself the IDE",
   "ADR-6 Knot-theory framing is an aspirational lens, not a literal computation",
 ]

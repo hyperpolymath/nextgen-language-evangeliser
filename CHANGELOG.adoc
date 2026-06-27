@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 == [Unreleased]
 
+=== Re-point (2026-06) — correspondence engine; ReScript host removed
+
+==== Added
+- Correspondence model spine: Idris2 ABI (`src/interface/Abi/` — typechecks), Zig FFI mirror (`src/interface/ffi/`), AffineScript host binding (`src/interface/host/`)
+- Cartridge contract (JSON-Schema 2020-12) + reference pack (one correspondence per CorrespondenceKind); browser multi-pane workspace (`gui/`)
+- Offline Deno CLI reading cartridges (`bin/evangeliser.js`: `--kind` / `--find` / `--json`); cartridge invariant tests (`test/run_all.js`)
+
+==== Changed
+- Identity re-pointed to "Duolingo / Rosetta Stone for programming languages" — *classify, don't translate*
+- Runtime surface is now Deno + cartridge data (no compile step); `just build` validates cartridges
+
+==== Removed
+- **Legacy ReScript host** — all `src/*.res` / `src/*.resi` / `test/*_test.res` sources, `rescript.json`, `scripts/rescript-build.sh`, and the ReScript Deno tasks/imports. ReScript remains only as a legacy *target* language in the correspondence catalogue.
+
 === Added
 - Migration to **Nextgen Languages Evangeliser** — multi-target pattern catalogue
 - AffineScript added as flagship target (successor to ReScript as the teaching subject)

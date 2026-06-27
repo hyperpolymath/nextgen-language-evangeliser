@@ -9,125 +9,125 @@
 //   deno run --allow-read --allow-net gui/server.js [--port N] [--host H] [--open]
 //   (add --allow-env to honour EVANGELISER_GUI_PORT; --allow-run for --open)
 
-const root = new URL("../", import.meta.url);
+const root = new URL("../", import.meta.url)
 
 function argValue(name, fallback) {
-  const i = Deno.args.indexOf(name);
-  return i === -1 || i + 1 >= Deno.args.length ? fallback : Deno.args[i + 1];
+  const i = Deno.args.indexOf(name)
+  return i === -1 || i + 1 >= Deno.args.length ? fallback : Deno.args[i + 1]
 }
 
 function envPort() {
   try {
-    return Deno.env.get("EVANGELISER_GUI_PORT");
+    return Deno.env.get("EVANGELISER_GUI_PORT")
   } catch {
-    return undefined; // --allow-env not granted; fine
+    return undefined // --allow-env not granted; fine
   }
 }
 
 async function loadCartridges() {
-  const dir = new URL("cartridges/", root);
-  const out = [];
+  const dir = new URL("cartridges/", root)
+  const out = []
   async function walk(d) {
-    let entries;
+    let entries
     try {
-      entries = Deno.readDir(d);
+      entries = Deno.readDir(d)
     } catch {
-      return;
+      return
     }
     for await (const e of entries) {
-      const child = new URL(e.name + (e.isDirectory ? "/" : ""), d);
+      const child = new URL(e.name + (e.isDirectory ? "/" : ""), d)
       if (e.isDirectory) {
-        await walk(child);
-        continue;
+        await walk(child)
+        continue
       }
-      if (!e.name.endsWith(".cartridge.json")) continue;
+      if (!e.name.endsWith(".cartridge.json")) continue
       try {
-        const c = JSON.parse(await Deno.readTextFile(child));
+        const c = JSON.parse(await Deno.readTextFile(child))
         out.push({
           cartridge: c.name ?? e.name,
           description: c.description ?? "",
           languages: c.languages ?? [],
           transitions: Array.isArray(c.transitions) ? c.transitions : [],
-        });
+        })
       } catch (err) {
-        console.error(`skip ${e.name}: ${err.message}`);
+        console.error(`skip ${e.name}: ${err.message}`)
       }
     }
   }
-  await walk(dir);
-  return out;
+  await walk(dir)
+  return out
 }
 
 const contentTypes = {
   ".html": "text/html; charset=utf-8",
   ".js": "text/javascript; charset=utf-8",
   ".css": "text/css; charset=utf-8",
-};
+}
 
 async function staticFile(name) {
-  const body = await Deno.readFile(new URL(name, import.meta.url));
-  const ext = name.slice(name.lastIndexOf("."));
+  const body = await Deno.readFile(new URL(name, import.meta.url))
+  const ext = name.slice(name.lastIndexOf("."))
   return new Response(body, {
     headers: { "content-type": contentTypes[ext] ?? "application/octet-stream" },
-  });
+  })
 }
 
 function json(body, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
     headers: { "content-type": "application/json; charset=utf-8" },
-  });
+  })
 }
 
 async function handler(req) {
-  const url = new URL(req.url);
+  const url = new URL(req.url)
   try {
     if (req.method === "GET") {
-      if (url.pathname === "/") return await staticFile("app.html");
-      if (url.pathname === "/app.js") return await staticFile("app.js");
+      if (url.pathname === "/") return await staticFile("app.html")
+      if (url.pathname === "/app.js") return await staticFile("app.js")
       if (url.pathname === "/api/cartridges") {
-        return json({ cartridges: await loadCartridges() });
+        return json({ cartridges: await loadCartridges() })
       }
     }
-    return json({ error: "Not found" }, 404);
+    return json({ error: "Not found" }, 404)
   } catch (err) {
-    console.error(err);
-    return json({ error: err.message ?? String(err) }, 500);
+    console.error(err)
+    return json({ error: err.message ?? String(err) }, 500)
   }
 }
 
-const requestedPort = Number(argValue("--port", envPort() ?? "8765"));
-const hostname = argValue("--host", "127.0.0.1");
-let server;
-let port = requestedPort;
+const requestedPort = Number(argValue("--port", envPort() ?? "8765"))
+const hostname = argValue("--host", "127.0.0.1")
+let server
+let port = requestedPort
 for (let attempt = 0; attempt < 20; attempt += 1) {
   try {
-    port = requestedPort + attempt;
-    server = Deno.serve({ hostname, port, onListen: () => {} }, handler);
-    break;
+    port = requestedPort + attempt
+    server = Deno.serve({ hostname, port, onListen: () => {} }, handler)
+    break
   } catch (err) {
-    if (String(err.message ?? err).includes("Address already in use")) continue;
-    throw err;
+    if (String(err.message ?? err).includes("Address already in use")) continue
+    throw err
   }
 }
 if (!server) {
-  throw new Error(`No free port from ${requestedPort} to ${requestedPort + 19}`);
+  throw new Error(`No free port from ${requestedPort} to ${requestedPort + 19}`)
 }
 
-const addr = `http://${hostname}:${port}/`;
-console.log(`Correspondence workspace: ${addr}`);
+const addr = `http://${hostname}:${port}/`
+console.log(`Correspondence workspace: ${addr}`)
 
 if (Deno.args.includes("--open")) {
   setTimeout(() => {
     for (const cmd of [["sensible-browser", addr], ["gio", "open", addr], ["xdg-open", addr]]) {
       try {
-        new Deno.Command(cmd[0], { args: cmd.slice(1), stdout: "null", stderr: "null" }).spawn();
-        return;
+        new Deno.Command(cmd[0], { args: cmd.slice(1), stdout: "null", stderr: "null" }).spawn()
+        return
       } catch {
         // try the next opener
       }
     }
-  }, 250);
+  }, 250)
 }
 
-await server.finished;
+await server.finished
