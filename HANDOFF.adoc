@@ -1,0 +1,73 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+// SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
+= Session handoff — read me first
+:toc: macro
+
+Quick orientation for the next working session (e.g. resuming in the Claude Code
+desktop app). The long-term plan lives in link:ROADMAP.adoc[ROADMAP.adoc]; the
+canonical design in link:docs/theory/CORRESPONDENCE-MODEL.adoc[the spec]; the
+live state in `.machine_readable/STATE.a2ml`.
+
+== Where things stand (2026-06)
+
+* *Identity:* Duolingo / Rosetta Stone *for programming languages* — a
+  comprehension + transfer engine that *classifies* cross-language
+  correspondences. It is *not* an IDE, a linter, a universal translator, or a
+  shame-the-JS matcher. Classify, don't translate.
+* *The legacy ReScript host has been removed* (merged). ReScript survives only
+  as a legacy _target_ language in the correspondence content (the
+  vanished-`return` example, the cartridge target, the Form examples).
+* *Runtime surface = Deno + cartridge data.* No compile step.
+* *Engine spine* (authored; the host application is still to be built):
+  `src/interface/Abi/` (Idris2 ABI — typechecks), `src/interface/ffi/` (Zig
+  C-ABI mirror), `src/interface/host/Correspondence.affine` (AffineScript
+  binding, compiler-gated).
+
+== Run it
+
+[source,bash]
+----
+just gui      # browser multi-pane workspace (primary surface)
+just test     # cartridge invariant tests (Deno) — 59 checks
+just build    # validate cartridge data (no compile step)
+deno run --allow-read bin/evangeliser.js --kind false-friend   # offline CLI
+----
+
+== Toolchain
+
+* *Required:* https://deno.land[Deno] (latest stable) — runs everything above.
+* *Optional, now locally buildable* (these were "author-now / verify-in-CI" in
+  the cloud env because it could not fetch them; on a desktop you can actually
+  build/verify): *Idris2* (`idris2 --typecheck abi.ipkg`), *Zig* (the FFI mirror
+  under `src/interface/ffi/`).
+
+== Next steps (pick up from ROADMAP M2/M4/M5)
+
+. Port the legacy pattern catalogue into *cartridge facts*
+  (Concept/Form/Transition + CorrespondenceKind + residue + strata).
+. Author a *second language pack* to prove the engine is language-agnostic
+  (JTV is the canonical alien-realization / novel exemplar).
+. Begin the *AffineScript host application* against the Idris2 ABI / Zig FFI
+  seams (needs the AffineScript compiler).
+. Optional cleanup: reframe the old-model contributor prose
+  (`CONTRIBUTING.md`, `MAINTAINERS.md`, `docs/TPCF.md`, the duplicate
+  `CHANGELOG.md`) — still carries "JS→ReScript transformation" language.
+
+== Guardrails (non-negotiable)
+
+* *Deno*, not npm/bun. *Justfile*, not Makefile. *Zig* for FFI, *Idris2* for
+  ABI/proofs.
+* Keep the *no-shame* voice: celebrate / minimise / better / safety / example.
+* *Never* reintroduce `.res` host code — the host path is AffineScript
+  (`.affine`).
+* *Licence files and SPDX headers are owner-only.* Never relicense or
+  bulk-sweep SPDX; licence-label drift is FLAG-ONLY to the owner.
+
+== Known open item (owner decision)
+
+The `governance / Licence consistency` check fails because `LICENSE` has no
+`SPDX-License-Identifier:` header. This is *pre-existing* and *owner-domain* —
+left untouched on purpose. It is entangled with label drift (the `LICENSE` body
+is the Palimpsest text; `config.ncl` says `MIT OR Palimpsest-0.8`; the README
+says "Palimpsest License (MPL-2.0)"; the manifests say `MPL-2.0`). Resolve only
+with an explicit owner decision on the exact identifier.
