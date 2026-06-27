@@ -63,7 +63,7 @@ Policy enforcement contracts (k9, dust, lust, must, trust).
 - `MAINTAINERS` - Machine-readable contact list
 - `SUPPORT` - Support channels
 - `SECURITY.md` - Technical security policy
-- `CONTRIBUTING.md` - Technical contribution manual
+- `CONTRIBUTING.adoc` - Technical contribution manual
 - `CODE_OF_CONDUCT.md` - Conduct rules
 
 ### Agent Instructions: `.machine_readable/agent_instructions/` ONLY

@@ -20,7 +20,7 @@
 ;
 ; Scope:
 ;   TRUST governs AI agent behaviour only. It does not affect human
-;   contributors — humans follow CONTRIBUTING.md and GOVERNANCE.adoc.
+;   contributors — humans follow CONTRIBUTING.adoc and GOVERNANCE.adoc.
 ;
 ; Relationship to other contractiles:
 ;   - MUST: Trust never overrides MUST. Even at maximal trust, MUST

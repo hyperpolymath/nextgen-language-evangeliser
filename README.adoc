@@ -246,17 +246,17 @@ See link:docs/RSR_COMPLIANCE.adoc[RSR_COMPLIANCE.adoc] for full details.
 == Documentation
 
 * link:docs/theory/CORRESPONDENCE-MODEL.adoc[CORRESPONDENCE-MODEL.adoc] - Canonical design spec
-* link:CONTRIBUTING.md[CONTRIBUTING.md] - How to contribute (incl. cartridge authoring)
+* link:CONTRIBUTING.adoc[CONTRIBUTING.adoc] - How to contribute (incl. cartridge authoring)
 * link:CODE_OF_CONDUCT.md[CODE_OF_CONDUCT.md] - Community guidelines
 * link:SECURITY.md[SECURITY.md] - Security policies
-* link:CHANGELOG.md[CHANGELOG.md] - Version history
+* link:CHANGELOG.adoc[CHANGELOG.adoc] - Version history
 * link:docs/RSR_COMPLIANCE.adoc[RSR_COMPLIANCE.adoc] - RSR framework compliance
 * link:docs/TPCF.adoc[TPCF.adoc] - Contribution framework
 * link:ROADMAP.adoc[ROADMAP.adoc] - Re-point sequence & milestones
 
 == Contributing
 
-We welcome contributions! See link:CONTRIBUTING.md[CONTRIBUTING.md] for:
+We welcome contributions! See link:CONTRIBUTING.adoc[CONTRIBUTING.adoc] for:
 
 * Code of Conduct
 * Development setup

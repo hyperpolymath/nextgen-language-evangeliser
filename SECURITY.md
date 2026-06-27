@@ -212,7 +212,7 @@ When contributing code:
 - [ ] Input validation for all user data
 - [ ] Resource limits respected
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for full guidelines.
+See [CONTRIBUTING.adoc](CONTRIBUTING.adoc) for full guidelines.
 
 ## 🏆 Security Compliance
 
