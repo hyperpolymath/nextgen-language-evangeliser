@@ -1,0 +1,45 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= TEST-NEEDS — nextgen-languages-evangeliser
+
+CRG Grade: C (achieved 2026-04-04).
+
+== Current test state
+
+[cols="2,1,3",options="header"]
+|===
+| Category | Count | Notes
+
+| Cartridge invariant tests | 1 suite | `test/run_all.js` (Deno) — semantic invariants over every cartridge
+| GUI smoke test | 1 suite | `test/gui_smoke_test.js` (Deno) — server handler: shell, bundle, cartridge API
+| Cartridge schema validation | 1 | `scripts/validate-cartridges.js` (Deno + ajv, JSON-Schema 2020-12)
+| Idris2 ABI typecheck | 1 | `abi.ipkg` / `src/interface/Abi/*.idr` (CI: `idris2-abi.yml`)
+| Test framework | Deno + ajv + Idris2 | host-language unit tests were removed with the ReScript host
+|===
+
+== What's covered
+
+* Every correspondence is classified by one of the six CorrespondenceKinds
+* Well-formedness: Forms (language + surface), residue shapes, strata names/booleans
+* False-friend signature (surface holds ∧ intention diverges) — mirrors `Abi.Correspondence.isFalseFriendShape`
+* Residue direction for novel (absent-source) / vanished (absent-target)
+* The worked-examples reference cartridge demonstrates all six kinds
+* Cartridge JSON-Schema conformance (ajv)
+* GUI server handler: static shell, `/app.js` bundle, `/api/cartridges` shape, and a clean 404
+* Idris2 ABI typechecks (no `believe_me` / `assert_total`)
+
+== Still missing (for CRG B+)
+
+* Headless-DOM rendering test of `gui/app.js` (the smoke test covers the server / API, not the browser render)
+* Property-based generation over cartridge facts
+* Performance benchmarks
+* End-to-end "walk a correspondence" flow test
+
+== Run tests
+
+[source,bash]
+----
+just test          # cartridge invariants + GUI smoke test
+just test-gui      # GUI smoke test only
+deno task test     # same as `just test`
+deno task validate # cartridge schema validation
+----

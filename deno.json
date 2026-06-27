@@ -10,7 +10,8 @@
     "gui": "deno run --allow-read --allow-net gui/server.js",
     "lint": "deno lint",
     "fmt": "deno fmt",
-    "test": "deno run --allow-read test/run_all.js",
+    "test": "deno run --allow-read test/run_all.js && deno run --allow-read test/gui_smoke_test.js",
+    "test:gui": "deno run --allow-read test/gui_smoke_test.js",
     "pre-commit": "deno task lint && deno task fmt --check"
   },
   "fmt": {
@@ -20,7 +21,7 @@
     "semiColons": false,
     "singleQuote": false,
     "proseWrap": "preserve",
-    "include": ["bin/", "src/cartridges.js", "test/run_all.js", "deno.json"]
+    "include": ["bin/", "src/cartridges.js", "test/", "deno.json"]
   },
   "lint": {
     "rules": {
