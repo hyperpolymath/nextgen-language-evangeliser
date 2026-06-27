@@ -1,11 +1,11 @@
 = Nextgen Languages Evangeliser
 
-image:https://img.shields.io/badge/RSR-Bronze-CD7F32[RSR Bronze,link=docs/RSR_COMPLIANCE.md]
+image:https://img.shields.io/badge/RSR-Bronze-CD7F32[RSR Bronze,link=docs/RSR_COMPLIANCE.adoc]
 image:https://img.shields.io/badge/License-MPL--2.0-blue.svg[License: MPL-2.0,link="https://github.com/hyperpolymath/palimpsest-license"]
 // SPDX-License-Identifier: CC-BY-SA-4.0
 // SPDX-FileCopyrightText: 2026 Jonathan D.A. Jewell
 
-image:[TPCF: Perimeter 3,link=docs/TPCF.md]
+image:[TPCF: Perimeter 3,link=docs/TPCF.adoc]
 image:[Learn — to love it!]
 image:https://img.shields.io/badge/Deno-Runtime-000000.svg[Deno Runtime]
 
@@ -241,7 +241,7 @@ This project follows the *Rhodium Standard Repository (RSR)* framework:
 * *Licensed*: MPL-2.0
 * *Build Reproducibility*: Deno + Justfile
 
-See link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] for full details.
+See link:docs/RSR_COMPLIANCE.adoc[RSR_COMPLIANCE.adoc] for full details.
 
 == Documentation
 
@@ -250,8 +250,8 @@ See link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] for full details.
 * link:CODE_OF_CONDUCT.md[CODE_OF_CONDUCT.md] - Community guidelines
 * link:SECURITY.md[SECURITY.md] - Security policies
 * link:CHANGELOG.md[CHANGELOG.md] - Version history
-* link:docs/RSR_COMPLIANCE.md[RSR_COMPLIANCE.md] - RSR framework compliance
-* link:docs/TPCF.md[TPCF.md] - Contribution framework
+* link:docs/RSR_COMPLIANCE.adoc[RSR_COMPLIANCE.adoc] - RSR framework compliance
+* link:docs/TPCF.adoc[TPCF.adoc] - Contribution framework
 * link:ROADMAP.adoc[ROADMAP.adoc] - Re-point sequence & milestones
 
 == Contributing
