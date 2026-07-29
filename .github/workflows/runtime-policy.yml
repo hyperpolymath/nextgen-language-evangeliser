@@ -1,0 +1,71 @@
+# SPDX-License-Identifier: MPL-2.0
+# Runtime and package-manager policy check.
+#
+# Authority: hyperpolymath/standards LANGUAGE-POLICY.adoc §1.
+# Ordering:  Bun (1st) > Deno (2nd) > pnpm (3rd) > npm (last resort).
+#
+# REPLACES npm-bun-blocker.yml, which failed any build carrying `bun.lockb` with
+# the message "npm/bun artifacts detected. Use Deno instead." That gate blocked
+# what is now the FIRST-choice runtime and mandated the second. It was present in
+# 55 repositories.
+#
+# What this fails on, deliberately:
+#   MIXED TOOLCHAINS -- two different package managers' lockfiles in one repo.
+#   That is real, actionable drift: two dependency graphs that can disagree.
+# What it does NOT fail on:
+#   Using bun, deno, pnpm or npm. npm is LAST but PERMITTED; the check reports
+#   the tier in use so drift is visible without blocking legitimate work.
+name: Runtime Policy
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  runtime-policy:
+    name: Runtime Policy
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Report runtime tier and reject mixed toolchains
+        run: |
+          set -euo pipefail
+
+          bun=0; deno=0; pnpm=0; npm=0
+          [ -f bun.lockb ] || [ -f bun.lock ]                 && bun=1  || true
+          [ -f deno.lock ] || [ -f deno.json ] || [ -f deno.jsonc ] && deno=1 || true
+          [ -f pnpm-lock.yaml ]                               && pnpm=1 || true
+          [ -f package-lock.json ]                            && npm=1  || true
+
+          total=$((bun + deno + pnpm + npm))
+
+          if [ "$total" -eq 0 ]; then
+            echo "::notice::No JS/TS package manager in use — nothing to check."
+            exit 0
+          fi
+
+          # Report the tier actually in use (LANGUAGE-POLICY.adoc §1).
+          [ "$bun"  -eq 1 ] && echo "Bun   — tier 1 (preferred)"
+          [ "$deno" -eq 1 ] && echo "Deno  — tier 2 (accepted; existing projects are grandfathered)"
+          [ "$pnpm" -eq 1 ] && echo "pnpm  — tier 3"
+          [ "$npm"  -eq 1 ] && echo "::warning::npm lockfile present. npm is tier 4, the last resort — permitted, never preferred. See LANGUAGE-POLICY.adoc §1."
+
+          if [ "$total" -gt 1 ]; then
+            echo "::error::Mixed toolchains: $total package managers have lockfiles in this repository."
+            echo "Two dependency graphs that can disagree is real drift. Pick one — preferring the"
+            echo "highest tier present — and delete the others' lockfiles."
+            exit 1
+          fi
+
+          echo "✅ Single package manager in use."
