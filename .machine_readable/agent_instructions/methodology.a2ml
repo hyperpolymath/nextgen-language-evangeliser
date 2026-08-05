@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: MPL-2.0
-# Copyright (c) {{CURRENT_YEAR}} {{AUTHOR}} ({{OWNER}}) <{{AUTHOR_EMAIL}}>
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
 #
 # methodology.a2ml — AI agent methodology configuration
 # Declares how agents should approach work in this repository.
@@ -9,7 +9,7 @@
 
 [metadata]
 version = "1.0.0"
-last-updated = "{{CURRENT_DATE}}"
+last-updated = "2026-08-05"
 spec = "https://github.com/hyperpolymath/standards/blob/main/agentic-a2ml/docs/ADR-002-methodology-layer.adoc"
 
 # ============================================================================
@@ -101,7 +101,7 @@ constraints = [
 # These rules detect corrupt/template/stale state files.
 
 [methodology.state-validation]
-reject-if-contains = ["{{PLACEHOLDER}}", "{{PROJECT}}", "rsr-template-repo"]
+reject-if-contains = ["{{PLACEHOLDER}}", "NEXTGEN_LANGUAGE_EVANGELISER", "rsr-template-repo"]
 reject-if-project-name-mismatch = true
 staleness-threshold-days = 90
 fallback-files = ["TODO.md", "TODO.adoc", "ROADMAP.adoc", "README.adoc"]
