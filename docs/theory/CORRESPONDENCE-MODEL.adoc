@@ -104,13 +104,36 @@ The model is grounded in the estate's own formalism, not a bespoke mapping table
 
 [IMPORTANT]
 ====
-*Honesty note on "knot theory."* The owner's framing — *types → carrier · tropes →
-recurring equivalence-figures · knot theory → certificate* — is load-bearing for
-intuition, but there is *no literal knot-invariant computation* here, and the
-knot-theory lens is flagged (by the owner) as "perceived as rhetoric, pending
-historical confirmation". We use *invariant* in the precise sense of a _preserved
-quantity that certifies "same idea"_, and keep knot theory as an aspirational lens, not
-a faked dependency.
+*Settled: the third layer is the "sortal" layer, and knot theory is retired as its
+name.* The owner's framing was *types → carrier · tropes → recurring
+equivalence-figures · knot theory → certificate*, with the knot-theory lens flagged
+as "perceived as rhetoric, pending historical confirmation". That is no longer
+pending. It was tested adversarially and ruled on in *invariant-path ADR-0001*
+(2026-08-05), which this repository's ADR-6 anticipated.
+
+What the ruling found, in short. Classical knot theory genuinely does not apply: a
+forward-only ordering on evidence makes admissible strands monotone in time, and
+monotone strands comb flat. But the third layer is *not* thereby empty — merge and
+split vertices are critical points of the time function, so confluence diamonds are
+closed curves and two of them link with every edge still pointing forward. What
+survives is not topology but *individuation*: the layer adjudicates identity of an
+argument across presentations, issuing an equivalence certificate (a move sequence
+preserving the claim) or an obstruction certificate.
+
+Hence *sortal*, from the same literature "trope" came from: a sortal supplies a
+criterion of identity and a principle of counting for its instances. Both halves are
+load-bearing — the criterion decides "same idea", and the count decides whether two
+corroborating lines are two witnesses or one witness echoed.
+
+Note the convergence with this document's own carrier. "Crossings are
+lossy-with-residue = Echo fibre" already reaches for `Echo f y := Σ (x : A), f x ≡ y`
+— and the fibre is exactly "which distinct presentations collapsed to the same
+argument", which is the sortal question stated in `echo-types`' vocabulary. The two
+lines of thought arrived at the same construction independently.
+
+*invariant* keeps its precise sense here — a _preserved quantity that certifies "same
+idea"_ — and no knot-invariant is computed. What changes is that this is now a
+recorded ruling with an argument behind it, not a caveat awaiting confirmation.
 ====
 
 [#taxonomy]

@@ -17,7 +17,7 @@ decisions = [
   "ADR-3 Engine vs cartridge — we build the engine/interface/vocabulary; per-language facts are cartridges (standards/cartridges)",
   "ADR-4 Host ReScript -> AffineScript (Zig FFI + Idris2 ABI seams); ReScript host removed (Deno + cartridges interim), retained only as a legacy target language",
   "ADR-5 Emit into PanLL (octads -> VeriSimDB -> panels); not itself the IDE",
-  "ADR-6 Knot-theory framing is an aspirational lens, not a literal computation",
+  "ADR-6 Knot-theory framing is an aspirational lens, not a literal computation — RESOLVED 2026-08-05: the third layer is the SORTAL layer (invariant-path ADR-0001)",
 ]
 
 [development-practices]

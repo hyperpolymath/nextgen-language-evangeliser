@@ -12,7 +12,7 @@
     (adr-3 "Engine vs cartridge — we build the general engine, interface and vocabulary; per-language facts are authored as cartridges (standards/cartridges)")
     (adr-4 "Host moves ReScript -> AffineScript with Zig FFI + Idris2 ABI seams; the ReScript host has been removed (Deno + cartridges is the interim surface), ReScript retained only as a legacy target language")
     (adr-5 "The engine emits into PanLL (octads -> VeriSimDB -> panels); it is not itself the IDE")
-    (adr-6 "Knot-theory framing is an aspirational lens, not a literal computation — documented honestly"))
+    (adr-6 "Knot-theory framing is an aspirational lens, not a literal computation — documented honestly; RESOLVED 2026-08-05, the third layer is the SORTAL layer, see invariant-path ADR-0001"))
   (development-practices
     (code-style "standard")
     (security "openssf-scorecard + panic-attack static-analysis-gate")

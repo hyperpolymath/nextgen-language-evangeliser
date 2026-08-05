@@ -151,11 +151,22 @@ The model is grounded in the estate's own formalism, not a bespoke lookup table:
 
 [IMPORTANT]
 ====
-*"Knot theory" is an aspirational lens, not a computation.* The framing _types → carrier
-· tropes → recurring equivalence-figures · knot theory → certificate_ is load-bearing for
-intuition, but there is *no literal knot-invariant computation here*. We use *invariant*
-in the precise sense of a _preserved quantity that certifies "same idea"_, and we make no
-Curry–Howard-fidelity claim.
+*The third layer is the "sortal" layer; "knot theory" is retired as its name.* The
+framing was _types → carrier · tropes → recurring equivalence-figures · knot theory →
+certificate_. Adversarial review (*invariant-path ADR-0001*, 2026-08-05) confirmed
+there is *no literal knot-invariant computation here* — classical knot theory does not
+apply, because a forward-only ordering on evidence makes admissible strands monotone
+in time and monotone strands comb flat.
+
+But the layer is not empty: it adjudicates *identity of an argument across
+presentations*, issuing an equivalence certificate (a move sequence preserving the
+claim) or an obstruction certificate. A *sortal* — from the same literature as "trope"
+— is a concept supplying a criterion of identity and a principle of counting for its
+instances, which is both halves of that job: what makes two writings the same idea,
+and whether two corroborating lines are two witnesses or one witness echoed.
+
+We use *invariant* in the precise sense of a _preserved quantity that certifies "same
+idea"_, and we make no Curry–Howard-fidelity claim.
 ====
 
 === Engine vs. cartridge — the division of labour

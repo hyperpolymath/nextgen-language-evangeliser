@@ -21,7 +21,7 @@ Canonical design: `docs/theory/CORRESPONDENCE-MODEL.adoc` — this file mirrors 
 Classification is a **graded `CorrespondenceKind`**, not a boolean — six grades of the Echo fibre, each with a pedagogy:
 **cognate** (transfer) · **false-friend** (warn) · **antonym** (remap) · **alien-realization** (bridge) · **novel / no-anchor** (teach de novo) · **vanished** (re-route). Classification runs *per stratum* (surface → structure → intention → trope → invariant).
 
-Carrier = **Dyadic relation + Echo loss-with-residue** (`proven-tests-and-benches` `Dyadic.idr` + `hyperpolymath/echo-types`); `invariant-path` is the governance front-end. "Knot theory" is an aspirational lens, **not** a literal computation.
+Carrier = **Dyadic relation + Echo loss-with-residue** (`proven-tests-and-benches` `Dyadic.idr` + `hyperpolymath/echo-types`); `invariant-path` is the governance front-end. The third layer is the **sortal** layer (identity of an argument across presentations); "knot theory" was its working name and is retired — see invariant-path ADR-0001.
 
 ## Engine vs. Cartridge
 
