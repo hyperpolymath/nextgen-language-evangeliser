@@ -20,7 +20,7 @@ design), link:CLAUDE.md[CLAUDE.md], and link:README.adoc[README.adoc] for overvi
 * [x] Six `CorrespondenceKind`s (cognate / false-friend / antonym / alien-realization / novel / vanished) as graded Echo fibres
 * [x] Strata ("levels of objects": surface → structure → intention → trope → invariant)
 * [x] Formal carrier: Dyadic `Relation` + Echo loss-with-residue; `invariant-path` as governance front-end
-* [x] Honesty caveat recorded: "knot theory" is an aspirational lens, not a computation
+* [x] Honesty caveat recorded, then RESOLVED: the third layer is the *sortal* layer; "knot theory" retired as its name (invariant-path ADR-0001, 2026-08-05)
 
 === M1 — Standards / repo hygiene ✅
 * [x] Repo renamed `rescript-evangeliser` → `nextgen-languages-evangeliser`

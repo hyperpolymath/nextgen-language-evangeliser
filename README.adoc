@@ -63,7 +63,7 @@ Classification runs *per stratum* — surface → structure → semantic intenti
 * *Crossings are lossy-with-residue = Echo fibre* (`hyperpolymath/echo-types`, Agda): `Echo f y := Σ (x : A), f x ≡ y`. The residue is precisely what is lost or added going A→B.
 * *`invariant-path`* is the governance front-end: it anchors each equivalence _claim_ to two code locations plus a witness, human-in-the-loop.
 
-NOTE: "Knot theory" is an aspirational lens for intuition, not a literal computation. "Invariant" here means a _preserved quantity that certifies "same idea"_ — no knot-invariant is computed, and we do not claim Curry–Howard fidelity.
+NOTE: The third layer is the *sortal* layer — it decides identity of an argument across presentations, and issues equivalence or obstruction certificates. "Knot theory" was its working name and is retired: no knot-invariant is computed, and classical knot theory provably does not apply here (invariant-path ADR-0001, 2026-08-05). "Invariant" means a _preserved quantity that certifies "same idea"_, and we do not claim Curry–Howard fidelity.
 
 == Engine vs. Cartridge
 
