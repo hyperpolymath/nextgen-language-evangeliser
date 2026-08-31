@@ -40,6 +40,7 @@ When working here: classify-don't-translate; keep the no-shame voice; lead with 
 | Banned | Replacement |
 |--------|-------------|
 | TypeScript | AffineScript |
+| ReScript | AffineScript |
 | Deno | Bun |
 | Node.js | Bun |
 | npm | Bun |
