@@ -2,7 +2,7 @@
 = ABI seam — the correspondence model (Idris2)
 
 The formally-typed core of the engine that *classifies* cross-language
-correspondences. Typecheck with `idris2 --typecheck abi.ipkg` from the repo root.
+correspondences. Typecheck with `idris2 --typecheck src/interface/abi.ipkg` from the repo root.
 
 == Modules
 
@@ -34,7 +34,7 @@ The shapes are re-expressed here as fresh MPL-2.0 source rather than depended on
 
 == Status
 
-*Typechecks clean* under Idris2 0.8.0 (`idris2 --typecheck abi.ipkg`; `%default
+*Typechecks clean* under Idris2 0.8.0 (`idris2 --typecheck src/interface/abi.ipkg`; `%default
 total`, no escape hatches — verified 2026-06-18). The Zig FFI side of the seam
 (`src/interface/ffi/`) and the AffineScript host binding that consumes this ABI
 follow as later slices of the abstraction-model pivot.

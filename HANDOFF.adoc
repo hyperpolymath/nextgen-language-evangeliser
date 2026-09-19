@@ -38,7 +38,7 @@ deno run --allow-read bin/evangeliser.js --kind false-friend   # offline CLI
 * *Required:* https://deno.land[Deno] (latest stable) — runs everything above.
 * *Optional, now locally buildable* (these were "author-now / verify-in-CI" in
   the cloud env because it could not fetch them; on a desktop you can actually
-  build/verify): *Idris2* (`idris2 --typecheck abi.ipkg`), *Zig* (the FFI mirror
+  build/verify): *Idris2* (`idris2 --typecheck src/interface/abi.ipkg`), *Zig* (the FFI mirror
   under `src/interface/ffi/`).
 
 == Next steps (pick up from ROADMAP M2/M4/M5)
