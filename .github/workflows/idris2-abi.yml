@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   typecheck:
-    name: idris2 --typecheck abi.ipkg
+    name: idris2 --typecheck src/interface/abi.ipkg
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -41,4 +41,4 @@ jobs:
       - name: Typecheck the ABI
         run: |
           idris2 --version
-          idris2 --typecheck abi.ipkg
+          idris2 --typecheck src/interface/abi.ipkg

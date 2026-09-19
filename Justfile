@@ -205,7 +205,7 @@ nix-shell:
 
 # Guix build (if available)
 guix-build:
-    @command -v guix >/dev/null && guix build -f guix.scm || echo "Guix not installed"
+    @command -v guix >/dev/null && guix build -f build/guix.scm || echo "Guix not installed"
 
 # === HELP ===
 

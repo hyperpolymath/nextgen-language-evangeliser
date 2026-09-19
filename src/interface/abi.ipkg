@@ -8,7 +8,7 @@
 -- EVERY filesystem (Idris2 requires capitalised namespace components).
 --
 -- Typecheck with the package (not a bare --check, which warns on module/path):
---   idris2 --typecheck abi.ipkg      (or --build)
+--   idris2 --typecheck src/interface/abi.ipkg      (or --build)
 
 package abi
 
@@ -18,7 +18,7 @@ authors = "Jonathan D.A. Jewell"
 
 brief = "Formally-typed ABI seam (Idris2): Concept/Form/Transition + the six CorrespondenceKinds, grounded in Dyadic + Echo"
 
-sourcedir = "src/interface"
+sourcedir = "."
 
 depends = base
 
