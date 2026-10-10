@@ -1,0 +1,640 @@
+// SPDX-License-Identifier: CC-BY-SA-4.0
+= Ultraplan — Issue #78: Deferred Red Checks (Hypatia neurosymbolic scan + RSR Compliance Check)
+:toc: macro
+:toclevels: 3
+:sectnums:
+:docdate: 2026-10-10
+:status: ACCEPTED — executed 2026-10-10 (owner rulings DP-1..DP-4 applied; see §8)
+
+[.lead]
+Remediation plan for the two non-required contexts that are red on `main`
+(standing ruling 2026-09-15: a red non-required check is an issue with
+acceptance criteria, not a merge blocker). Cross-cutting tracker:
+`hyperpolymath/standards#994`. Authoritative inputs: the RSR v2.0 criteria
+SSOT (`hyperpolymath/standards` `0-canon/rsr/rsr-criteria-v2.a2ml`,
+2.1.0-draft), `hyperpolymath/rsr-template-repo` (canonical layout), and the
+Hypatia rule sources (`hyperpolymath/hypatia` `lib/rules/*`).
+
+toc::[]
+
+== 1. Mission and acceptance criteria
+
+Issue #78 acceptance criteria: *both contexts green on `main`, or retired by
+owner ruling.*
+
+[cols="2,3", options="header"]
+|===
+|Context |Producer
+|`Hypatia neurosymbolic scan` |`.github/workflows/static-analysis-gate.yml`, job `hypatia-scan`
+|`RSR Compliance Check` |`.github/workflows/ci.yml`, job `rsr-compliance`
+|===
+
+Evidence of red on `main` at HEAD `1cdc1e5e`:
+
+* `CI` (RSR Compliance Check → step ``Check required files'') fails on the
+  daily schedule run every day 2026-10-03 → 2026-10-10 (runs 38016613696 etc.).
+* `Static Analysis Gate` fails on the 2026-10-02 push (and on the dependabot
+  branch run 37932360065, 2026-10-09) at step ``Fail on critical security
+  findings'' — *Hypatia found 10 critical security issue(s)*.
+* Every other context on `main` is green (Governance, Scorecard, CodeQL,
+  Secret Scanner, Mirror, Well-Known Standards, Workflow Security Linter,
+  Security Policy, Makefile Blocker, Runtime Policy, RSR Anti-Pattern Check).
+
+*Recommendation: fix, do not retire.* Both checks have live estate roles:
+the Hypatia gate feeds the gitbot-fleet learning pipeline (its
+`deposit-findings` job), and the RSR check is the repo's local mirror of the
+normative oracle (`hypatia:rsr-conformance`). Retiring either diverges from
+`rsr-template-repo`, which ships both.
+
+== 2. Root cause analysis (verified against rule sources)
+
+=== 2.1 Red #1 — `Hypatia neurosymbolic scan`: 10 criticals
+
+GitHub caps check-run annotations, so the visible list understates the
+critical set. Reconstructed from the Hypatia rule sources
+(`structural_drift.ex`, `workflow_audit.ex`, `code_safety.ex`), the 10
+criticals are:
+
+[cols="1,2,2,3", options="header"]
+|===
+|n |Rule |Finding |Fix direction
+|9 |`structural_drift/SD004` (critical) |Descriptiles in retired locations:
+`.machine_readable/{META,STATE,ECOSYSTEM}.a2ml` (legacy s-expression dialect)
+and `.machine_readable/6a2/{AGENTIC,ECOSYSTEM,META,NEUROSYM,PLAYBOOK,STATE}.a2ml`
+(current record dialect). Canonical: `.machine_readable/descriptiles/` —
+`6a2/` deprecated 2026-06-30 (SSOT 3.1.1). |Move + consolidate (§5.1)
+|1 |`workflow_audit/missing_workflow` (critical via
+`severity_for_workflow("hypatia-scan.yml")`) |Required workflow
+`.github/workflows/hypatia-scan.yml` absent (SSOT 6.1.2, silver, universal;
+template ships it, calling the standards reusable scan). |Add canonical
+workflow (§5.2)
+|===
+
+Non-critical findings from the same scan (annotated `failure` because the
+gate emits `::error` for high too; these do not currently gate, but the
+reusable scan blocks on them once a baseline is committed, and they are real
+defects):
+
+[cols="1,2,2,3", options="header"]
+|===
+|Sev |Rule |Finding |Fix direction
+|high |`code_safety/shell_download_then_run` (CWE-494) |`setup.sh` lines 144+156:
+`curl -fsSL https://just.systems/install.sh \| bash` (×2) |Remove
+download-and-execute (§5.3.1)
+|high |`code_safety/js_innerhtml` (CWE-79) |`gui/app.js:41`:
+`else if (k === "html") el.innerHTML = v;` — dead escape hatch; **no caller
+passes `html:`** |Delete branch (§5.3.2)
+|high |`code_safety/js_deno_all_perms` (CWE-250) |`scripts/validate-cartridges.js:5`
+(comment): `deno run -A` — same pattern also at `Justfile:93` and
+`scripts/launch-gui.sh:9` (not scanned, but same defect class) |Least-privilege
+flags (§5.3.3)
+|high |`workflow_audit/WF022` |`rsr-antipattern.yml`: inline-python heading regex
+`re.search(r'TypeScript [Ee]xemptions', line)` unanchored — matches prose, can
+silently walk the wrong section (the affinescript multi-week silent-gate
+failure class, standards#183) |Anchor to `^#{1,4}\s+` (§5.3.4)
+|high |`workflow_audit/WF017` |`instant-sync.yml`:
+`peter-evans/repository-dispatch` with `token: ${{ secrets.FARM_DISPATCH_TOKEN }}`
+and no presence gate — fails every run where the secret is absent (the
+65-repo Instant Sync bug class, 2026-05-30 audit) |env-boolean gate idiom
+(§5.3.5)
+|medium ×10 |`workflow_audit/missing_timeout_minutes` (ERR-WF-013) |No
+`timeout-minutes:` on: `instant-sync.yml/dispatch`, `guix-nix-policy.yml/check`,
+`codeql.yml/analyze`, and **8 jobs** in `ci.yml` (test, security,
+rsr-compliance, build, performance, docs, release) |Add proportional
+timeouts (§5.3.6)
+|===
+
+Gate-design drift (context, not a finding): the inline `hypatia-scan` job in
+`static-analysis-gate.yml` clones **floating Hypatia `main`** and has no
+baseline mechanism; the estate control plane
+(`standards/docs/decisions/2026-06-06-hypatia-estate-control-plane.adoc`) is
+the *pinned* reusable `hypatia-scan-reusable.yml` (vetted scanner SHA input,
+`.hypatia-baseline.json` + `scripts/apply-baseline.sh`, SARIF to the Security
+tab). The template deliberately runs **both**: the inline gate feeds the
+fleet learning pipeline, the reusable is the repo's independent security
+scan. `static-analysis-gate.yml` here is byte-identical in shape to the
+template's — *do not modify it* (drift from template); add the missing
+`hypatia-scan.yml` instead.
+
+=== 2.2 Red #2 — `RSR Compliance Check`: stale gate vs. binding layout
+
+The `rsr-compliance` job checks a 2025-era file set; three estate migrations
+moved on without it:
+
+[cols="2,2,3", options="header"]
+|===
+|Gate demands |Repo reality |Binding ruling
+|`CODE_OF_CONDUCT.md` (root) |`CODE_OF_CONDUCT.adoc` (root, after PR #62
+Markdown→AsciiDoc) |SSOT 2.1.4 (silver): `CODE_OF_CONDUCT.md` **or**
+`.github/CODE_OF_CONDUCT.md`. Template ships full-content
+`.github/CODE_OF_CONDUCT.md`. GitHub's community profile only recognises
+`.md`.
+|`SECURITY.md` (root) |`SECURITY.adoc` (root) |SSOT 2.1.3 (**bronze**,
+universal): `SECURITY.md` or `.github/SECURITY.md`. Template ships
+`.github/SECURITY.md`.
+|`.well-known/{security,ai,humans}.txt` (root) |`www/.well-known/` (after PR
+#72) |Template canonical is `www/.well-known/` (rsr-template-repo#53,
+stage-5 sweep of ~270 repos; `scripts/migrate-wellknown-to-www.sh`;
+`www/tests/check-wellknown.sh`). Root is legacy-tolerated during the
+migration window. The repo is *correct*; the gate is stale.
+|===
+
+Same staleness in the local task runner: `just validate-rsr` fails
+(`validate-docs` demands root `CODE_OF_CONDUCT.md`/`SECURITY.md`;
+`validate-structure` demands `deno.json`, which has **never existed in this
+repo's git history** — the `deno task {build,fmt,lint,test,test:gui}` recipes
+have therefore never worked). And `wellknown-enforcement.yml` only inspects
+root `.well-known/`, warns-only, exits 0 — a *vacuous gate* (the defect class
+PR #67 was merged to eliminate).
+
+Known-bad data inside the migrated files (found in recon):
+
+* `www/.well-known/security.txt`: `Canonical:` and `Policy:` URLs name
+  **`nextgen-languages-evangeliser`** — the repository is
+  **`nextgen-language-evangeliser`** (no ``s''). `Canonical:` points at the
+  retired root path; `Policy:` points at `SECURITY.md`, which does not exist.
+* `www/.well-known/ai.txt` references `AI.a2ml`, which does not exist.
+* `README.adoc:317` and `SECURITY.adoc:28,237,238` and
+  `docs/RSR_COMPLIANCE.adoc` §5/§10 still link root `.well-known/` paths;
+  `docs/RSR_COMPLIANCE.adoc` §9 still offers ``Nix (fallback)'' — Nix was
+  deleted estate-wide (PR #59); §4 lists the community docs at root.
+* `SECURITY.adoc` still describes the ``VS Code workspace trust model'' —
+  the extension was removed with the TypeScript eradication (#61).
+
+=== 2.3 Estate-level contradiction to report upstream (not fix here)
+
+The normative oracle's built-in detector for SSOT 2.2.1 (`wellknown-core`)
+checks only **root** `.well-known/` (`rsr_conformance.ex` `all_graded`), and
+the SSOT's own `template_ref` says `.well-known/` — while the template repo
+itself ships them **only** at `www/.well-known/`. The oracle therefore fails
+the canonical template for 2.2.1. The detector (`structural_drift/SD020`)
+named by the SSOT is not implemented in the scanner. This is exactly the
+``rules diverged from the norm'' case standards#994 exists for: *report
+upstream; do not regress this repo's layout back to root.*
+
+== 3. Binding constraints (must not violate)
+
+. *RSR v2.0 SSOT* (`0-canon/rsr/rsr-criteria-v2.a2ml`, 2.1.0-draft) — the sole
+normative source; the one normative checker is `hypatia:rsr-conformance`;
+all other checkers (ours included) are non-normative mirrors and should be
+*generated in its shape* (any_of/present/all_graded), never invent stricter
+demands.
+. *rsr-template-repo layout* — community-health files live at `.github/*.md`
+(full content, `CC-BY-SA-4.0` SPDX comment headers); prose docs stay AsciiDoc;
+`www/.well-known/` canonical; descriptiles at `.machine_readable/descriptiles/`;
+`hypatia-scan.yml` = pinned call into the standards reusable.
+. *Licence discipline* (CLAUDE.md, owner-managed): MPL-2.0 code /
+CC-BY-SA-4.0 docs; add SPDX to **new** files; **never** bulk-sweep or
+relicence existing headers — existing header drift (e.g. `SECURITY.adoc`,
+`CODE_OF_CONDUCT.adoc`, `GOVERNANCE.adoc` lack SPDX lines) is FLAG-ONLY to
+the owner.
+. *Language policy* (LANGUAGE-POLICY.adoc §1 via `runtime-policy.yml`): Bun
+tier 1, Deno tier 2 (**grandfathered** — this repo's Deno surface may stay),
+TypeScript/Node/npm/Makefile/Python/Go banned; JS glue allowed per
+`.claude/CLAUDE.md` exemptions.
+. *Honesty doctrine*: no vacuous gates, no `\|| echo SKIP` silent-green (SSOT
+6.1.5), ``author now, verify in CI — never claim a green build you did not
+run''.
+. *Baseline discipline*: prefer fix-the-code; `.hypatia-baseline.json`
+entries need `expires_at` + `tracking_issue`; `.hypatia-ignore` entries need
+a stated reason and are for whole-path exemptions only.
+. *Workflow pinning*: SHA-pinned actions; reusable workflows pinned to a
+40-hex standards commit; new/edited workflows must pass `workflow-linter.yml`
+and keep `permissions: contents: read` floors.
+. *Governance workflow pin* (`governance.yml` → standards
+`governance-reusable.yml@81dbf2dd…`) is green — untouched.
+
+== 4. Strategy
+
+One branch (this session's `arena/f31fb256-nextgen-language-evangeliser`),
+one PR, four logical commits, ordered so no intermediate state is redder
+than the base:
+
+[cols="1,3,2", options="header"]
+|===
+|Phase |Content |Kills
+|1 |Descriptile relocation + reference repair + add canonical
+`hypatia-scan.yml` |10/10 criticals → `Hypatia neurosymbolic scan` green
+|2 |High/medium hygiene: `setup.sh`, `gui/app.js`, Deno perms, WF022, WF017,
+timeouts |5 highs + 11 mediums (future-proofing the reusable gate & baseline
+promotion)
+|3 |RSR realignment: `.github/` community files, oracle-shaped `rsr-compliance`
+job, Justfile repair, well-known enforcement + URL fixes, docs consistency
+|`RSR Compliance Check` green; `just validate-rsr` honest; vacuous
+well-known gate repaired
+|4 |Land, verify on `main`, close #78 with evidence, re-point dependabot PR
+#79, file upstream reports |Issue acceptance criteria
+|===
+
+Deferred (owner-gated, §8) and out-of-scope backlog: §9.
+
+== 5. Phase detail (exact changes)
+
+=== 5.1 Phase 1a — descriptile relocation (SD004 ×9)
+
+Canonical target: `.machine_readable/descriptiles/`.
+
+[cols="2,2,3", options="header"]
+|===
+|Source |Disposition |Rationale
+|`.machine_readable/6a2/AGENTIC.a2ml` |`git mv` → `descriptiles/AGENTIC.a2ml` |Record dialect, sole copy
+|`.machine_readable/6a2/NEUROSYM.a2ml` |`git mv` → `descriptiles/NEUROSYM.a2ml` |Record dialect, sole copy
+|`.machine_readable/6a2/PLAYBOOK.a2ml` |`git mv` → `descriptiles/PLAYBOOK.a2ml` |Record dialect, sole copy
+|`.machine_readable/6a2/{META,STATE,ECOSYSTEM}.a2ml` |`git mv` → `descriptiles/` **as the base content** |Record dialect = the dialect SSOT 3.2.1 requires to parse
+|`.machine_readable/{META,STATE,ECOSYSTEM}.a2ml` |**Delete** after a line-by-line fact reconciliation against the record-dialect twins |Legacy s-expression dialect; both copies dated 2026-06-18 — reconcile, port any s-expr-only facts (e.g. root STATE's `route-to-mvp` milestone detail) into the record version, bump `last-updated` to the migration date with a header comment |`.machine_readable/6a2/` (directory) |Removed (empty after moves) |Prevents SD023 divergence re-trigger
+|===
+
+Untouched: `ENSAID_CONFIG.a2ml` (not a descriptile; live references in
+README/EXPLAINME/CORRESPONDENCE-MODEL), `contractiles/`, `agent_instructions/`,
+`bot_directives/`, `root-allow.txt`.
+
+Reference repair (SD007 scans `0-AI-MANIFEST.a2ml`, `README.adoc`,
+`.claude/CLAUDE.md`; SD024 scans workflows/scripts/Justfile for retired
+paths — currently none, keep it that way):
+
+* `0-AI-MANIFEST.a2ml` — canonical-locations section: the six descriptiles
+``MUST exist in `.machine_readable/descriptiles/` ONLY''; anchor path →
+`.machine_readable/descriptiles/anchors/ANCHOR.a2ml` (SSOT 3.1.8).
+* `HANDOFF.adoc:9` — `.machine_readable/STATE.a2ml` →
+`.machine_readable/descriptiles/STATE.a2ml`.
+* `CLAUDE.md:88` — historical ``6a2 manifests'' mention → ``descriptile
+manifests'' (keep the ✅ history honest: note the 2026-10 relocation).
+* `.machine_readable/descriptiles/STATE.a2ml` internal text (it narrates
+``6a2 manifests'' as merged history) — update the working-features wording.
+
+=== 5.2 Phase 1b — add `.github/workflows/hypatia-scan.yml` (missing_workflow)
+
+Template-shaped (the template's file, minted for this repo):
+
+[source,yaml]
+----
+# SPDX-License-Identifier: MPL-2.0
+name: Hypatia Security Scan
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  actions: read      # reusable staleness check reads workflow runs
+  contents: read
+  security-events: write
+jobs:
+  hypatia:
+    uses: hyperpolymath/standards/.github/workflows/hypatia-scan-reusable.yml@<FULL-SHA>
+----
+
+Pin choice (§8, DP-3): `<FULL-SHA>` =
+`10e0b6ffb979f0a27fe58206512055133e67460a` (latest standards commit touching
+the reusable, 2026-10-01, ``fix(gates): pin what reusables fetch'') —
+*recommended*; alternative: the template's own pin
+`da2c748aad55c1a1dcba00b60fe4a35017bc6540` (2026-09-10) for byte-parity with
+the template.
+
+Behaviour on this repo (no `.hypatia-baseline.json`, no
+`scripts/apply-baseline.sh`): the reusable scan is **ADVISORY** — it reports
+criticals loudly in the summary and Security tab but does not fail; blocking
+promotion happens automatically the day a baseline lands (standards#399/#437
+mechanism). Scanner is pinned inside the reusable (vetted SHA input default),
+so this check is reproducible — unlike the floating inline gate.
+
+=== 5.3 Phase 2 — highs and mediums
+
+==== 5.3.1 `setup.sh` (CWE-494 ×2)
+
+Replace both `curl … | bash` fallbacks with **no download-and-execute**:
+package managers stay (dnf/apt/pacman/apk/brew/scoop/winget/rpm-ostree/guix);
+where `just` is unavailable, print precise manual-install instructions
+(pinned release URL + ``verify the checksum published by the project before
+extracting'') and continue with a warning (the rest of setup does not hard-
+require `just` at script time). *Alternative (DP-2):* pinned-version tarball
++ SHA-256 constant embedded in `setup.sh` — stronger, but the checksum must
+be fetched by a networked environment (this sandbox cannot reach release
+asset hosts); recommend revisiting when the owner can mint the constant.
+No rule-dodge rewrites (`curl -o tmp && bash tmp` is banned by intent, not
+just by regex).
+
+==== 5.3.2 `gui/app.js` (CWE-79)
+
+Delete line 41 (`else if (k === "html") el.innerHTML = v;`). Verified: zero
+callers pass `html:`; every render path uses `text:`/`textContent` or
+attributes. Add a one-line comment: SafeDOM-by-construction — no innerHTML
+escape hatch (Hypatia CWE-79).
+
+==== 5.3.3 Deno least privilege (CWE-250)
+
+* `scripts/validate-cartridges.js:5` comment → `deno run --allow-read scripts/validate-cartridges.js`
+* `Justfile:93` (`validate-cartridges` recipe) → `@deno run --allow-read scripts/validate-cartridges.js`
+* `scripts/launch-gui.sh:9` → `exec deno run --allow-read --allow-net gui/server.js --open "$@"`
+  (verify `gui/server.js` needs: file reads + HTTP listen; add `--allow-env`
+  only if it reads env vars — check `Deno.env` usage during implementation).
+* Shebangs of `bin/evangeliser.js`, `test/*.js` already least-privilege
+  (`--allow-read`) — untouched.
+
+==== 5.3.4 `rsr-antipattern.yml` (WF022)
+
+Anchor the exemption-table heading detection:
+`re.search(r'TypeScript [Ee]xemptions', line)` →
+`re.search(r'^#{1,4}\s+.*TypeScript [Ee]xemptions', line)` + a comment
+naming the intended heading (`.claude/CLAUDE.md` ``### TypeScript
+Exemptions'' — verified present, line 88; the anchored regex matches it and
+no longer matches prose).
+
+==== 5.3.5 `instant-sync.yml` (WF017 + ERR-WF-013)
+
+Estate-recognised env-boolean gate idiom (measured on gitbot-fleet's copy):
+
+[source,yaml]
+----
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HAS_FARM_TOKEN: ${{ secrets.FARM_DISPATCH_TOKEN != '' }}
+    steps:
+      - name: Trigger Propagation
+        id: dispatch
+        if: env.HAS_FARM_TOKEN == 'true'
+        continue-on-error: true
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
+        …
+----
+
+`Confirm` step: handle `outcome == 'skipped'` (secret absent → `::notice::
+FARM_DISPATCH_TOKEN not set — propagation skipped`) distinctly from
+`failure` (keep the rotate-token warning).
+
+==== 5.3.6 `timeout-minutes` sweep (ERR-WF-013 ×10)
+
+[cols="2,2", options="header"]
+|===
+|Job |Timeout
+|`ci.yml`: test |45
+|`ci.yml`: security |15
+|`ci.yml`: rsr-compliance |10
+|`ci.yml`: build |30
+|`ci.yml`: performance |30
+|`ci.yml`: docs |15
+|`ci.yml`: release |45
+|`codeql.yml`: analyze |30
+|`guix-nix-policy.yml`: check |10
+|`instant-sync.yml`: dispatch |10 (§5.3.5)
+|===
+
+=== 5.4 Phase 3 — RSR realignment
+
+==== 5.4.1 Community-health files (SSOT 2.1.3 bronze / 2.1.4, 2.1.5 silver)
+
+*Owner ruling 2026-10-10 (DP-1): keep the AsciiDoc files; no `.md`
+conversion.* Therefore:
+
+* `SECURITY.adoc`, `CODE_OF_CONDUCT.adoc`, `CONTRIBUTING.adoc` stay where
+they are. `SECURITY.adoc` gets a content repair instead of a move: the
+retired VS Code-extension threat model is replaced with the current
+Deno + cartridge-data surface; `.well-known/` references point at
+`www/.well-known/`; the wrong-name releases URL is fixed; Policy Version
+bumped.
+* The SSOT detectors 2.1.3/2.1.4/2.1.5 list only `.md` variants, so the
+*non-normative* checks in this repo (`ci.yml` rsr-compliance, Justfile
+`validate-docs`/`validate-security`) accept **both** `.adoc` (canonical
+here) and `.md` — and the detector lag goes upstream (§5.5): GitHub's
+community-profile recognition of `.adoc` is the owner's own feature requests
+(github/orgs/community discussions #181843, #189645).
+* Referrers repaired: `CONTRIBUTING.adoc` links (→ `.adoc` files),
+`docs/RSR_COMPLIANCE.adoc` §4 (→ `.adoc`), `www/.well-known/security.txt`
+Policy URL (§5.4.4).
+
+==== 5.4.2 `ci.yml` `rsr-compliance` — regenerate in oracle shape
+
+Rewrite ``Check required files'' as a non-normative mirror of the
+rsr-criteria-v2 detectors (any_of semantics; www-canonical well-known;
+honest failures; no silent-green):
+
+[source,bash]
+----
+any_of() { for f in "$@"; do [ -f "$f" ] && return 0; done; return 1; }
+# 2.1.1/2.1.6/2.1.7/2.1.8/2.3.1 + bronze basics
+any_of README.adoc README.md                       || fail "README (2.1.1)"
+any_of CHANGELOG.adoc CHANGELOG.md                 || fail "CHANGELOG (2.1.6)"
+any_of MAINTAINERS.adoc docs/MAINTAINERS.adoc      || fail "MAINTAINERS (2.1.7)"
+any_of GOVERNANCE.adoc docs/GOVERNANCE.adoc .github/GOVERNANCE.md || fail "GOVERNANCE (2.1.8)"
+any_of 0-AI-MANIFEST.a2ml 0-AI-MANIFEST.deed       || fail "AI manifest (2.3.1)"
+test -f CLAUDE.md                                  || fail "CLAUDE.md"
+# 2.1.3 bronze / 2.1.4 / 2.1.5 silver — .md community files, root or .github/
+any_of SECURITY.md .github/SECURITY.md             || fail "SECURITY.md (2.1.3)"
+any_of CODE_OF_CONDUCT.md .github/CODE_OF_CONDUCT.md || fail "CODE_OF_CONDUCT.md (2.1.4)"
+any_of CONTRIBUTING.md .github/CONTRIBUTING.md CONTRIBUTING.adoc || fail "CONTRIBUTING (2.1.5)"
+# 2.1.2 / 7.1.2 licensing
+test -f LICENSE && test -f LICENSES/MPL-2.0.txt && test -f LICENSES/CC-BY-SA-4.0.txt || fail "licences"
+# 1.1.2/1.1.3 build system
+{ test -f Justfile || test -f justfile; } && ! test -f Makefile || fail "Justfile (1.1.2/1.1.3)"
+# 2.2.1 well-known — canonical www/, legacy root tolerated with warning
+for f in security.txt ai.txt humans.txt; do
+  if [ -f "www/.well-known/$f" ]; then :
+  elif [ -f ".well-known/$f" ]; then warn "legacy root .well-known/$f — canonical is www/"
+  else fail "www/.well-known/$f (2.2.1)"
+  fi
+done
+# 3.1.1 descriptiles present, 6a2 retired
+test -d .machine_readable/descriptiles && ! test -d .machine_readable/6a2 || fail "descriptiles (3.1.1)"
+----
+
+Plus `timeout-minutes: 10`, and a job comment stating the normative oracle
+is `hypatia:rsr-conformance` and this check mirrors criteria ids (so the
+next person regenerates rather than hand-drifts it).
+
+==== 5.4.3 `Justfile` repair (local parity, honest failures)
+
+* `validate-docs` / `validate-security` — same any_of sets as §5.4.2
+(`.github/*.md` accepted; `www/.well-known/` canonical).
+* `validate-structure` — drop the `deno.json` demand (file never existed);
+require `src/`, `cartridges/`, `www/.well-known/`,
+`.machine_readable/descriptiles/`.
+* Repair the never-worked `deno task` recipes with direct commands: `build`
+→ `deno run --allow-read scripts/validate-cartridges.js`; `fmt` → `deno fmt`;
+`lint` → `deno lint`; `test` → `deno run --allow-read test/run_all.js`;
+`test:gui` → `deno run --allow-read test/gui_smoke_test.js`.
+* Header comment: replace ``Use Deno, not npm/bun'' with the current
+LANGUAGE-POLICY tiering (Bun tier 1; Deno tier 2, grandfathered here).
+
+==== 5.4.4 Well-known enforcement + URL truth
+
+* `wellknown-enforcement.yml` → port the template's
+`dot-wellknown-enforcement.yml` semantics: `www/.well-known/` canonical,
+legacy root = warning, **error when security.txt is absent everywhere**
+(kills the vacuous exit-0), RFC 9116 Contact/Expires/expiry validation
+against the www copy, path triggers include `www/.well-known/**`. Keep the
+file name (check context name unchanged: ``Well-Known Standards (RFC 9116 +
+RSR)'').
+* `www/.well-known/security.txt`: `Canonical:` →
+`https://github.com/hyperpolymath/nextgen-language-evangeliser/blob/main/www/.well-known/security.txt`;
+`Policy:` →
+`https://github.com/hyperpolymath/nextgen-language-evangeliser/blob/main/SECURITY.adoc`
+(fixes the wrong repo name *and* the dead paths).
+* `www/.well-known/ai.txt`: drop the `AI.a2ml` reference → point at
+`CLAUDE.md` / `.claude/CLAUDE.md`.
+* Adopt the template's `www/tests/check-wellknown.sh` (verbatim, minted) so
+`just` and CI can run the canonical validator.
+
+==== 5.4.5 Documentation consistency sweep
+
+* `README.adoc:317` → `link:www/.well-known/humans.txt[humans.txt]`.
+* `docs/RSR_COMPLIANCE.adoc` — §4 community-file paths (`.github/*.md`), §5
+`www/.well-known/security.txt`, §9 delete ``Nix (fallback)'' (retired
+estate-wide, PR #59), §10 `www/.well-known/`; note the Deno surface is
+tier-2-grandfathered.
+* `CLAUDE.md` — Project Structure: remove the `deno.json` line, add
+`.machine_readable/descriptiles/`; Technology Stack / Language Policy:
+align with LANGUAGE-POLICY tiering (Bun 1st, Deno 2nd grandfathered) as PR
+#63 did for `.claude/CLAUDE.md`; note community files live at `.github/*.md`.
+* `CHANGELOG.adoc` — **do not** rewrite historical entries (append-only);
+add a new entry describing this change set.
+* `HANDOFF.adoc`, `EXPLAINME.adoc` — path touch-ups where they name moved
+files.
+
+=== 5.5 Phase 4 — landing and issue lifecycle
+
+. Push branch → open PR (title
+`fix(ci): clear the deferred red checks — descriptiles, hypatia-scan, RSR realignment (#78)`),
+body naming both contexts, the 10-critical breakdown, and the binding
+citations (SSOT ids, template refs, standards#994 link).
+. Watch PR checks to green: `Static Analysis Gate` (hypatia job: 0
+criticals), `CI` (rsr-compliance pass), new `Hypatia Security Scan`
+(advisory, expect a green run with 0 criticals post-fix), `Governance`,
+`Workflow Security Linter` (new/edited workflows), `RSR Anti-Pattern Check`
+(re-verify the anchored parser still reads the exemption table), `Well-Known
+Standards`, `Runtime Policy`, `Makefile Blocker`, `CodeQL`, `Secret Scanner`.
+. Merge (owner flow; signed commits per CONTRIBUTING §Signed commits);
+confirm both contexts green on `main` (the nightly `CI` schedule run is the
+standing proof; trigger `workflow_dispatch` runs where available for
+immediate evidence).
+. Comment on #78 with the run IDs proving green-on-`main`, then close.
+. Dependabot PR #79 (open): update branch / re-run checks so it inherits
+green; per the standing ruling it was never blocked, but leaving it red
+re-files the same debt.
+. Upstream reports (comment on standards#994 or new issues, per owner
+preference):
+.. oracle detector 2.2.1 is root-only while the template canonical is
+`www/.well-known/` (the oracle fails the template itself); SSOT
+`template_ref` for 2.2.1 stale; `structural_drift/SD020` unimplemented.
+.. SSOT detectors 2.1.3/2.1.4/2.1.5 list only `.md` variants; owner ruling
+2026-10-10 keeps `.adoc` community files canonical here — propose the
+`.adoc` variants as an additive SSOT patch (versioning rule-minor permits
+detector additions; GitHub-recognition context: orgs/community discussions
+#181843 / #189645).
+.. `static-analysis-gate.yml` (template-owned) clones floating Hypatia
+`main` — control-plane says pin; suggest the template adopt the vetted-SHA
+clone or delegate.
+.. GitHub's 10-annotation cap made the gate's critical set unreadable from
+the UI; suggest the inline gate emit a per-rule count summary (upstream
+template change).
+
+== 6. Verification plan (honest: author now, verify in CI)
+
+* *Local (sandbox):* re-run the rewritten `rsr-compliance` script; simulate
+SD004 (assert the seven names exist only under `descriptiles/`); simulate
+SD023/SD024/SD007 by grep; YAML-parse every touched workflow (`python3
+-yaml`); run `www/tests/check-wellknown.sh`; run `just validate-rsr` **if**
+`just`+`deno` are installable here, else say so and defer to CI. Hypatia
+itself cannot be built here (hex.pm unreachable) — the PR run is ground
+truth for the scan.
+* *CI:* the check matrix in §5.5 step 2, then green-on-`main` confirmation.
+* *Regression watch:* the nightly scheduled `CI` run and the weekly
+`Hypatia Security Scan` cron for one cycle post-merge.
+
+== 7. Risks and mitigations
+
+[cols="2,3,3", options="header"]
+|===
+|Risk |Impact |Mitigation
+|Floating Hypatia `main` in `static-analysis-gate.yml` adds new critical
+rules after our fix |Gate re-reddens for reasons unrelated to any commit
+|All 10 current criticals fixed at the root (no ignores/baseline); upstream
+report §5.5.6.b proposes pinning the template's clone; optionally adopt
+`.hypatia-baseline.json` + `scripts/apply-baseline.sh` later for the
+reusable gate (blocking, expiry-tracked)
+|Deleting `SECURITY.adoc`/`CODE_OF_CONDUCT.adoc` collides with the PR #62
+``migrate to AsciiDoc'' precedent |Owner disagreement on file set |DP-1
+below; SSOT 2.1.3/2.1.4 + template + GitHub community-profile recognition
+are the binding evidence; conversion is a *move*, not a relicence — SPDX
+headers on the new `.md` files follow the template (CC-BY-SA-4.0)
+|S-expr descriptile copies contain facts missing from the record-dialect
+twins |Silent knowledge loss |Line-by-line reconciliation before delete;
+reconciled facts land in the record files with `last-updated` bumped; git
+history preserves the originals
+|Anchored WF022 regex breaks the exemption-table parser |`RSR Anti-Pattern
+Check` false-fails or silently ignores exemptions |Heading verified
+(`.claude/CLAUDE.md:88`); parser unit-tested locally with a fixture before
+push
+|New `hypatia-scan.yml` check name adds a 5th Hypatia spelling estate-wide
+(standards#994 §2) |Required-context bookkeeping churn |Name matches the
+template exactly (``Hypatia Security Scan'' / job ``Hypatia Neurosymbolic
+Analysis'') — convergence, not divergence
+|`security.txt` edits re-trigger `Well-Known Standards` |None if content
+valid |Expires 2027-12-31 stays; Contact present; validator ported from
+template
+|===
+
+== 8. Decision points (owner ruling requested)
+
+[cols="1,3,2", options="header"]
+|===
+|ID |Question |Recommendation
+|DP-1 |Community files: conversion to `.github/*.md`, or keep `.adoc`?
+|*RULED (owner, 2026-10-10): stick with `.adoc`* — SSOT detector lag
+reported upstream (§5.5)
+|DP-2 |`setup.sh` curl\|bash: remove remote-exec fallback, or pin a
+release + SHA-256? |*RULED: remove the fallback* (a checksum constant can be
+minted later from a networked environment)
+|DP-3 |`hypatia-scan.yml` reusable pin |*RULED: latest* —
+`10e0b6ffb979f0a27fe58206512055133e67460a`
+|DP-4 |Landing shape: one PR or two? |One PR (this session's branch is fixed
+to a single ref; #78 closes once both contexts are green)
+|DP-5 |Upstream reports: comment on standards#994, or discrete issues? |Drafted
+in §5.5; posting left to the owner (cross-repo action)
+|===
+
+== 9. Out of scope for #78 (recorded so it is not lost)
+
+* *Gold-tier scorecard uplift* (SSOT gold criteria, none currently gating):
+`descriptiles/anchors/ANCHOR.a2ml` (3.1.8), `CLADE.a2ml` (3.1.9),
+`.machine_readable/rsr-profile.a2ml` (3.2.2), `dogfood-gate.yml` (6.2.1),
+root `*_chora.deed` (template canary + rhodibot expectations).
+* *A2ML-vs-deed doctrine*: the template's rhodibot canary treats **every**
+`.a2ml` as drift (``facts belong in the repo deed'') while the SSOT's 3.x
+criteria are descriptile-`.a2ml`-shaped — an estate contradiction to raise
+with the owner before any deed migration here.
+* *actions.lock adoption* (``managed by gh actions-lock'' headers on
+template workflows; this repo pins inline without a lock).
+* *Bun migration* of the grandfathered Deno surface (#61 Step-3 successor
+work; Deno is permitted tier 2).
+* *SPDX header drift* on existing files (`SECURITY.adoc`,
+`CODE_OF_CONDUCT.adoc`, `GOVERNANCE.adoc`, others) — FLAG-ONLY per CLAUDE.md;
+list handed to the owner, no sweep.
+* `.machine_readable/root-allow.txt` is inert here (no
+`check-root-shape.sh`); reconcile if/when the root-shape checker is adopted.
+* `pages.yml` builds from `README.md` (absent — falls back to a stub
+`index.md`); the Ddraig pipeline likely wants `README.adoc` or the `www/`
+bundle — separate fix.
+
+== 10. Execution checklist (condensed)
+
+* [ ] P1a `git mv` 6a2 → `descriptiles/`; reconcile + delete s-expr twins;
+      repair references (manifest, HANDOFF, CLAUDE.md, STATE internals)
+* [ ] P1b add `.github/workflows/hypatia-scan.yml` (pinned reusable, DP-3)
+* [ ] P2 `setup.sh` (DP-2) · `gui/app.js` · deno perms ×3 · WF022 anchor ·
+      WF017 gate · timeouts ×11
+* [ ] P3 `.github/{SECURITY,CODE_OF_CONDUCT,CONTRIBUTING}.md` (DP-1) ·
+      `ci.yml` rsr-compliance rewrite · Justfile repair ·
+      wellknown-enforcement port · security.txt/ai.txt URL fixes ·
+      adopt `www/tests/check-wellknown.sh` · docs sweep · CHANGELOG entry
+* [ ] P4 local sims → push → PR (#78) → green matrix → merge → green on
+      `main` → close #78 with run-ID evidence → refresh PR #79 → upstream
+      reports (DP-5)
