@@ -6,7 +6,7 @@
 Quick orientation for the next working session (e.g. resuming in the Claude Code
 desktop app). The long-term plan lives in link:ROADMAP.adoc[ROADMAP.adoc]; the
 canonical design in link:docs/theory/CORRESPONDENCE-MODEL.adoc[the spec]; the
-live state in `.machine_readable/STATE.a2ml`.
+live state in `.machine_readable/descriptiles/STATE.a2ml`.
 
 == Where things stand (2026-06)
 

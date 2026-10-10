@@ -1,0 +1,78 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# STATE.a2ml — Nextgen Languages Evangeliser project state
+# Relocated 2026-10-10 from the retired .machine_readable/6a2/ path to the
+# canonical .machine_readable/descriptiles/ (RSR v2.0 SSOT 3.1.1/3.1.2;
+# Hypatia SD004). Content reconciled with the legacy s-expression-dialect
+# .machine_readable/STATE.a2ml twin (deleted in the same change): the record
+# dialect is the base, the semantically newer facts from the twin (M3
+# complete, completion 66, working features, session history to 2026-06-27)
+# are ported in.
+[metadata]
+project = "nextgen-languages-evangeliser"
+predecessor = "rescript-evangeliser"
+version = "1.3.0"
+last-updated = "2026-10-10"
+status = "active"
+
+[project-context]
+name = "Nextgen Languages Evangeliser"
+purpose = "Duolingo/Rosetta-Stone for programming languages — a comprehension+transfer engine that classifies cross-language correspondences so learning transfers from a known language to a new one."
+is-not = "an IDE (that is PanLL), a linter, a universal translator, or a shame-the-JS pattern matcher"
+model = "Concept/Form/Transition + six CorrespondenceKinds (cognate/false-friend/antonym/alien-realization/novel/vanished) as graded Echo fibres"
+division = "we build the engine + interface + vocabulary; the community authors per-language cartridges"
+completion-percentage = 66
+
+[position]
+phase = "Re-point: correspondence engine + abstraction-model pivot"   # design | implementation | testing | maintenance | archived
+maturity = "alpha"   # experimental | alpha | beta | production | lts
+
+[working-features]
+features = [
+  "Correspondence-model design spec (docs/theory/CORRESPONDENCE-MODEL.adoc) — merged",
+  "Standards/machine-readable hygiene (descriptile manifests, panic-attack gate, eNSAID config) — merged",
+  "Idris2 ABI spine (Carrier.idr + Correspondence.idr) — typechecks; Zig FFI mirror; AffineScript host binding",
+  "Cartridge contract (JSON-Schema) + reference pack (one correspondence per CorrespondenceKind)",
+  "Browser multi-pane workspace (index / forms / classification; five overlay view-layers) — merged",
+  "Offline CLI (Deno; reads cartridges): --kind / --find / --json",
+  "Cartridge invariant tests (Deno; mirrors Abi.Correspondence)",
+  "Legacy ReScript host removed — runtime surface is Deno + cartridges",
+]
+
+[route-to-mvp]
+milestones = [
+  "M0 correspondence-model spec — complete",
+  "M1 standards/repo hygiene — complete",
+  "M2 identity re-point + abstraction-model pivot — in progress",
+  "M3 browser multi-pane GUI + overlay view-layers — complete",
+  "M4 AffineScript host port (Zig FFI + Idris2 ABI) — gated",
+  "M5 cartridge contract + 2nd language pack — pending",
+  "M6 proofs/benches + PanLL octad emission — pending",
+]
+
+[blockers-and-issues]
+issues = [
+  "AffineScript/Idris2/Zig/Deno toolchain absent in some environments — author now, verify in CI",
+  "JTV grammar-v2 worked example stubbed pending julia-the-viper repo access",
+  "Licence-label drift to flag to owner vs MPL-2.0 SPDX — FLAG-ONLY, manual",
+]
+
+[critical-next-actions]
+actions = [
+  "Port the legacy pattern catalogue into cartridge facts (Concept/Form/Transition + CorrespondenceKind)",
+  "Author a second language pack to prove engine-agnosticism",
+  "Begin the AffineScript host application against the Idris2 ABI / Zig FFI seams",
+]
+
+[session-history]
+history = [
+  "2026-04-16 Phase 0 decisions locked; Phase 1 started",
+  "2026-06-18 Re-point: correspondence-model spec merged (#19); standards hygiene merged (#20); identity re-point",
+  "2026-06-27 ABI/FFI/host spine + multi-pane GUI merged; legacy ReScript host removed (Deno + cartridges)",
+  "2026-10-10 Descriptiles relocated to .machine_readable/descriptiles/; deferred red checks remediated (#78)",
+]
+
+[maintenance-status]
+last-run-utc = "2026-10-10T00:00:00Z"
+last-result = "pass"   # unknown | pass | warn | fail

@@ -38,6 +38,6 @@ require-rerun-after-fix = true
 release-claim-requires-hard-pass = true
 
 [automation-hooks]
-# on-enter:  Read 0-AI-MANIFEST.a2ml, then .machine_readable/6a2/STATE.a2ml
-# on-exit:   Update 6a2/STATE.a2ml with session outcomes
+# on-enter:  Read 0-AI-MANIFEST.a2ml, then .machine_readable/descriptiles/STATE.a2ml
+# on-exit:   Update descriptiles/STATE.a2ml with session outcomes
 # on-commit: Run `just validate-rsr`
