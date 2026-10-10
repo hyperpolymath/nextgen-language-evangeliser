@@ -2,10 +2,13 @@
 # https://github.com/casey/just
 # SPDX-License-Identifier: MPL-2.0
 #
-# Per Hyperpolymath policy:
-# - Use Deno, not npm/bun
+# Per Hyperpolymath LANGUAGE-POLICY (standards §1):
+# - Runtime tiers: Bun (1st) > Deno (2nd) > pnpm > npm (last resort).
+#   This repo's Deno surface is EXISTING and GRANDFATHERED (tier 2) — keep it
+#   Deno; do not add npm/bun lockfiles (mixed toolchains fail runtime-policy).
 # - Use justfile, not Makefile
 # - Use AffineScript, not TypeScript (ReScript host removed 2026-06; AffineScript host pending)
+# - Deno permissions are least-privilege: explicit --allow-* flags, never -A (CWE-250)
 
 # List all available recipes
 import? "contractile.just"
@@ -20,7 +23,7 @@ default:
 # runtime surface is Deno + cartridge data (the ReScript host was removed).
 build:
     @echo "🧩 Validating cartridges (no compile step — Deno-only host)..."
-    deno task build
+    @deno run --allow-read scripts/validate-cartridges.js
 
 # Serve the workspace with live reload on change
 watch:
@@ -56,12 +59,12 @@ setup: install
 # Format code
 fmt:
     @echo "✨ Formatting..."
-    deno task fmt
+    @deno fmt bin gui scripts src test
 
 # Lint code
 lint:
     @echo "🔍 Linting..."
-    deno task lint
+    @deno lint bin gui scripts src test
 
 # Serve the browser correspondence workspace (multi-pane, cartridge-driven)
 gui:
@@ -73,24 +76,25 @@ gui:
 # Run all tests (cartridge invariants + GUI smoke test)
 test:
     @echo "🧪 Running tests..."
-    deno task test
+    @deno run --allow-read test/run_all.js
+    @deno run --allow-read test/gui_smoke_test.js
 
 # Run just the GUI smoke test (server handler: shell, bundle, cartridge API)
 test-gui:
     @echo "🖥️  GUI smoke test..."
-    @deno task test:gui
+    @deno run --allow-read test/gui_smoke_test.js
 
 # === VALIDATION ===
 
 # Run full validation
 validate:
     @echo "🔍 Validating project..."
-    deno task validate
+    @just validate-cartridges
 
 # Validate cartridges against the correspondence schema (Deno + ajv)
 validate-cartridges:
     @echo "🧩 Validating cartridges..."
-    @deno run -A --no-lock scripts/validate-cartridges.js
+    @deno run --allow-read scripts/validate-cartridges.js
 
 # Validate RSR compliance
 validate-rsr:
@@ -107,25 +111,35 @@ validate-structure:
     @echo "📁 Checking project structure..."
     @test -d src || (echo "❌ Missing src/" && exit 1)
     @test -d cartridges || (echo "❌ Missing cartridges/" && exit 1)
-    @test -f deno.json || (echo "❌ Missing deno.json" && exit 1)
+    @test -d .machine_readable/descriptiles || (echo "❌ Missing .machine_readable/descriptiles/ (RSR 3.1.1)" && exit 1)
+    @test ! -d .machine_readable/6a2 || (echo "❌ Retired .machine_readable/6a2/ still present (RSR 3.1.1)" && exit 1)
+    @test -d www/.well-known || (echo "❌ Missing www/.well-known/ (RSR 2.2.1 canonical location)" && exit 1)
     @echo "✅ Project structure valid"
 
 # Validate documentation
+# Community-health files: AsciiDoc is canonical here (owner ruling 2026-10-10,
+# #78); .md variants are also accepted so a future conversion cannot fail this.
+# Mirrors the RSR v2.0 SSOT any_of detectors (2.1.x) — the normative oracle is
+# hypatia:rsr-conformance; this recipe is a local, non-normative mirror.
 validate-docs:
     @echo "📚 Checking documentation..."
-    @test -f README.adoc || (echo "❌ Missing README.adoc" && exit 1)
-    @test -f CONTRIBUTING.adoc || (echo "❌ Missing CONTRIBUTING.adoc" && exit 1)
-    @test -f CODE_OF_CONDUCT.md || (echo "❌ Missing CODE_OF_CONDUCT.md" && exit 1)
-    @test -f SECURITY.md || (echo "❌ Missing SECURITY.md" && exit 1)
-    @test -f MAINTAINERS.adoc || (echo "❌ Missing MAINTAINERS.adoc" && exit 1)
-    @test -f CHANGELOG.adoc || (echo "❌ Missing CHANGELOG.adoc" && exit 1)
+    @{ test -f README.adoc || test -f README.md; } || (echo "❌ Missing README (2.1.1)" && exit 1)
+    @{ test -f CONTRIBUTING.adoc || test -f .github/CONTRIBUTING.md || test -f CONTRIBUTING.md; } || (echo "❌ Missing CONTRIBUTING (2.1.5)" && exit 1)
+    @{ test -f CODE_OF_CONDUCT.adoc || test -f .github/CODE_OF_CONDUCT.md || test -f CODE_OF_CONDUCT.md; } || (echo "❌ Missing CODE_OF_CONDUCT (2.1.4)" && exit 1)
+    @{ test -f SECURITY.adoc || test -f .github/SECURITY.md || test -f SECURITY.md; } || (echo "❌ Missing SECURITY (2.1.3)" && exit 1)
+    @{ test -f MAINTAINERS.adoc || test -f docs/MAINTAINERS.adoc; } || (echo "❌ Missing MAINTAINERS (2.1.7)" && exit 1)
+    @{ test -f CHANGELOG.adoc || test -f CHANGELOG.md; } || (echo "❌ Missing CHANGELOG (2.1.6)" && exit 1)
+    @{ test -f GOVERNANCE.adoc || test -f docs/GOVERNANCE.adoc || test -f .github/GOVERNANCE.md; } || (echo "❌ Missing GOVERNANCE (2.1.8)" && exit 1)
     @test -f CLAUDE.md || (echo "❌ Missing CLAUDE.md" && exit 1)
+    @{ test -f 0-AI-MANIFEST.a2ml || test -f 0-AI-MANIFEST.deed; } || (echo "❌ Missing AI manifest front door (2.3.1)" && exit 1)
     @echo "✅ Documentation complete"
 
 # Validate security files
 validate-security:
     @echo "🛡️ Checking security files..."
-    @test -f SECURITY.md || (echo "❌ Missing SECURITY.md" && exit 1)
+    @{ test -f SECURITY.adoc || test -f .github/SECURITY.md || test -f SECURITY.md; } || (echo "❌ Missing SECURITY policy (2.1.3)" && exit 1)
+    @for f in security.txt ai.txt humans.txt; do         if [ -f "www/.well-known/$f" ]; then :;         elif [ -f ".well-known/$f" ]; then echo "⚠️  legacy root .well-known/$f — canonical is www/.well-known/";         else echo "❌ Missing www/.well-known/$f (2.2.1)"; exit 1; fi;      done
+    @bash www/tests/check-wellknown.sh
     @echo "✅ Security files present"
 
 # Validate licenses

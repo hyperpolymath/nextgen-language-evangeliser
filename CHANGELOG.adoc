@@ -8,6 +8,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 == [Unreleased]
 
+=== Estate red-checks remediation (2026-10) — issue #78
+
+==== Fixed
+- Cleared the two deferred red checks on `main` (issue #78): the Hypatia gate's 10 critical findings and the stale `RSR Compliance Check`.
+- Descriptiles relocated to the canonical `.machine_readable/descriptiles/` (RSR v2.0 SSOT 3.1.x; Hypatia SD004): the six `6a2/` record-dialect manifests moved, the legacy s-expression twins (`.machine_readable/{META,STATE,ECOSYSTEM}.a2ml`) reconciled into them and retired, retired-location references repaired (`0-AI-MANIFEST.a2ml`, `AGENTIC.a2ml`, `PLAYBOOK.a2ml`, `HANDOFF.adoc`, `CLAUDE.md`).
+- `setup.sh`: download-and-execute (`curl … | bash`) removed in favour of checksummed manual-install instructions (CWE-494).
+- `gui/app.js`: removed the dead `innerHTML` escape hatch — SafeDOM by construction (CWE-79).
+- Least-privilege Deno permissions everywhere; `-A` eliminated (`scripts/validate-cartridges.js`, `scripts/launch-gui.sh`, `Justfile`) (CWE-250).
+- `rsr-antipattern.yml`: exemption-heading regex anchored to the markdown heading shape (Hypatia WF022).
+- `instant-sync.yml`: `repository-dispatch` now gated on secret presence (WF017) with `timeout-minutes`.
+- `ci.yml`, `codeql.yml`, `guix-nix-policy.yml`: `timeout-minutes` on every job (ERR-WF-013).
+- `www/.well-known/security.txt`: `Canonical:`/`Policy:` URLs corrected (wrong repository name, retired paths).
+
+==== Added
+- `.github/workflows/hypatia-scan.yml` — estate-required independent Hypatia security scan, pinned to the standards reusable workflow (RSR 6.1.2).
+- `www/tests/check-wellknown.sh` — canonical well-known bundle validator (minted from rsr-template-repo), wired into `just validate-security` and the Well-Known Standards workflow.
+- `docs/plans/PLAN-issue-78-red-checks.adoc` — the remediation ultraplan.
+
+==== Changed
+- `ci.yml` `RSR Compliance Check` regenerated as a non-normative mirror of the rsr-criteria-v2 SSOT detectors (any_of shapes; `www/.well-known/` canonical; owner ruling 2026-10-10: community-health files stay AsciiDoc).
+- `just validate-rsr` repaired: `deno task` recipes (which referenced a `deno.json` that never existed) replaced with direct least-privilege `deno` commands; validators updated to the same SSOT shapes.
+- `wellknown-enforcement.yml` now fails closed when `security.txt` is absent everywhere (was a vacuous warn-only gate) and treats `www/.well-known/` as canonical.
+- `SECURITY.adoc` modernized: retired VS Code-extension threat model replaced with the current Deno + cartridge-data surface; dead links fixed.
+- `Justfile` header aligned to LANGUAGE-POLICY runtime tiers (Bun tier 1; this repo's Deno surface is tier-2 grandfathered).
+
 === Re-point (2026-06) — correspondence engine; ReScript host removed
 
 ==== Added

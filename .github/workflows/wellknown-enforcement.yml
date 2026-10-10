@@ -1,18 +1,34 @@
 # SPDX-License-Identifier: MPL-2.0
+# Well-Known Standards (RFC 9116 + RSR)
+#
+# Canonical location for the .well-known bundle is www/.well-known/
+# (rsr-template-repo#53, stage-5 sweep #119; the template's
+# dot-wellknown-enforcement.yml semantics). A repository-root .well-known/
+# is LEGACY — tolerated with a warning during the migration window, never
+# silently validated as canonical. A security.txt absent from BOTH
+# locations is a HARD ERROR (the pre-2026-10 version of this workflow
+# exit-0'd there — a vacuous gate; see the defect class PR #67 eliminated).
 name: Well-Known Standards (RFC 9116 + RSR)
 on:
   push:
     branches: [main, master]
     paths:
-      - '.well-known/**'
+      - 'www/.well-known/**'
+      - '.well-known/**'   # legacy location — migration window
       - 'security.txt'
   pull_request:
     paths:
+      - 'www/.well-known/**'
       - '.well-known/**'
+      - 'security.txt'
   schedule:
-    # Weekly expiry check
+    # Weekly expiry check (Mondays 09:00 UTC)
     - cron: '0 9 * * 1'
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -20,29 +36,39 @@ permissions:
 jobs:
   validate:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      
+
       - name: RFC 9116 security.txt validation
         run: |
           SECTXT=""
-          [ -f ".well-known/security.txt" ] && SECTXT=".well-known/security.txt"
-          [ -f "security.txt" ] && SECTXT="security.txt"
-          
-          if [ -z "$SECTXT" ]; then
-            echo "::warning::No security.txt found. See https://github.com/hyperpolymath/well-known-ecosystem"
-            exit 0
+          if [ -f "www/.well-known/security.txt" ]; then
+            SECTXT="www/.well-known/security.txt"
+          elif [ -f ".well-known/security.txt" ]; then
+            SECTXT=".well-known/security.txt"
+            echo "::warning::security.txt at legacy root .well-known/ — canonical location is www/.well-known/ (rsr-template-repo#53)"
+          elif [ -f "security.txt" ]; then
+            SECTXT="security.txt"
+            echo "::warning::security.txt at repository root — canonical location is www/.well-known/"
           fi
-          
+
+          if [ -z "$SECTXT" ]; then
+            echo "::error::No security.txt found — required by RFC 9116 / RSR 2.2.1. See https://github.com/hyperpolymath/well-known-ecosystem"
+            exit 1
+          fi
+
           # Required: Contact
           grep -q "^Contact:" "$SECTXT" || { echo "::error::Missing Contact field"; exit 1; }
-          
+
           # Required: Expires
           if ! grep -q "^Expires:" "$SECTXT"; then
             echo "::error::Missing Expires field"
             exit 1
           fi
-          
+
           # Check expiry
           EXPIRES=$(grep "^Expires:" "$SECTXT" | cut -d: -f2- | tr -d ' ' | head -1)
           if date -d "$EXPIRES" > /dev/null 2>&1; then
@@ -60,16 +86,29 @@ jobs:
       - name: RSR well-known compliance
         run: |
           MISSING=""
-          [ ! -f ".well-known/security.txt" ] && [ ! -f "security.txt" ] && MISSING="$MISSING security.txt"
-          [ ! -f ".well-known/ai.txt" ] && MISSING="$MISSING ai.txt"
-          [ ! -f ".well-known/humans.txt" ] && MISSING="$MISSING humans.txt"
-          
+          LEGACY=""
+          for f in security.txt ai.txt humans.txt; do
+            if [ -f "www/.well-known/$f" ]; then
+              :
+            elif [ -f ".well-known/$f" ] || { [ "$f" = security.txt ] && [ -f security.txt ]; }; then
+              LEGACY="$LEGACY $f"
+            else
+              MISSING="$MISSING $f"
+            fi
+          done
+          if [ -n "$LEGACY" ]; then
+            echo "::warning::legacy .well-known location (canonical is www/.well-known/):$LEGACY — see rsr-template-repo scripts/migrate-wellknown-to-www.sh"
+          fi
+
           if [ -n "$MISSING" ]; then
             echo "::warning::Missing RSR recommended files:$MISSING"
             echo "Reference: https://github.com/hyperpolymath/well-known-ecosystem/.well-known/"
           else
             echo "✅ RSR well-known compliant"
           fi
+
+      - name: Canonical well-known bundle validation
+        run: bash www/tests/check-wellknown.sh
 
       - name: Mixed content check
         run: |

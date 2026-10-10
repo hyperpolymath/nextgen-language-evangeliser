@@ -35,14 +35,16 @@ toc::[]
 == 4. Complete documentation
 
 * `README.adoc`, `EXPLAINME.adoc`, `ROADMAP.adoc`, `CONTRIBUTING.adoc`,
-  `CODE_OF_CONDUCT.md`, `SECURITY.md`, `MAINTAINERS.adoc`, `CHANGELOG`,
-  `CLAUDE.md`, and the canonical design spec
+  `CODE_OF_CONDUCT.adoc`, `SECURITY.adoc`, `MAINTAINERS.adoc`,
+  `CHANGELOG.adoc`, `CLAUDE.md`, and the canonical design spec
   `docs/theory/CORRESPONDENCE-MODEL.adoc`.
 
 == 5. Security-first design
 
-* `panic-attack` static-analysis gate (`just assail`); CodeQL; SHA-pinned GitHub
-  Actions; RFC 9116 `.well-known/security.txt`; no hardcoded secrets; HTTPS-only.
+* `panic-attack` static-analysis gate (`just assail`); Hypatia neurosymbolic
+  scan (inline gate + pinned `hypatia-scan.yml` reusable); CodeQL; SHA-pinned
+  GitHub Actions; RFC 9116 `www/.well-known/security.txt`; least-privilege
+  Deno permissions (never `-A`); no hardcoded secrets; HTTPS-only.
 
 == 6. Open governance
 
@@ -66,11 +68,15 @@ toc::[]
 == 9. Build reproducibility
 
 * No compile step for the runtime surface (Deno + data). Task orchestration via
-  *Justfile*; reproducible environments via *Guix* (primary) / *Nix* (fallback).
+  *Justfile*; reproducible environments via *Guix* (Nix was retired
+  estate-wide in 2026).
 
 == 10. `.well-known/`
 
-* `security.txt` (RFC 9116), `ai.txt`, `humans.txt`.
+* `security.txt` (RFC 9116), `ai.txt`, `humans.txt` — canonical location
+  `www/.well-known/` (rsr-template-repo#53); validated by
+  `www/tests/check-wellknown.sh` (`just validate-security`) and the
+  `Well-Known Standards` workflow.
 
 == 11. No vendor lock-in
 
