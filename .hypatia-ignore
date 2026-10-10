@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: MPL-2.0
+#
+# .hypatia-ignore — scoped, documented exemptions for the Hypatia scanner.
+#
+# Format (one entry per line):
+#     <rule_module>/<rule_type>:<path-fragment>
+#     <rule_module>/*:<path-fragment>          (any type in module)
+#     <path-fragment>                          (any rule, any module)
+#
+# Lines starting with `#` are comments. A path-fragment is a substring match
+# against the repo-relative file path. Built-in defaults live in Hypatia's
+# lib/hypatia/scanner_suppression.ex — do not duplicate them here. Each entry
+# below carries a stated reason. Prefer fix-the-code or an inline directive
+# over an entry here; this file is for whole-file/directory exemptions.
+# Shaped after rsr-template-repo's own .hypatia-ignore.
+
+# ─── Research-extension workflow findings ───────────────────────────────────────
+#
+# RE001 is an advisory recommendation to add harden-runner whenever a workflow
+# references a secret. These workflows deliberately use repository-locked,
+# SHA-pinned actions and least-privilege permissions while retaining the
+# outbound access they need (GitHub API, SMTP, forge propagation). Mirrors the
+# template's own exemptions for the same workflow classes. Keep the exemptions
+# file-scoped so the advisory still applies to every new workflow.
+research_extensions/RE001:.github/workflows/push-email-notify.yml
+research_extensions/RE001:.github/workflows/label-triage.yml
+research_extensions/RE001:.github/workflows/labels.yml
+research_extensions/RE001:.github/workflows/instant-sync.yml
+research_extensions/RE001:.github/workflows/ci.yml
