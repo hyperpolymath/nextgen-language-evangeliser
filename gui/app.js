@@ -32,13 +32,16 @@ const state = { items: [], view: "side-by-side", kind: "all", query: "", selecte
 
 const $ = (id) => document.getElementById(id);
 
+// SafeDOM by construction: text goes through textContent and everything else
+// through setAttribute. There is deliberately NO innerHTML escape hatch —
+// an `html:` option here would be a stored-DOM XSS seam (CWE-79; Hypatia
+// code_safety/js_innerhtml). If rich markup is ever needed, build nodes.
 function node(tag, opts = {}, kids = []) {
   const el = document.createElement(tag);
   for (const [k, v] of Object.entries(opts)) {
     if (v == null) continue;
     if (k === "class") el.className = v;
     else if (k === "text") el.textContent = v;
-    else if (k === "html") el.innerHTML = v;
     else el.setAttribute(k, v);
   }
   for (const kid of [].concat(kids)) if (kid != null) el.append(kid);

@@ -5,8 +5,10 @@
 # Detects your shell, platform, and installs prerequisites.
 # Then hands off to `just setup` for project-specific configuration.
 #
-# Usage:
-#   curl -fsSL https://raw.githubusercontent.com/hyperpolymath/nextgen-languages-evangeliser/main/setup.sh | sh
+# Usage (clone + run; this repo does NOT recommend piping remote scripts
+# into a shell — download, review, then execute):
+#   curl -fsSL -o setup.sh https://raw.githubusercontent.com/hyperpolymath/nextgen-language-evangeliser/main/setup.sh
+#   sh setup.sh
 #   # or after cloning:
 #   ./setup.sh
 #
@@ -129,6 +131,21 @@ detect_platform() {
 }
 
 # ── Install just ──
+#
+# No download-and-execute: piping a remote installer straight into a shell
+# runs unverified code with the user's privileges (CWE-494; Hypatia
+# code_safety/shell_download_then_run). Where the package manager cannot
+# provide `just`, we print verified-manual-install instructions instead of
+# fetching and running a remote script.
+manual_just_instructions() {
+    warn "Package manager could not provide just. Install it manually, with integrity verification:"
+    info "  1. Download the release archive for your platform (pin a version tag):"
+    info "       https://github.com/casey/just/releases"
+    info "  2. Verify the archive's SHA-256 checksum before extracting."
+    info "  3. Extract and place the 'just' binary on your PATH (e.g. /usr/local/bin)."
+    info "  Alternatively: cargo install just  (verifies crate signatures via crates.io)."
+}
+
 install_just() {
     if command -v just >/dev/null 2>&1; then
         ok "just already installed: $(just --version 2>/dev/null | head -1)"
@@ -140,8 +157,8 @@ install_just() {
     case "$PKG_MGR" in
         dnf)        sudo dnf install -y just ;;
         apt)        sudo apt-get install -y just 2>/dev/null || {
-                        # just not in older apt repos — use installer
-                        curl -fsSL https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+                        # just not in older apt repos — no remote-exec fallback (CWE-494)
+                        manual_just_instructions
                     } ;;
         pacman)     sudo pacman -S --noconfirm just ;;
         apk)        sudo apk add just ;;
@@ -152,8 +169,7 @@ install_just() {
         guix)       guix install just ;;
         nix)        nix-env -iA nixpkgs.just ;;
         *)
-            info "Using just installer script..."
-            curl -fsSL https://just.systems/install.sh | bash -s -- --to /usr/local/bin
+            manual_just_instructions
             ;;
     esac
 
