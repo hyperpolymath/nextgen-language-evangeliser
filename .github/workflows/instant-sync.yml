@@ -1,5 +1,11 @@
 # SPDX-License-Identifier: MPL-2.0
 # Instant Forge Sync - Triggers propagation to all forges on push/release
+#
+# WF017 gate: the dispatch step consumes `secrets.FARM_DISPATCH_TOKEN`. On
+# repos where that secret has not been propagated the ungated action fails
+# EVERY run (the 2026-05-30 estate audit caught 65 repos this way), so the
+# job binds a presence boolean and the step gates on it — the idiom the
+# Hypatia rule recognises (env-boolean gate).
 name: Instant Sync
 
 on:
@@ -14,9 +20,13 @@ permissions:
 jobs:
   dispatch:
     runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      HAS_FARM_TOKEN: ${{ secrets.FARM_DISPATCH_TOKEN != '' }}
     steps:
       - name: Trigger Propagation
         id: dispatch
+        if: env.HAS_FARM_TOKEN == 'true'
         continue-on-error: true
         uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
         with:
@@ -34,7 +44,9 @@ jobs:
       - name: Confirm
         if: always()
         run: |
-          if [ "${{ steps.dispatch.outcome }}" = "failure" ]; then
+          if [ "${{ env.HAS_FARM_TOKEN }}" != "true" ]; then
+            echo "::notice::FARM_DISPATCH_TOKEN not set on this repository — forge propagation skipped."
+          elif [ "${{ steps.dispatch.outcome }}" = "failure" ]; then
             echo "::warning::Propagation dispatch failed; rotate FARM_DISPATCH_TOKEN for hyperpolymath/.git-private-farm."
           else
             echo "::notice::Propagation triggered for ${{ github.event.repository.name }}"

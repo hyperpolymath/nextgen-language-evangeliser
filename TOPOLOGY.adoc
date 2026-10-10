@@ -26,7 +26,7 @@ nextgen-languages-evangeliser/
 ├── config.ncl             # Nickel configuration
 ├── docs/                  # Documentation (AsciiDoc)
 ├── Justfile               # Task runner recipes
-└── deno.json              # Deno module config
+└── .machine_readable/     # Descriptiles (STATE/META/…), contractiles, agent instructions
 ----
 
 == Data flow

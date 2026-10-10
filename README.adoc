@@ -208,8 +208,9 @@ nextgen-languages-evangeliser/
 +-- test/run_all.js         # Cartridge invariant tests (Deno)
 +-- scripts/                # Deno utilities (cartridge validator, GUI launcher)
 +-- docs/theory/CORRESPONDENCE-MODEL.adoc  # Canonical design spec
-+-- abi.ipkg                # Idris2 package (typecheck the ABI)
-+-- deno.json               # Deno configuration
++-- src/interface/abi.ipkg  # Idris2 package (typecheck the ABI)
++-- www/.well-known/        # RFC 9116 security.txt + ai.txt + humans.txt (canonical)
++-- .machine_readable/descriptiles/  # STATE / META / ECOSYSTEM / AGENTIC / NEUROSYM / PLAYBOOK
 +-- Justfile                # Task orchestration
 +-- config.ncl              # Nickel configuration
 +-- CLAUDE.md               # AI context
@@ -314,7 +315,7 @@ If you use this project in academic research, please cite:
 * *PanLL / eNSAID*: the downstream contact layer this engine feeds
 * *Makaton*: inspiration for the glyph view-layer
 * *Deno Team*: for the excellent runtime
-* *Contributors*: see link:.well-known/humans.txt[humans.txt]
+* *Contributors*: see link:www/.well-known/humans.txt[humans.txt]
 
 == Status
 

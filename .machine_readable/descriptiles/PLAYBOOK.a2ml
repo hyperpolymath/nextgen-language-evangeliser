@@ -15,13 +15,13 @@ project = "nextgen-languages-evangeliser"
 # target = "library + cli + browser-gui"
 
 [incident-response]
-# 1. Read .machine_readable/6a2/STATE.a2ml for current status.
+# 1. Read .machine_readable/descriptiles/STATE.a2ml for current status.
 # 2. Review recent commits and CI (Static Analysis Gate, RSR Compliance).
 # 3. Run `just validate-rsr` to check compliance.
 # 4. Run `just assail` for the panic-attack static-analysis scan.
 
 [release-process]
-# 1. Update version in 6a2/STATE.a2ml and 6a2/META.a2ml.
+# 1. Update version in descriptiles/STATE.a2ml and descriptiles/META.a2ml.
 # 2. Run `just validate-rsr` and `just crg-grade`.
 # 3. Tag and push.
 

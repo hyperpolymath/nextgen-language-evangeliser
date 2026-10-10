@@ -36,7 +36,7 @@ Emits `octads` → VeriSimDB (`:8097`) + Groove signals → **PanLL** panels; vi
 
 ## Technology Stack
 
-- **Deno** — runtime, tooling & current host surface (workspace server + CLI + cartridge data); not npm/bun
+- **Deno** — runtime, tooling & current host surface (workspace server + CLI + cartridge data); tier 2 and *grandfathered* under the estate LANGUAGE-POLICY (Bun is tier 1 for new JS surface work; npm is last-resort)
 - **AffineScript** — future host + first-class target (Zig FFI + Idris2 ABI seams; OCaml 5.1+; emits typed-wasm IR → WebAssembly)
 - **Zig** — FFI layer; **Idris2** — ABI / proofs
 - **Nickel** — configuration
@@ -61,8 +61,9 @@ nextgen-languages-evangeliser/
 ├── bin/evangeliser.js  # Offline CLI (Deno; reads cartridges)
 ├── test/run_all.js   # Cartridge invariant tests (Deno)
 ├── docs/theory/CORRESPONDENCE-MODEL.adoc  # Canonical design spec
-├── Justfile          # Task orchestration (NOT Makefile)
-└── deno.json         # Deno configuration
+├── .machine_readable/descriptiles/  # STATE / META / ECOSYSTEM / AGENTIC / NEUROSYM / PLAYBOOK (record-dialect A2ML)
+├── www/.well-known/  # RFC 9116 security.txt + ai.txt + humans.txt (canonical location)
+└── Justfile          # Task orchestration (NOT Makefile)
 ```
 
 ## Common Commands
@@ -85,7 +86,7 @@ We **never** shame developers. The voice stays **celebrate / minimise / better /
 ## Re-point Status (was the ReScript → AffineScript "migration")
 
 - ✅ Correspondence-model spec merged (Concept/Form/Transition + six kinds + Dyadic/Echo carrier)
-- ✅ Standards / repo hygiene merged (6a2 manifests, panic-attack gate, eNSAID config)
+- ✅ Standards / repo hygiene merged (descriptile manifests — relocated to `.machine_readable/descriptiles/` in 2026-10 — panic-attack gate, eNSAID config)
 - ✅ Idris2 ABI spine + Zig FFI mirror + AffineScript host binding authored (ABI typechecks)
 - ✅ Browser multi-pane GUI (overlay view-layers) merged
 - ✅ Legacy ReScript host **removed** — runtime surface is Deno + cartridges
@@ -99,7 +100,7 @@ We **never** shame developers. The voice stays **celebrate / minimise / better /
 - Lead with the **correspondence model**; AffineScript is one first-class target/host, not the sole pitch.
 - **Classify, don't translate.** No universal-translator or Curry–Howard-fidelity claims.
 - **No shame.** Keep the celebrate / minimise / better / safety / example voice.
-- **Use Deno, not npm/bun. Use Justfile, not Makefile. Use Zig for FFI, Idris2 for ABI/proofs.**
+- **This repo's runtime is Deno (tier 2, grandfathered); estate LANGUAGE-POLICY ranks Bun tier 1 for new work and npm last. Use Justfile, not Makefile. Use Zig for FFI, Idris2 for ABI/proofs.**
 - **The ReScript host is removed.** ReScript is allowed only as a legacy *target* in correspondence content; never reintroduce `.res` host code — the host path is AffineScript (`.affine`).
 - Toolchain may be absent in this environment — **author now, verify in CI**; never claim a green build you did not run.
 - **Licence: MPL-2.0 (sole-owner repo). Add SPDX `MPL-2.0` to new files. NEVER relicense or bulk-sweep SPDX; licence-label drift is FLAG-ONLY to the owner.**
