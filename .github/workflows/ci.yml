@@ -17,6 +17,7 @@ jobs:
   test:
     name: Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
     if: vars.RUN_EXTENSION_CI == 'true'
 
     strategy:
@@ -69,6 +70,7 @@ jobs:
   security:
     name: Security Audit
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     if: vars.RUN_EXTENSION_CI == 'true'
 
     steps:
@@ -100,41 +102,88 @@ jobs:
   rsr-compliance:
     name: RSR Compliance Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
+    # NON-NORMATIVE MIRROR of the RSR v2.0 criteria SSOT
+    # (hyperpolymath/standards 0-canon/rsr/rsr-criteria-v2.a2ml; the ONE
+    # normative checker is hypatia:rsr-conformance). Regenerate this step
+    # from the SSOT detector table instead of hand-drifting it.
+    #
+    # Owner ruling 2026-10-10 (#78): community-health files stay AsciiDoc
+    # (SECURITY.adoc, CODE_OF_CONDUCT.adoc, CONTRIBUTING.adoc). The SSOT's
+    # 2.1.3/2.1.4/2.1.5 detectors list only .md variants; that detector lag
+    # is reported upstream (standards#994) — GitHub community-profile
+    # recognition of .adoc is requested in github/orgs/community discussions
+    # #181843 and #189645. The .md variants are still ACCEPTED here so a
+    # future conversion cannot fail this check.
+    #
+    # .well-known: canonical location is www/.well-known/ (rsr-template-repo#53,
+    # stage-5 sweep); a legacy root .well-known/ is tolerated with a warning
+    # during the migration window.
     steps:
     - name: Checkout code
       uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
     - name: Check required files
       run: |
-        echo "Checking RSR Bronze compliance..."
-
-        # Documentation
-        test -f README.md || test -f README.adoc || (echo "Missing README.md or README.adoc" && exit 1)
-        test -f CONTRIBUTING.adoc || (echo "Missing CONTRIBUTING.adoc" && exit 1)
-        test -f CODE_OF_CONDUCT.md || (echo "Missing CODE_OF_CONDUCT.md" && exit 1)
-        test -f SECURITY.md || (echo "Missing SECURITY.md" && exit 1)
-        test -f MAINTAINERS.adoc || (echo "Missing MAINTAINERS.adoc" && exit 1)
-        test -f CHANGELOG.adoc || (echo "Missing CHANGELOG.adoc" && exit 1)
-        test -f CLAUDE.md || (echo "Missing CLAUDE.md" && exit 1)
-
-        # Licenses
-        test -f LICENSES/MPL-2.0.txt || (echo "Missing LICENSES/MPL-2.0.txt" && exit 1)
-        test -f LICENSES/CC-BY-SA-4.0.txt || (echo "Missing LICENSES/CC-BY-SA-4.0.txt" && exit 1)
-
-        # .well-known/
-        test -f .well-known/security.txt || (echo "Missing security.txt" && exit 1)
-        test -f .well-known/ai.txt || (echo "Missing ai.txt" && exit 1)
-        test -f .well-known/humans.txt || (echo "Missing humans.txt" && exit 1)
-
-        # Build system
-        test -f justfile || test -f Justfile || (echo "Missing justfile or Justfile" && exit 1)
-
-        echo "✅ RSR Bronze compliance verified!"
+        set -u
+        echo "Checking RSR compliance (mirror of rsr-criteria-v2 detectors)..."
+        FAIL=0
+        req()  { # req <criterion> <description> <candidate...>
+          crit="$1"; desc="$2"; shift 2
+          for f in "$@"; do [ -f "$f" ] && { echo "  ✅ $crit $desc ($f)"; return 0; }
+          [ -d "$f" ] && { echo "  ✅ $crit $desc ($f/)"; return 0; }; done
+          echo "  ❌ $crit missing $desc (looked for: $*)"; FAIL=1
+        }
+        # 2.1.x documentation
+        req 2.1.1 README                    README.adoc README.md
+        req 2.1.5 CONTRIBUTING              CONTRIBUTING.adoc .github/CONTRIBUTING.md CONTRIBUTING.md
+        req 2.1.4 CODE_OF_CONDUCT           CODE_OF_CONDUCT.adoc .github/CODE_OF_CONDUCT.md CODE_OF_CONDUCT.md
+        req 2.1.3 SECURITY                  SECURITY.adoc .github/SECURITY.md SECURITY.md
+        req 2.1.7 MAINTAINERS               MAINTAINERS.adoc docs/MAINTAINERS.adoc
+        req 2.1.6 CHANGELOG                 CHANGELOG.adoc CHANGELOG.md
+        req 2.1.8 GOVERNANCE                GOVERNANCE.adoc docs/GOVERNANCE.adoc .github/GOVERNANCE.md
+        req —     CLAUDE.md                 CLAUDE.md
+        # 2.1.2 / 7.1.2 licensing
+        req 2.1.2 LICENSE                   LICENSE
+        req 7.1.2 LICENSES/MPL-2.0.txt      LICENSES/MPL-2.0.txt
+        req 7.1.2 LICENSES/CC-BY-SA-4.0.txt LICENSES/CC-BY-SA-4.0.txt
+        # 2.3.1 AI manifest front door
+        req 2.3.1 AI-manifest               0-AI-MANIFEST.a2ml 0-AI-MANIFEST.deed
+        # 1.1.2 / 1.1.3 build system: Justfile present, Makefile banned
+        req 1.1.2 Justfile                  Justfile justfile
+        if [ -f Makefile ] || [ -f makefile ]; then
+          echo "  ❌ 1.1.3 Makefile present — estate policy is Justfile"; FAIL=1
+        else
+          echo "  ✅ 1.1.3 no Makefile"
+        fi
+        # 3.1.1 descriptiles canonical, 6a2 retired
+        req 3.1.1 descriptiles              .machine_readable/descriptiles
+        if [ -d .machine_readable/6a2 ]; then
+          echo "  ❌ 3.1.1 retired .machine_readable/6a2/ still present"; FAIL=1
+        else
+          echo "  ✅ 3.1.1 no retired 6a2/"
+        fi
+        # 2.2.1 well-known — canonical www/, legacy root tolerated with warning
+        for f in security.txt ai.txt humans.txt; do
+          if [ -f "www/.well-known/$f" ]; then
+            echo "  ✅ 2.2.1 www/.well-known/$f"
+          elif [ -f ".well-known/$f" ]; then
+            echo "  ⚠️ 2.2.1 legacy root .well-known/$f — canonical is www/.well-known/ (rsr-template-repo#53)"
+          else
+            echo "  ❌ 2.2.1 missing $f (want www/.well-known/$f)"; FAIL=1
+          fi
+        done
+        if [ "$FAIL" -ne 0 ]; then
+          echo "::error::RSR compliance check failed — see ❌ rows above"
+          exit 1
+        fi
+        echo "✅ RSR compliance verified (non-normative mirror; oracle: hypatia:rsr-conformance)"
 
   build:
     name: Build Extension
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: vars.RUN_EXTENSION_CI == 'true'
     needs: [test, security, rsr-compliance]
 
@@ -173,6 +222,7 @@ jobs:
   performance:
     name: Performance Benchmarks
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.RUN_EXTENSION_CI == 'true'
 
     steps:
@@ -200,6 +250,7 @@ jobs:
   docs:
     name: Build Documentation
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
     steps:
@@ -219,6 +270,7 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     if: startsWith(github.ref, 'refs/tags/v') && vars.RUN_EXTENSION_CI == 'true'
     needs: [build]
     permissions:

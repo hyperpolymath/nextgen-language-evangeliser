@@ -1,0 +1,47 @@
+# SPDX-License-Identifier: MPL-2.0
+# Copyright (c) 2026 Jonathan D.A. Jewell (hyperpolymath) <j.d.a.jewell@open.ac.uk>
+#
+# ECOSYSTEM.a2ml — Nextgen Languages Evangeliser ecosystem position
+# Relocated 2026-10-10 from the retired .machine_readable/6a2/ path to the
+# canonical .machine_readable/descriptiles/ (RSR v2.0 SSOT 3.1.1/3.1.4;
+# Hypatia SD004). Content reconciled with the legacy s-expression-dialect
+# .machine_readable/ECOSYSTEM.a2ml twin (deleted in the same change): the
+# record dialect is the base; the twin's predecessor, what-this-is /
+# what-this-is-not and legacy-target facts are ported in.
+[metadata]
+version = "1.3"
+last-updated = "2026-10-10"
+
+[project]
+name = "Nextgen Languages Evangeliser"
+predecessor = "rescript-evangeliser"
+type = "project"
+purpose = "Duolingo/Rosetta-Stone for programming languages — a comprehension+transfer engine that classifies cross-language correspondences; emits into PanLL; extended by community language cartridges."
+role = "component"
+
+[position-in-ecosystem]
+category = "application"
+description = "Cross-language correspondence engine; classify-not-translate; feeds PanLL"
+
+[related-projects]
+projects = [
+  "hyperpolymath/panll — downstream IDE / contact layer this engine feeds (+ eNSAID)",
+  "hyperpolymath/proven-tests-and-benches — Dyadic relation carrier (Dyadic.idr)",
+  "hyperpolymath/echo-types — loss-with-residue (Agda)",
+  "hyperpolymath/standards — cartridges, overlay-protocol, ensaid-config, accessibility",
+  "hyperpolymath/affinescript — first-class target + future host",
+  "hyperpolymath/typed-wasm — AffineScript codegen layer",
+  "rescript-lang/rescript — legacy target language in the correspondence catalogue",
+]
+
+[what-this-is]
+is = "A language-comprehension and transfer engine: it classifies cross-language correspondences (cognate/false-friend/antonym/alien-realization/novel/vanished) and teaches the transfer without shame"
+
+[what-this-is-not]
+is-not = [
+  "An IDE (that is PanLL)",
+  "A linter",
+  "A universal translator (no Curry-Howard-fidelity goal)",
+  "A compiler or type-checker",
+  "A shame-the-JavaScript pattern matcher",
+]

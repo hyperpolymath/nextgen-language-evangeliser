@@ -11,9 +11,12 @@ This is the AI manifest for **nextgen-languages-evangeliser**. It declares:
 
 ## CANONICAL LOCATIONS (UNIVERSAL RULE)
 
-### Machine-Readable Metadata: `.machine_readable/` ONLY
+### Descriptiles: `.machine_readable/descriptiles/` ONLY
 
-These 6 a2ml files MUST exist in `.machine_readable/` directory ONLY:
+These 6 a2ml descriptiles MUST exist in `.machine_readable/descriptiles/` ONLY
+(the former `.machine_readable/` root of the machine tree and the
+`.machine_readable/6a2/` directory are BOTH retired — RSR v2.0 SSOT 3.1.1,
+6a2 deprecated 2026-06-30, enforced by Hypatia SD004):
 1. **STATE.a2ml** - Project state, progress, blockers
 2. **META.a2ml** - Architecture decisions, governance
 3. **ECOSYSTEM.a2ml** - Position in ecosystem, relationships
@@ -21,15 +24,16 @@ These 6 a2ml files MUST exist in `.machine_readable/` directory ONLY:
 5. **NEUROSYM.a2ml** - Neurosymbolic integration config
 6. **PLAYBOOK.a2ml** - Operational runbook
 
-**CRITICAL:** If ANY of these files exist in the root directory, this is an ERROR.
+**CRITICAL:** If ANY of these files exist in the repository root, directly in
+`.machine_readable/`, or in `.machine_readable/6a2/`, this is an ERROR.
 
-### Anchor File: `.machine_readable/anchors/ANCHOR.a2ml` ONLY
+### Anchor File: `.machine_readable/descriptiles/anchors/ANCHOR.a2ml` ONLY
 
 Canonical authority and semantic-boundary declaration MUST exist at:
 
-` .machine_readable/anchors/ANCHOR.a2ml `
+` .machine_readable/descriptiles/anchors/ANCHOR.a2ml `
 
-Do not place `ANCHOR.a2ml` at repository root.
+Do not place `ANCHOR.a2ml` at repository root or directly in `.machine_readable/`.
 
 ### Maintenance Policies: `.machine_readable/policies/` ONLY
 

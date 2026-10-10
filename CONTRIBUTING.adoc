@@ -114,12 +114,12 @@ full policy and JavaScript-glue exemptions.
 == Security
 
 Never commit secrets. Report vulnerabilities privately — see
-link:SECURITY.md[SECURITY.md].
+link:SECURITY.adoc[SECURITY.adoc].
 
 == Code of Conduct
 
 This project follows the *Compassionate Code Contribution Pledge* — see
-link:CODE_OF_CONDUCT.md[CODE_OF_CONDUCT.md]. In short: never shame developers,
+link:CODE_OF_CONDUCT.adoc[CODE_OF_CONDUCT.adoc]. In short: never shame developers,
 celebrate existing knowledge, assume good intent, foster psychological safety.
 
 == Licence

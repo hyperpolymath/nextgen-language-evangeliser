@@ -1,0 +1,35 @@
+# SPDX-License-Identifier: MPL-2.0
+#
+# Standalone Hypatia security scan (push / PR / weekly). This is NOT a duplicate
+# of the `hypatia-scan` job in `static-analysis-gate.yml`: that job exists to
+# feed the gitbot-fleet LEARNING pipeline (via `deposit-findings`), whereas this
+# workflow is the repo's independent security scan. Same tool, two consumers.
+# Required by the estate baseline (Hypatia workflow_audit/missing_workflow;
+# RSR v2.0 SSOT criterion 6.1.2) and by rsr-template-repo's canonical set.
+#
+# The reusable workflow pins the scanner to a vetted Hypatia commit, validates
+# findings, uploads SARIF to the Security tab, and runs ADVISORY (fix-forward)
+# until this repo commits a `.hypatia-baseline.json` + `scripts/apply-baseline.sh`,
+# which arms the blocking gate automatically (standards#399/#437 mechanism).
+name: Hypatia Security Scan
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+permissions:
+  actions: read      # required by the reusable workflow (staleness check reads workflow runs)
+  contents: read
+  security-events: write
+
+jobs:
+  hypatia:
+    uses: hyperpolymath/standards/.github/workflows/hypatia-scan-reusable.yml@10e0b6ffb979f0a27fe58206512055133e67460a

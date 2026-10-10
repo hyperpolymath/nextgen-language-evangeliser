@@ -1,5 +1,10 @@
 == Security Policy
 
+// Modernized 2026-10-10 (#78): the VS Code extension this policy was first
+// written for was removed with the TypeScript eradication; the runtime
+// surface is now Deno + cartridge data (offline CLI, browser workspace
+// server). Extension-era content has been replaced with the current model.
+
 === 🛡️ Security Philosophy
 
 Security is a *first-class concern* in Nextgen Languages Evangeliser. We
@@ -8,7 +13,7 @@ follow a *10+ dimensional security model*:
 [arabic]
 . *Input Validation* - All user input is validated and sanitized
 . *Output Encoding* - Code transformations are safe from injection
-. *Authentication* - VS Code workspace trust model
+. *Authentication* - Not applicable (offline, local-first; no accounts)
 . *Authorization* - File system access controls
 . *Session Management* - No network sessions required (offline-first)
 . *Cryptography* - No cryptographic operations (not needed)
@@ -25,7 +30,7 @@ If you discover a security vulnerability, please report it responsibly:
 
 *DO:* - ✅ Email security details to the maintainers (see
 MAINTAINERS.adoc) - ✅ Use encrypted email if possible (PGP key in
-.well-known/security.txt) - ✅ Wait for response before public
+www/.well-known/security.txt) - ✅ Wait for response before public
 disclosure (max 90 days) - ✅ Provide detailed reproduction steps
 
 *DON’T:* - ❌ Open public GitHub issues for vulnerabilities - ❌
@@ -49,29 +54,31 @@ Denial of service - Supply chain attacks
 
 ==== Threat Model
 
-*In Scope:* - Malicious JavaScript/TypeScript files opened in VS Code -
-Crafted pattern definitions - File system traversal attempts - Resource
-exhaustion (DoS)
+*In Scope:* - Crafted cartridge JSON data (schema-validated before use) -
+Path traversal attempts in the workspace server and CLI - Resource
+exhaustion (DoS) of the local workspace server - XSS in the browser
+workspace (SafeDOM: no innerHTML; Hypatia CWE-79 gate)
 
 *Out of Scope:* - Physical access to developer machine - OS-level
-vulnerabilities - VS Code API vulnerabilities - Network-based attacks
-(extension is offline-first)
+vulnerabilities - Network-based attacks on end users (the runtime surface
+is offline-first; the workspace server binds locally for the browser)
 
 ==== Security Boundaries
 
 ....
 ┌─────────────────────────────────────────┐
-│ VS Code Workspace (Untrusted)           │
-│  ├─ User JavaScript files               │
-│  └─ Custom pattern definitions          │
+│ Local Workspace (Untrusted inputs)      │
+│  ├─ Community cartridge JSON data       │
+│  └─ Browser origin consuming the GUI    │
 └─────────────────────────────────────────┘
-           ↓ (sandboxed parsing)
+           ↓ (schema-validated loading)
 ┌─────────────────────────────────────────┐
-│ Nextgen Languages Evangeliser Extension          │
-│  ├─ AST Parser (Babel, sandboxed)       │
-│  ├─ Pattern Matcher (validated)         │
-│  ├─ Webview (Content Security Policy)   │
-│  └─ File System (read-only by default)  │
+│ Nextgen Languages Evangeliser (Deno)    │
+│  ├─ Cartridge loader (JSON-Schema 2020) │
+│  ├─ Workspace server (localhost bind)   │
+│  ├─ GUI rendering (textContent only)   │
+│  └─ File system (--allow-read, least    │
+│     privilege; never -A)                │
 └─────────────────────────────────────────┘
 ....
 
@@ -79,13 +86,12 @@ vulnerabilities - VS Code API vulnerabilities - Network-based attacks
 
 [arabic]
 . *Input Sanitization*
-* All JavaScript/TypeScript parsed via Babel AST (not eval)
-* Pattern regexes validated for ReDoS attacks
-* File paths validated against traversal
+* Cartridge data validated against the JSON-Schema (draft 2020-12) before use
+* No `eval` / `Function` constructors; GUI builds DOM via textContent only
+* File paths validated against traversal in the CLI and workspace server
 . *Content Security Policy*
-* Webview UI runs with strict CSP
-* No inline scripts or styles
-* No external resource loading
+* Browser workspace serves local assets only — no external resource loading
+* No `innerHTML` escape hatch in the renderer (SafeDOM by construction)
 . *Resource Limits*
 * Maximum file size: 10MB
 * Parser timeout: 5 seconds
@@ -110,7 +116,7 @@ If enabled (opt-in only): - Aggregated, anonymous usage counts - Pattern
 category usage (no code snippets) - Performance metrics (timing only) -
 Crash reports (no PII)
 
-All telemetry is: - Local-first (stored in VS Code settings) -
+All telemetry is: - Local-first (stored on the user's machine only) -
 User-controlled (can be deleted anytime) - Transparent (see
 docs/TELEMETRY.md)
 
@@ -159,7 +165,7 @@ dependency tree (<10 packages)
 
 ==== No Network Dependencies
 
-This extension: - *Never* makes network requests - *Never* loads
+This tool: - *Never* makes network requests at runtime - *Never* loads
 external resources - Works in air-gapped environments - No CDN
 dependencies
 
@@ -170,14 +176,15 @@ dependencies
 * No man-in-the-middle vulnerabilities
 * Works in high-security environments
 
-=== 🎯 VS Code Workspace Trust
+=== 🎯 Least-Privilege Runtime Permissions
 
-This extension respects VS Code’s workspace trust model:
+The Deno runtime enforces a permission model the tool leans into:
 
-* *Untrusted Workspaces*: Limited functionality (read-only)
-* *Trusted Workspaces*: Full pattern detection and transformation
-
-See: https://code.visualstudio.com/docs/editor/workspace-trust
+* *CLI* (`bin/evangeliser.js`): `--allow-read` only — it reads cartridges
+* *Workspace server* (`gui/server.js`): `--allow-read` + `--allow-net` (local bind)
+* *Launcher* (`scripts/launch-gui.sh`): adds `--allow-env` (port override) and
+  `--allow-run` (spawn the browser for `--open`)
+* `-A` / `--allow-all` is banned repo-wide (CWE-250; Hypatia gate)
 
 === 📋 Security Checklist for Contributors
 
@@ -212,9 +219,8 @@ See CONTRIBUTING.adoc for full guidelines.
 
 === 📚 Additional Resources
 
-* https://owasp.org/[OWASP VS Code Extension Security]
-* https://code.visualstudio.com/api/references/extension-manifest[VS
-Code Extension Security Best Practices]
+* https://owasp.org/[OWASP]
+* https://docs.deno.com/runtime/fundamentals/security/[Deno Runtime Security Model]
 * https://www.nist.gov/cyberframework[NIST Cybersecurity Framework]
 
 === 🔄 Security Updates
@@ -227,16 +233,16 @@ Security updates are released as soon as possible:
 * *Low*: Next regular release
 
 Subscribe to releases to stay informed:
-https://github.com/Hyperpolymath/nextgen-languages-evangeliser/releases
+https://github.com/hyperpolymath/nextgen-language-evangeliser/releases
 
 === 📞 Contact
 
 For security concerns:
 
 * *Email*: See MAINTAINERS.adoc
-* *PGP Key*: See .well-known/security.txt
-* *Security.txt*: RFC 9116 compliant file in .well-known/
+* *PGP Key*: See www/.well-known/security.txt
+* *Security.txt*: RFC 9116 compliant file in www/.well-known/ (canonical)
 
 '''''
 
-*Last Updated*: 2024-11-22 *Policy Version*: 1.0
+*Last Updated*: 2026-10-10 *Policy Version*: 2.0
