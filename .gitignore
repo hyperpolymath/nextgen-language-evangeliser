@@ -38,7 +38,6 @@ erl_crash.dump
 /Manifest.toml
 
 # Deno
-deno.lock
 .deno/
 
 # Python (SaltStack only)
