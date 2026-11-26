@@ -1,0 +1,7 @@
+{
+  "name": "nextgen-language-evangeliser",
+  "private": true,
+  "devDependencies": {
+    "prettier": "3.10.1"
+  }
+}
