@@ -4,7 +4,6 @@ rust = "latest"
 zig = "latest"
 bun = "1.4"
 just = "latest"
-denojs = "latest"
 
 # Package managers
 pnpm = "latest"
@@ -45,9 +44,7 @@ run = "just build"
 run = "just test"
 
 [tasks.lint]
-depends = ["setup"]
-run = 'bunx --no-install --bun prettier --check --no-error-on-unmatched-pattern "**/*.{js,mjs,cjs,json,md}"'
+run = "bun install --frozen-lockfile && bunx --no-install --bun prettier --check ."
 
 [tasks.fmt]
-depends = ["setup"]
-run = 'bunx --no-install --bun prettier --write --no-error-on-unmatched-pattern "**/*.{js,mjs,cjs,json,md}"'
+run = "bun install --frozen-lockfile && bunx --no-install --bun prettier --write ."
