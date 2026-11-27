@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: MPL-2.0
 #
 # Enforces: No TypeScript, No Go, No Python (except SaltStack), No npm
-# Allows: ReScript, Deno, WASM, Rust, OCaml, Haskell, Guile/Scheme
+# Allows: AffineScript, Deno, WASM, Rust, OCaml, Haskell, Guile/Scheme
 
 name: RSR Anti-Pattern Check
 
@@ -189,7 +189,7 @@ jobs:
           echo "╔════════════════════════════════════════════════════════════╗"
           echo "║           RSR Anti-Pattern Check Passed ✅                 ║"
           echo "║                                                            ║"
-          echo "║  Allowed: ReScript, Deno, WASM, Rust, OCaml, Haskell,     ║"
+          echo "║  Allowed: AffineScript, Deno, WASM, Rust, OCaml, Haskell, ║"
           echo "║           Guile/Scheme, SaltStack (Python)                 ║"
           echo "║                                                            ║"
           echo "║  Blocked: TypeScript, Go, npm, Python (non-Salt)          ║"
